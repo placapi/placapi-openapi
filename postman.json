@@ -484,7 +484,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"totalDeuda\": 522700,\n    \"totalMultas\": 1,\n    \"multas\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C29\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700\n      }\n    ],\n    \"acuerdosPago\": 0\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"totalDeuda\": 522700,\n    \"totalMultas\": 1,\n    \"multas\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C14\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700\n      }\n    ],\n    \"acuerdosPago\": 0\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
         }
       ]
     },
@@ -559,7 +559,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"documentNumber\": \"1020304050\",\n    \"totalComparendos\": 1,\n    \"totalDeuda\": 522700,\n    \"comparendos\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C29\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700,\n        \"departamento\": \"BOGOTÁ D.C.\"\n      }\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"documentNumber\": \"1020304050\",\n    \"totalComparendos\": 1,\n    \"totalDeuda\": 522700,\n    \"comparendos\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C14\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700,\n        \"departamento\": \"BOGOTÁ D.C.\"\n      }\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
         }
       ]
     },
@@ -634,7 +634,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"documentNumber\": \"1020304050\",\n    \"numeroComparendo\": \"11001000000012345678\",\n    \"encontrado\": true,\n    \"comparendo\": {\n      \"comparendoId\": \"11001000000012345678\",\n      \"fecha\": \"2025-03-15\",\n      \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n      \"infraccion\": \"No respetar pico y placa\",\n      \"codigo\": \"C29\",\n      \"estado\": \"pendiente\",\n      \"valor\": 522700,\n      \"departamento\": \"BOGOTÁ D.C.\"\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"documentNumber\": \"1020304050\",\n    \"numeroComparendo\": \"11001000000012345678\",\n    \"encontrado\": true,\n    \"comparendo\": {\n      \"comparendoId\": \"11001000000012345678\",\n      \"fecha\": \"2025-03-15\",\n      \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n      \"infraccion\": \"No respetar pico y placa\",\n      \"codigo\": \"C14\",\n      \"estado\": \"pendiente\",\n      \"valor\": 522700,\n      \"departamento\": \"BOGOTÁ D.C.\"\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
         }
       ]
     },
@@ -1416,7 +1416,7 @@
             }
           }
         },
-        "description": "Restricción de pico y placa por ubicación y tipo de vehículo. Filtra por `ciudad` o por `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`). `tipoVehiculo` = carro (default) o moto. Qué dígito de la placa se evalúa lo fija el decreto de cada ciudad y viene en `digitoPlaca`: por defecto el último para carro y el primero para moto, pero no en todas (en Popayán las motos van por el último). La `placa` es opcional: con placa indica si aplica hoy/mañana; sin placa devuelve qué dígitos restringen. Sin ubicación devuelve todas las ciudades monitoreadas. **En festivo nacional no hay pico y placa en ninguna ciudad**: `digitosHoy` sale vacío, `hoyAplica` en false y el bloque `festivo` trae el nombre del día. También viene incluido en consulta-full, con el mismo filtro por ubicación y el tipo de vehículo detectado solo desde el RUNT.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `ciudad` (string, opcional). Ciudad a consultar (ej. Bogotá).\n- `lat` (number, opcional). Latitud; requiere lng. Geolocaliza la ciudad y manda sobre `ciudad`.\n- `lng` (number, opcional). Longitud; requiere lat.\n- `placa` (string, opcional). Placa; agrega hoyAplica/manianaAplica.\n- `tipoVehiculo` (string, opcional). carro (default) | moto. El dígito que se evalúa lo decide cada ciudad y se devuelve en `digitoPlaca`. taxi y publico se aceptan pero aún no tienen reglas cargadas (devuelven tienePicoYPlaca:false)."
+        "description": "Restricción de pico y placa por ubicación y tipo de vehículo. Filtra por `ciudad` o por `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`). `tipoVehiculo` = carro (default) o moto. Qué dígito de la placa se evalúa lo fija el decreto de cada ciudad y viene en `digitoPlaca`: por defecto el último para carro y el primero para moto, pero no en todas: varias ciudades restringen también la moto por el último, así que hay que leer `digitoPlaca` en vez de asumir la regla. La `placa` es opcional: con placa indica si aplica hoy/mañana; sin placa devuelve qué dígitos restringen. Sin ubicación devuelve todas las ciudades monitoreadas. **En festivo nacional no hay pico y placa en ninguna ciudad**: `digitosHoy` sale vacío, `hoyAplica` en false y el bloque `festivo` trae el nombre del día. También viene incluido en consulta-full, con el mismo filtro por ubicación y el tipo de vehículo detectado solo desde el RUNT.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `ciudad` (string, opcional). Ciudad a consultar (ej. Bogotá).\n- `lat` (number, opcional). Latitud; requiere lng. Geolocaliza la ciudad y manda sobre `ciudad`.\n- `lng` (number, opcional). Longitud; requiere lat.\n- `placa` (string, opcional). Placa; agrega hoyAplica/manianaAplica.\n- `tipoVehiculo` (string, opcional). carro (default) | moto. El dígito que se evalúa lo decide cada ciudad y se devuelve en `digitoPlaca`. taxi y publico se aceptan pero aún no tienen reglas cargadas (devuelven tienePicoYPlaca:false)."
       },
       "response": [
         {
@@ -1447,7 +1447,7 @@
                 }
               }
             },
-            "description": "Restricción de pico y placa por ubicación y tipo de vehículo. Filtra por `ciudad` o por `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`). `tipoVehiculo` = carro (default) o moto. Qué dígito de la placa se evalúa lo fija el decreto de cada ciudad y viene en `digitoPlaca`: por defecto el último para carro y el primero para moto, pero no en todas (en Popayán las motos van por el último). La `placa` es opcional: con placa indica si aplica hoy/mañana; sin placa devuelve qué dígitos restringen. Sin ubicación devuelve todas las ciudades monitoreadas. **En festivo nacional no hay pico y placa en ninguna ciudad**: `digitosHoy` sale vacío, `hoyAplica` en false y el bloque `festivo` trae el nombre del día. También viene incluido en consulta-full, con el mismo filtro por ubicación y el tipo de vehículo detectado solo desde el RUNT.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `ciudad` (string, opcional). Ciudad a consultar (ej. Bogotá).\n- `lat` (number, opcional). Latitud; requiere lng. Geolocaliza la ciudad y manda sobre `ciudad`.\n- `lng` (number, opcional). Longitud; requiere lat.\n- `placa` (string, opcional). Placa; agrega hoyAplica/manianaAplica.\n- `tipoVehiculo` (string, opcional). carro (default) | moto. El dígito que se evalúa lo decide cada ciudad y se devuelve en `digitoPlaca`. taxi y publico se aceptan pero aún no tienen reglas cargadas (devuelven tienePicoYPlaca:false)."
+            "description": "Restricción de pico y placa por ubicación y tipo de vehículo. Filtra por `ciudad` o por `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`). `tipoVehiculo` = carro (default) o moto. Qué dígito de la placa se evalúa lo fija el decreto de cada ciudad y viene en `digitoPlaca`: por defecto el último para carro y el primero para moto, pero no en todas: varias ciudades restringen también la moto por el último, así que hay que leer `digitoPlaca` en vez de asumir la regla. La `placa` es opcional: con placa indica si aplica hoy/mañana; sin placa devuelve qué dígitos restringen. Sin ubicación devuelve todas las ciudades monitoreadas. **En festivo nacional no hay pico y placa en ninguna ciudad**: `digitosHoy` sale vacío, `hoyAplica` en false y el bloque `festivo` trae el nombre del día. También viene incluido en consulta-full, con el mismo filtro por ubicación y el tipo de vehículo detectado solo desde el RUNT.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `ciudad` (string, opcional). Ciudad a consultar (ej. Bogotá).\n- `lat` (number, opcional). Latitud; requiere lng. Geolocaliza la ciudad y manda sobre `ciudad`.\n- `lng` (number, opcional). Longitud; requiere lat.\n- `placa` (string, opcional). Placa; agrega hoyAplica/manianaAplica.\n- `tipoVehiculo` (string, opcional). carro (default) | moto. El dígito que se evalúa lo decide cada ciudad y se devuelve en `digitoPlaca`. taxi y publico se aceptan pero aún no tienen reglas cargadas (devuelven tienePicoYPlaca:false)."
           },
           "status": "OK",
           "code": 200,
@@ -2585,6 +2585,81 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"clasificacion-social\",\n  \"status\": \"info\",\n  \"data\": {\n    \"documento\": \"1020304050\",\n    \"tipoDocumento\": \"CC\",\n    \"persona\": {\n      \"nombre\": \"JUAN CARLOS PEREZ GOMEZ\",\n      \"sexo\": \"Masculino\",\n      \"edad\": 38\n    },\n    \"ubicacion\": {\n      \"departamento\": \"VALLE DEL CAUCA\",\n      \"municipio\": \"CALI\",\n      \"codigoMunicipio\": \"76001\"\n    },\n    \"sisben\": {\n      \"grupo\": \"B\",\n      \"nivel\": \"B6\",\n      \"descripcion\": \"Pobreza moderada\"\n    },\n    \"rui\": {\n      \"tieneClasificacion\": true,\n      \"grupo\": \"C\",\n      \"nivel\": \"C15\",\n      \"grupoIngresos\": \"Ingreso observado y estimado\"\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Puesto de votación",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/puesto-votacion",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "puesto-votacion"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Dónde le toca votar a una persona, por cédula, del censo electoral de la Registraduría. Devuelve el **puesto** con su nombre oficial, la **dirección**, el **número de mesa**, el **municipio y departamento**, el **código DIVIPOL** del puesto —el mismo con el que la Registraduría publica logística y resultados— y las **coordenadas** del sitio con enlace de navegación, cuando la fuente lo tiene georreferenciado. Trae además `fechaInscripcion`, que es desde cuándo la persona figura en ese puesto: eso delata a quien acaba de trasladarse. **No es estacional**: consulta el lugar de votación vigente y responde también fuera de calendario electoral. Sirve para logística de transporte el día de elecciones, verificación de residencia electoral y validación de datos de afiliados. ⚠️ **Solo cédula de ciudadanía** — el censo electoral no maneja otro documento, y cualquier otro tipo responde 400 sin cobrar. **Un documento que no figura en el censo responde 404 y NO cobra**: acá el producto es el puesto, y si no vino no se entregó nada. La fuente distingue dos formas de \"no hay puesto\": que el documento no figure en el censo, y que tenga una **novedad** que lo saca de él (cédula cancelada por muerte, no expedida). Las dos responden 404 con el mensaje textual del registro y ninguna cobra: el estado de la cédula es otra pregunta, y no la vendemos como si fuera esta. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, obligatorio). Valores: `CC`. Tipo de documento. El censo electoral es de ciudadanos colombianos y solo maneja cédula de ciudadanía: cualquier otro valor responde 400 `tipo_documento_no_soportado` sin cobrar y sin consultar a la fuente.\n- `docNumber` (string, obligatorio). Número de cédula. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/puesto-votacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "puesto-votacion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Dónde le toca votar a una persona, por cédula, del censo electoral de la Registraduría. Devuelve el **puesto** con su nombre oficial, la **dirección**, el **número de mesa**, el **municipio y departamento**, el **código DIVIPOL** del puesto —el mismo con el que la Registraduría publica logística y resultados— y las **coordenadas** del sitio con enlace de navegación, cuando la fuente lo tiene georreferenciado. Trae además `fechaInscripcion`, que es desde cuándo la persona figura en ese puesto: eso delata a quien acaba de trasladarse. **No es estacional**: consulta el lugar de votación vigente y responde también fuera de calendario electoral. Sirve para logística de transporte el día de elecciones, verificación de residencia electoral y validación de datos de afiliados. ⚠️ **Solo cédula de ciudadanía** — el censo electoral no maneja otro documento, y cualquier otro tipo responde 400 sin cobrar. **Un documento que no figura en el censo responde 404 y NO cobra**: acá el producto es el puesto, y si no vino no se entregó nada. La fuente distingue dos formas de \"no hay puesto\": que el documento no figure en el censo, y que tenga una **novedad** que lo saca de él (cédula cancelada por muerte, no expedida). Las dos responden 404 con el mensaje textual del registro y ninguna cobra: el estado de la cédula es otra pregunta, y no la vendemos como si fuera esta. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, obligatorio). Valores: `CC`. Tipo de documento. El censo electoral es de ciudadanos colombianos y solo maneja cédula de ciudadanía: cualquier otro valor responde 400 `tipo_documento_no_soportado` sin cobrar y sin consultar a la fuente.\n- `docNumber` (string, obligatorio). Número de cédula. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"puesto-votacion\",\n  \"status\": \"info\",\n  \"data\": {\n    \"documento\": \"1020304050\",\n    \"departamento\": \"VALLE\",\n    \"municipio\": \"CALI\",\n    \"puesto\": \"INSTITUCION EDUCATIVA EJEMPLO\",\n    \"direccion\": \"CALLE 00 # 00-00\",\n    \"mesa\": \"24\",\n    \"codigoPuesto\": \"310019914\",\n    \"fechaInscripcion\": \"2026-02-07\",\n    \"ubicacion\": {\n      \"lat\": 3.35393,\n      \"lng\": -76.523,\n      \"mapsUrl\": \"https://www.google.com/maps/dir/?api=1&destination=3.35393,-76.52300\"\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
         }
       ]
     },
