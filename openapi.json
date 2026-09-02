@@ -3,7 +3,7 @@
   "info": {
     "title": "PlacApi API",
     "version": "1.0.0",
-    "description": "API REST para consolidar consultas de información vehicular de Colombia (RUNT, SOAT, tecnomecánica, SIMIT, antecedentes, impuestos, FASECOLDA y pico y placa) y licencias de conducción. PlacApi no es una entidad oficial del Gobierno colombiano.",
+    "description": "API REST sobre registros oficiales de Colombia, con dos familias de consultas. Vehicular POR PLACA: RUNT, SOAT, tecnomecánica, multas del SIMIT, antecedentes del vehículo, impuestos, avalúo FASECOLDA y pico y placa. De personas POR NÚMERO DE DOCUMENTO, sin placa: nombre por cédula, licencias de conducción, comparendos, puesto de votación del censo electoral de la Registraduría, Sisbén y Registro Universal de Ingresos, afiliaciones a seguridad social del RUAF, registro mercantil del RUES, contratación estatal del SECOP II, procesos judiciales, bienes y rentas, y antecedentes disciplinarios, fiscales y judiciales. PlacApi no es una entidad oficial del Gobierno colombiano.",
     "termsOfService": "https://placapi.com/terminos",
     "contact": {
       "name": "Soporte PlacApi",
@@ -18,9 +18,47 @@
       "model": "prepaid-credits",
       "pricePerQuery": 349,
       "currency": "COP",
-      "note": "Se cobra el número de créditos de cada endpoint (x-credits) solo cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en consulta-full. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus 2 créditos."
+      "note": "Se cobra el número de créditos de cada endpoint (x-credits) cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en varios de persona y 3 en consulta-full. Una consulta sin resultado (404) trae 10 gratis por mes y por cada código de sin-resultado, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus créditos. Repetir la MISMA consulta (misma cuenta, endpoint y placa) dentro de 10 segundos se responde igual pero no vuelve a cobrar: se reembolsa con el motivo duplicado_reciente."
     }
   },
+  "tags": [
+    {
+      "name": "Reporte completo",
+      "description": "Todas las fuentes del vehículo y del propietario en una sola llamada."
+    },
+    {
+      "name": "Vehículo (RUNT)",
+      "description": "Ficha, estado y verificación del vehículo por placa o por VIN."
+    },
+    {
+      "name": "Multas y comparendos (SIMIT)",
+      "description": "Comparendos, resoluciones, acuerdos y paz y salvo por placa o cédula."
+    },
+    {
+      "name": "Licencias de conducción",
+      "description": "Licencias del conductor y suspensiones/cancelaciones por cédula."
+    },
+    {
+      "name": "Avalúo comercial (FASECOLDA)",
+      "description": "Valor comercial de referencia por placa o por código FASECOLDA."
+    },
+    {
+      "name": "Impuestos y movilidad",
+      "description": "Impuesto vehicular y restricción de pico y placa."
+    },
+    {
+      "name": "Antecedentes de personas",
+      "description": "Verificación de una PERSONA, no de un vehículo: identidad, clasificación social, seguridad social, puesto de votación, disciplinarios, fiscales, judiciales y medidas correctivas por documento; listas de sanciones y notificaciones internacionales por nombre."
+    },
+    {
+      "name": "Empresas y Estado",
+      "description": "Debida diligencia sobre la contraparte: registro mercantil, contratación con el Estado, procesos judiciales y declaración de bienes y rentas."
+    },
+    {
+      "name": "Fuera de Colombia",
+      "description": "Perú por placa y por documento: ficha del vehículo, revisión técnica, papeletas y récord del conductor. México por placa."
+    }
+  ],
   "servers": [
     {
       "url": "https://placapi.com/api",
@@ -32,8 +70,11 @@
       "post": {
         "operationId": "consulta-full",
         "summary": "Consulta full (todo en uno)",
-        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). Cuesta 2 créditos. Costo: 2 créditos por consulta con datos.",
-        "x-credits": 2,
+        "tags": [
+          "Reporte completo"
+        ],
+        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` (con sus amparos) cuando el vehículo es de servicio público. Desde 0.71.0 llega también el HISTÓRICO completo, no solo lo vigente: `vehicle.tramites` (matrícula inicial, traspasos, cambios de color o de servicio, con fecha, organismo y estado), `soat.historico` y `rtm.historico` con todas las vigencias registradas, `vehicle.normalizacion` cuando el registro marca deficiencia de matrícula, el número de oficio de cada limitación en `antecedentes.embargos[].documento`, y en SIMIT el `departamento` y el `estadoCartera` de cada comparendo más el detalle de los `acuerdos` de pago. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
+        "x-credits": 3,
         "security": [
           {
             "ApiKeyAuth": []
@@ -147,7 +188,36 @@
                       "fechaMatricula": "15/03/2023",
                       "organismoTransito": "SECRETARIA DISTRITAL DE MOVILIDAD DE BOGOTA",
                       "estado": "activo",
-                      "clase": "CAMIONETA"
+                      "clase": "CAMIONETA",
+                      "capacidadCarga": null,
+                      "pesoBruto": 1830,
+                      "ejes": 2,
+                      "llantas": null,
+                      "pasajerosSentados": 5,
+                      "pasajerosTotal": null,
+                      "puertas": 5,
+                      "clasificacion": "CAMIONETA",
+                      "numeroSerie": "9GAJC6915FB040270",
+                      "licenciaTransito": "10035451456",
+                      "regrabados": [],
+                      "repotenciado": false,
+                      "importado": false,
+                      "vehiculoEnsenanza": false,
+                      "antiguoClasico": false,
+                      "seguridadEstado": false,
+                      "tarjetaOperacion": null,
+                      "polizasRc": [],
+                      "tramites": [
+                        {
+                          "id": "267205667",
+                          "fecha": "2023-03-15",
+                          "estado": "AUTORIZADA",
+                          "tramite": "TRÁMITE MATRÍCULA INICIAL",
+                          "entidad": "SECRETARIA DISTRITAL DE MOVILIDAD DE BOGOTA",
+                          "registro": "RNA"
+                        }
+                      ],
+                      "normalizacion": null
                     }
                   },
                   "soat": {
@@ -161,7 +231,20 @@
                       "poliza": "1508006948335000",
                       "fechaExpedicion": "20/09/2025",
                       "fechaVencimiento": "19/09/2026",
-                      "diasParaVencer": 69
+                      "diasParaVencer": 69,
+                      "historico": [
+                        {
+                          "poliza": "1508006948335000",
+                          "aseguradora": "SBS SEGUROS",
+                          "fechaExpedicion": "2025-09-20",
+                          "fechaInicioVigencia": "2025-09-20",
+                          "fechaVencimiento": "2026-09-19",
+                          "estado": "VIGENTE",
+                          "estadoSoat": "EMITIDA",
+                          "tipoTarifa": "120",
+                          "origen": "NACIONAL"
+                        }
+                      ]
                     }
                   },
                   "rtm": {
@@ -177,7 +260,19 @@
                       "fechaExpedicion": "22/09/2025",
                       "fechaVencimiento": "22/09/2026",
                       "diasParaVencer": 72,
-                      "certificadoNumero": "189733821"
+                      "certificadoNumero": "189733821",
+                      "historico": [
+                        {
+                          "certificadoNumero": "189733821",
+                          "cda": "CDA FONTIBON S.A.S",
+                          "fechaExpedicion": "2025-09-22",
+                          "fechaVencimiento": "2026-09-22",
+                          "estado": "APROBADA",
+                          "tipoRevision": "REVISION TECNICO-MECANICO",
+                          "vigente": true,
+                          "informacionConsistente": true
+                        }
+                      ]
                     }
                   },
                   "antecedentes": {
@@ -208,7 +303,12 @@
                       "totalDeuda": 0,
                       "totalMultas": 0,
                       "multas": [],
-                      "acuerdosPago": 0
+                      "acuerdosPago": 0,
+                      "acuerdos": [],
+                      "pazSalvo": true,
+                      "suspendida": false,
+                      "cancelada": false,
+                      "cursos": 0
                     }
                   },
                   "impuestos": {
@@ -278,6 +378,7 @@
                         ],
                         "diasSemana": [],
                         "horarios": "L–V, 6:00–21:00",
+                        "nota": null,
                         "vigencia": "Vigente en julio de 2026",
                         "fuente": "https://www.movilidadbogota.gov.co/pico-y-placa"
                       }
@@ -310,7 +411,7 @@
                     "mode": "live",
                     "fetchedAt": "2026-07-24T15:04:05.000Z"
                   },
-                  "cost": 2
+                  "cost": 3
                 }
               }
             }
@@ -343,6 +444,9 @@
       "post": {
         "operationId": "consulta",
         "summary": "Consulta vehicular (RUNT)",
+        "tags": [
+          "Vehículo (RUNT)"
+        ],
         "description": "Ficha completa del RUNT por placa: informacionGeneral (≈40 campos del vehículo), datosTecnicos, histórico completo de SOAT y de tecnomecánica (todas las vigencias, no solo la última), pólizas de responsabilidad civil, tarjeta de operación, blindaje, solicitudes, garantías mobiliarias, limitaciones a la propiedad y normalización. Es la respuesta más extensa de la API: si solo necesitas marca/línea/modelo usa Vehículo básico. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -564,6 +668,9 @@
       "post": {
         "operationId": "consulta-por-vin",
         "summary": "Consulta vehicular por VIN",
+        "tags": [
+          "Vehículo (RUNT)"
+        ],
         "description": "La MISMA ficha del RUNT que `/api/consulta` —informacionGeneral, datosTecnicos, histórico completo de SOAT y tecnomecánica, pólizas, solicitudes, garantías, limitaciones y normalización— pero entrando por VIN en vez de placa, y **sin documento del propietario**. Úsalo cuando tengas el VIN (o el número de chasis) pero no la cédula del dueño: la consulta por placa exige que el documento sea el del propietario ACTIVO y falla si no coincide. La respuesta trae la placa en `data.plate`, así que también sirve de puente VIN → placa. Único campo que cambia frente a `/api/consulta`: `data.documentNumber` viene vacío, porque no se pidió. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -756,6 +863,9 @@
       "post": {
         "operationId": "apto-traspaso",
         "summary": "Apto para traspaso",
+        "tags": [
+          "Vehículo (RUNT)"
+        ],
         "description": "Semáforo SÍ/NO de si un vehículo está apto para traspaso, derivado del RUNT: sin gravámenes, prendas, limitaciones a la propiedad ni garantías, y con el registro activo. Devuelve el flag y la lista de bloqueos concretos en texto listo para mostrar. `status` es ok si está apto, danger si el bloqueo es un gravamen/prenda/limitación y warn si solo el estado no es ACTIVO. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -870,6 +980,9 @@
       "post": {
         "operationId": "vehiculo-basico",
         "summary": "Vehículo básico (liviano)",
+        "tags": [
+          "Vehículo (RUNT)"
+        ],
         "description": "Proyección liviana de la ficha del RUNT por placa: exactamente 12 campos — placa, marca, línea, modelo, cilindraje, color, clase, servicio, combustible, estado, fecha de matrícula y organismo de tránsito. Todos texto (`fechaMatricula` puede venir null). Respuesta mínima para apps que solo necesitan lo esencial; `status` siempre es info porque describe el vehículo sin calificarlo. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -985,6 +1098,9 @@
       "post": {
         "operationId": "multas",
         "summary": "Multas SIMIT",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
         "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada y valor) y cuántos acuerdos de pago hay. `status`: ok sin multas, warn con multas y danger si la deuda pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1102,6 +1218,9 @@
       "post": {
         "operationId": "comparendos",
         "summary": "Comparendos por cédula",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
         "description": "Comparendos de una persona por cédula (fuente SIMIT): lista tipada con fecha, organismo, infracción, código, estado, valor y departamento de cada comparendo, más el total adeudado. A diferencia de Multas SIMIT (que consolida por placa), este devuelve los comparendos de la persona. `status`: ok sin comparendos, warn con comparendos y danger si la deuda pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1213,6 +1332,9 @@
       "post": {
         "operationId": "comparendo",
         "summary": "Detalle de comparendo",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
         "description": "Detalle de un comparendo puntual: se busca por su número dentro de los comparendos de la persona (cédula) y se devuelve el item completo (fecha, organismo, infracción, código, estado, valor, departamento) o `encontrado: false` con `comparendo: null` si no figura. Ese caso también cobra: la consulta al SIMIT se hizo y la respuesta —que no aparece— es información. `status`: info si no se encontró, ok si está pagada, warn si no. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1329,6 +1451,9 @@
       "post": {
         "operationId": "acuerdos-pago",
         "summary": "Acuerdos de pago",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
         "description": "Acuerdos de pago de comparendos de una persona por cédula (fuente SIMIT): resolución, fecha, estado, valor del acuerdo, saldo pendiente, secretaría y departamento de cada uno, más el total pendiente. `status`: ok sin acuerdos, warn con al menos uno. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1439,6 +1564,9 @@
       "post": {
         "operationId": "resoluciones",
         "summary": "Resoluciones de tránsito",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
         "description": "Resoluciones sancionatorias asociadas a una persona por cédula (fuente SIMIT): las multas que ya tienen número de resolución, con fecha, organismo, infracción, código, estado, valor y departamento, más el total adeudado. `status`: ok sin resoluciones, warn con al menos una y danger si el total pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1550,6 +1678,9 @@
       "post": {
         "operationId": "suspension-licencia",
         "summary": "Suspensión de licencia",
+        "tags": [
+          "Licencias de conducción"
+        ],
         "description": "Estado de suspensión o cancelación de la licencia de conducción de una persona por cédula (fuente SIMIT): banderas `suspendida`/`cancelada` y, cuando aplica, la vigencia de la medida (fecha desde, fecha hasta y organismo de tránsito); sin medida los tres campos vienen null. `status` es danger si está suspendida o cancelada, ok si no. Crítico para agencias de licencias. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1652,6 +1783,9 @@
       "post": {
         "operationId": "paz-salvo",
         "summary": "Paz y salvo de tránsito",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
         "description": "Certificado de paz y salvo de tránsito de una persona por cédula (fuente SIMIT): indica si está a paz y salvo (sin comparendos ni deuda pendiente), el total adeudado y la cantidad de comparendos. `status` es ok a paz y salvo, warn si no. Paso previo típico de un trámite. No sustituye el certificado oficial del organismo de tránsito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -1752,6 +1886,9 @@
       "post": {
         "operationId": "impuestos",
         "summary": "Impuesto vehicular",
+        "tags": [
+          "Impuestos y movilidad"
+        ],
         "description": "Departamento donde está matriculado el vehículo y enlace al portal oficial de impuestos. El departamento se resuelve desde el organismo de tránsito del RUNT por placa. NO liquida el impuesto: ningún departamento lo expone por API (todos blindan el portal con captcha y cuestionario), así que `data` siempre viene null y el valor está en `portalUrl` + el mensaje de `error`. Gratis: no cobra crédito. Gratis: no cobra crédito.",
         "x-credits": 0,
         "security": [
@@ -1856,7 +1993,10 @@
       "post": {
         "operationId": "avaluo",
         "summary": "Avalúo FASECOLDA",
-        "description": "Valor comercial FASECOLDA y rango de mercado por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, rango min/max y clase. El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y el rango cubre todas. Valor de referencia del gremio asegurador, no un avalúo pericial. Costo: 1 crédito por consulta con datos.",
+        "tags": [
+          "Avalúo comercial (FASECOLDA)"
+        ],
+        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, ficha técnica (categoría, tipología, combustible, transmisión, cilindraje) y clase. El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` cubre todas. Por `vin` la versión es única, así que `rangoMercado` colapsa en el propio valor; la curva año por año de esa versión viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -1970,6 +2110,9 @@
       "post": {
         "operationId": "avaluo-por-codigo",
         "summary": "Avalúo FASECOLDA por código",
+        "tags": [
+          "Avalúo comercial (FASECOLDA)"
+        ],
         "description": "Valor comercial FASECOLDA directo por código, sin resolver placa→código. Para aseguradoras y peritos que ya tienen el código FASECOLDA. Acepta `codeFasecolda` y opcionalmente `modelo` (año) para desambiguar el valor. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -2064,7 +2207,10 @@
       "post": {
         "operationId": "catalogo",
         "summary": "Catálogo de marcas, modelos y versiones",
-        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: cilindraje, potencia, airbags, puertas y tracción. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo responde 404 y no cobra. Costo: 1 crédito por consulta con datos.",
+        "tags": [
+          "Avalúo comercial (FASECOLDA)"
+        ],
+        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: cilindraje, potencia, airbags, puertas y tracción. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2234,6 +2380,9 @@
       "post": {
         "operationId": "perdida-total",
         "summary": "Pérdida total / siniestros",
+        "tags": [
+          "Vehículo (RUNT)"
+        ],
         "description": "Historial de reclamaciones ante aseguradoras de un vehículo (fuente FASECOLDA, desde 2008): fecha, amparo y `severidad` de cada registro. Solo pide la placa. `severidad: \"mayor\"` = la aseguradora indemnizó el vehículo completo (pérdida total); `\"menor\"` = indemnizó una reparación; `\"desconocida\"` = amparo que la fuente no cataloga. `perdidaTotal` es true SOLO si hay al menos un registro de severidad mayor, así que un carro con reclamaciones menores devuelve `perdidaTotal: false` con `totalSiniestros > 0`. Cobertura parcial: cubre únicamente vehículos que estuvieron asegurados, así que `perdidaTotal: false` significa «no figura», no «nunca chocó». La fuente no informa el valor indemnizado ni la aseguradora. `status` es danger con pérdida total, warn con reclamaciones menores y ok sin registros. Cuesta 2 créditos (el scrape es lento y la fuente topa las consultas diarias). Costo: 2 créditos por consulta con datos.",
         "x-credits": 2,
         "security": [
@@ -2330,6 +2479,7 @@
       "post": {
         "operationId": "garantias-rgm",
         "summary": "Prendas / garantías mobiliarias",
+        "tags": [],
         "description": "Prendas inscritas sobre un vehículo en el RGM de Confecámaras, por placa. Da el detalle que el RUNT a veces no entrega cuando solo marca la bandera: acreedor(es), deudor/garante (nombre y documento), folio electrónico, fecha de inscripción (formato del portal, dd/mm/aaaa hh:mm:ss) y última operación (inscripción, modificación, ejecución). Sin prendas responde `tienePrenda: false` con `garantias: []`. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -2424,7 +2574,10 @@
       "post": {
         "operationId": "pico-y-placa",
         "summary": "Pico y placa",
-        "description": "Restricción de pico y placa por ubicación y tipo de vehículo. Filtra por `ciudad` o por `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`). `tipoVehiculo` = carro (default) o moto. Qué dígito de la placa se evalúa lo fija el decreto de cada ciudad y viene en `digitoPlaca`: por defecto el último para carro y el primero para moto, pero no en todas: varias ciudades restringen también la moto por el último, así que hay que leer `digitoPlaca` en vez de asumir la regla. La `placa` es opcional: con placa indica si aplica hoy/mañana; sin placa devuelve qué dígitos restringen. Sin ubicación devuelve todas las ciudades monitoreadas. **En festivo nacional no hay pico y placa en ninguna ciudad**: `digitosHoy` sale vacío, `hoyAplica` en false y el bloque `festivo` trae el nombre del día. También viene incluido en consulta-full, con el mismo filtro por ubicación y el tipo de vehículo detectado solo desde el RUNT. Costo: 1 crédito por consulta con datos.",
+        "tags": [
+          "Impuestos y movilidad"
+        ],
+        "description": "Restricción de pico y placa por ubicación y tipo de vehículo. Filtra por `ciudad` o por `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`). `tipoVehiculo` = carro (default) o moto. Qué dígito de la placa se evalúa lo fija el decreto de cada ciudad y viene en `digitoPlaca`: por defecto el último para carro y el primero para moto, pero no en todas: varias ciudades restringen también la moto por el último, así que hay que leer `digitoPlaca` en vez de asumir la regla. La `placa` es opcional: con placa indica si aplica hoy/mañana; sin placa devuelve qué dígitos restringen. Sin ubicación devuelve todas las ciudades monitoreadas. **En festivo nacional no hay pico y placa en ninguna ciudad**: `digitosHoy` sale vacío, `hoyAplica` en false y el bloque `festivo` trae el nombre del día. También viene incluido en consulta-full, con el mismo filtro por ubicación y el tipo de vehículo detectado solo desde el RUNT. **Placa blanca**: los vehículos de servicio público no reciben el pico y placa de particulares. Si no envías `tipoVehiculo`, el tipo se resuelve solo con la placa —primero con lo que ya sabemos del vehículo, y si hace falta consultando el registro—; `deteccionServicio` dice de dónde salió y vale `no_determinado` cuando no se pudo saber y se asumió carro. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2462,7 +2615,17 @@
                   "tipoVehiculo": {
                     "type": "string",
                     "example": "carro",
-                    "description": "carro (default) | moto. El dígito que se evalúa lo decide cada ciudad y se devuelve en `digitoPlaca`. taxi y publico se aceptan pero aún no tienen reglas cargadas (devuelven tienePicoYPlaca:false)."
+                    "description": "carro | moto | taxi | publico. El dígito que se evalúa lo decide cada ciudad y se devuelve en `digitoPlaca`. taxi y publico (placa blanca) no tienen reglas cargadas en ninguna ciudad: devuelven tienePicoYPlaca:false con el motivo en `nota`. Si no lo envías se deriva de `clase` y `servicio`; sin ninguno de los tres, carro."
+                  },
+                  "servicio": {
+                    "type": "string",
+                    "example": "Público",
+                    "description": "Servicio del RUNT (Particular | Público | Oficial | Diplomático). Con Público el vehículo se evalúa como placa blanca. Este endpoint no consulta el RUNT, así que es la única forma de decírselo."
+                  },
+                  "clase": {
+                    "type": "string",
+                    "example": "AUTOMOVIL",
+                    "description": "Clase del RUNT (AUTOMOVIL, BUS, MOTOCICLETA…). Junto con `servicio` decide el tipo: en servicio público, AUTOMOVIL/CAMIONETA/CAMPERO son taxi y el resto publico."
                   }
                 }
               },
@@ -2494,6 +2657,7 @@
                     "hoy": null,
                     "maniana": null
                   },
+                  "deteccionServicio": "bd",
                   "data": [
                     {
                       "ciudad": "Bogotá",
@@ -2520,6 +2684,7 @@
                       ],
                       "diasSemana": [],
                       "horarios": "L–V, 6:00–21:00",
+                      "nota": null,
                       "vigencia": "Vigente en julio de 2026",
                       "fuente": "https://www.movilidadbogota.gov.co/pico-y-placa"
                     }
@@ -2558,6 +2723,9 @@
       "post": {
         "operationId": "licencia",
         "summary": "Licencias de conducción",
+        "tags": [
+          "Licencias de conducción"
+        ],
         "description": "Licencias de conducción por cédula (RUNT ciudadano): datos del conductor (nombre, estado de conductor y de ciudadano, número y fecha de inscripción), el arreglo `licenses` con una entrada por categoría —categoría, estado, número, organismo que expide, expedición, vencimiento, restricciones y, si aplica, resolución y fechas de suspensión— y los bloques de infracciones, solicitudes, certificados de aptitud y médicos, trámites SICOV, pagos ANSV, validaciones de identidad e impuestos de tránsito. Los bloques que el RUNT devuelve vacíos para la mayoría de documentos llegan como arreglos vacíos, no como null. Desde el 6-ago-2026 la fuente oficial exige el `primerApellido` del titular y devuelve el nombre ENMASCARADO (`J**N P***Z`): si no mandas el apellido se intenta resolver, y si no se logra la respuesta es 400 `apellido_requerido` sin cobrar. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -2704,6 +2872,9 @@
       "post": {
         "operationId": "vehiculo-pe",
         "summary": "Vehículo Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
         "description": "Ficha técnica de un vehículo peruano por placa, desde el registro oficial de propiedad vehicular. Devuelve los 13 campos canónicos comunes a todos los países; en Perú el registro publica 5 de ellos y el resto llega en `null`, listados en `cobertura.noPublicados`. Una placa fuera del registro responde `no_encontrado`. No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -2818,6 +2989,9 @@
       "post": {
         "operationId": "vehiculo-mx",
         "summary": "Vehículo México",
+        "tags": [
+          "Fuera de Colombia"
+        ],
         "description": "Ficha técnica de un vehículo mexicano por placa, desde el registro público vehicular nacional, más su estado de robo cruzado contra cuatro fuentes: fiscalía, aseguradoras, avisos ministeriales y el registro de robo de EE. UU./Canadá. Devuelve los 13 campos canónicos comunes a todos los países; los que el registro no publica llegan en `null` y quedan listados en `cobertura.noPublicados`. Un vehículo fuera del padrón responde `no_inscrito` (la cobertura del registro es parcial y eso no es un error). No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -2937,10 +3111,369 @@
         }
       }
     },
+    "/revision-tecnica-pe": {
+      "post": {
+        "operationId": "revision-tecnica-pe",
+        "summary": "Revisión técnica Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "Certificados de inspección técnica vehicular (CITV) de un vehículo peruano por placa: el equivalente a la tecnomecánica. Devuelve si hay un certificado vigente y hasta cuándo, y los **tres certificados más recientes** (es lo que publica el registro) con número, vigencia, resultado, estado, centro de inspección, tipo de servicio y observaciones. `status` es `ok` con certificado vigente, `warn` si solo hay historial vencido e `info` sin certificados. Una placa sin certificados es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa peruana. Se aceptan guiones (`ABC-123`)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "rtm",
+                  "status": "ok",
+                  "data": {
+                    "pais": "PE",
+                    "placa": "ABC123",
+                    "vigente": true,
+                    "vigenteHasta": "2027-03-09",
+                    "certificados": [
+                      {
+                        "numero": "C-2026-013-123-003563",
+                        "vigenciaInicio": "2026-03-09",
+                        "vigenciaFin": "2027-03-09",
+                        "resultado": "APROBADO",
+                        "estado": "VIGENTE",
+                        "centro": "REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.",
+                        "direccion": "VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES",
+                        "ambito": null,
+                        "tipoServicio": "PARTICULAR",
+                        "observacion": "Sin observaciones"
+                      },
+                      {
+                        "numero": "C-2025-013-123-001484",
+                        "vigenciaInicio": "2025-02-07",
+                        "vigenciaFin": "2026-02-07",
+                        "resultado": "APROBADO",
+                        "estado": "VENCIDO",
+                        "centro": "REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.",
+                        "direccion": "VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES",
+                        "ambito": null,
+                        "tipoServicio": "PARTICULAR",
+                        "observacion": "Sin observaciones"
+                      },
+                      {
+                        "numero": "C-2024-013-123-001548",
+                        "vigenciaInicio": "2024-02-07",
+                        "vigenciaFin": "2025-02-07",
+                        "resultado": "APROBADO",
+                        "estado": "VENCIDO",
+                        "centro": "REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.",
+                        "direccion": "VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES",
+                        "ambito": null,
+                        "tipoServicio": "PARTICULAR",
+                        "observacion": "Sin observaciones"
+                      }
+                    ]
+                  },
+                  "portalUrl": "https://rec.mtc.gob.pe/Citv/ArConsultaCitv",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/multas-pe": {
+      "post": {
+        "operationId": "multas-pe",
+        "summary": "Papeletas Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "Papeletas de tránsito PENDIENTES de un vehículo peruano por placa, unidas de tres registros: el récord nacional de infracciones en carreteras (`origen: \"nacional\"`), las papeletas de Lima Metropolitana (`origen: \"lima\"`) y las de la Provincia Constitucional del Callao (`origen: \"callao\"`). Devuelve el total, las pendientes, el monto pendiente en soles y cada papeleta con número, fecha, código y descripción de la infracción, gravedad, monto, estado y entidad. `monto` es la deuda viva: en Lima, importe + costas − descuento; en el Callao, el importe insoluto. El registro nacional no publica montos, así que ahí llega `null` y `montoPendiente` suma solo las que lo traen. `descripcion` es el texto de la infracción según el Reglamento Nacional de Tránsito y llega `null` cuando el código pertenece a otro reglamento; `tipoRegistro` es el rótulo con que el registro nacional clasifica el documento y nunca describe la infracción. Las pagadas no aparecen. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, los otros igual se entregan. `status` es `warn` con pendientes y `ok` sin ellas. Una placa sin papeletas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa peruana. Se aceptan guiones (`ABC-123`)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "multas",
+                  "status": "warn",
+                  "data": {
+                    "pais": "PE",
+                    "placa": "ABC123",
+                    "total": 2,
+                    "pendientes": 2,
+                    "montoPendiente": 440,
+                    "papeletas": [
+                      {
+                        "origen": "lima",
+                        "numero": "15285163",
+                        "fecha": "2024-11-11",
+                        "codigo": "L04",
+                        "descripcion": "Abrir o dejar abierta la puerta de un vehículo estacionado, dificultando la circulación vehicular.",
+                        "gravedad": "LEVE",
+                        "tipoRegistro": null,
+                        "monto": 440,
+                        "estado": "PENDIENTE",
+                        "entidad": "MUNICIPALIDAD METROPOLITANA DE LIMA"
+                      },
+                      {
+                        "origen": "nacional",
+                        "numero": "8325001207",
+                        "fecha": "2025-04-16",
+                        "codigo": "G11",
+                        "descripcion": "Circular, estacionar o detenerse sobre una isla de encauzamiento, canalizadora, de refugio o divisoria del tránsito, marcas delimitadoras de carriles, separadores centrales, bermas, aceras, áreas verdes, pasos peatonales, jardines o rampas para minusválidos.",
+                        "gravedad": "GRAVE",
+                        "tipoRegistro": "PAPELETAS TRANSITO",
+                        "monto": null,
+                        "estado": "PENDIENTE",
+                        "entidad": "AUTORIDAD NACIONAL DE TRANSPORTE TERRESTRE"
+                      }
+                    ],
+                    "cobertura": {
+                      "nacional": "ok",
+                      "lima": "ok",
+                      "callao": "sin_datos"
+                    }
+                  },
+                  "portalUrl": "https://www.sutran.gob.pe/consultas/record-de-infracciones/record-de-infracciones/",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/licencia-pe": {
+      "post": {
+        "operationId": "licencia-pe",
+        "summary": "Licencia Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "Récord del conductor peruano por documento: licencias de conducir con número, clase y categoría, estado (`VIGENTE` o compuestos como `CANCELADA/CONDUCTOR INHABILITADO`), fechas de expedición y revalidación y restricciones, más las sanciones (resolución, fechas de inicio y fin, y `estado` derivado de esas fechas). No devuelve nombre ni datos de la persona: solo lo que describe la licencia. `puntos` llega siempre `null`: el registro no los publica. `status` es `ok` con licencia vigente, `warn` con cualquier otro estado o sanción vigente e `info` sin licencia. Un documento sin licencia es una respuesta válida (`tieneLicencia: false`) y cobra; un DNI que no tenga exactamente 8 dígitos responde 400 `consulta_invalida` sin cobrar. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "documento"
+                ],
+                "properties": {
+                  "documento": {
+                    "type": "string",
+                    "example": "12345678",
+                    "description": "DNI (8 dígitos) o carné de extranjería del conductor. Alias aceptados: `dni`, `doc`."
+                  },
+                  "tipoDocumento": {
+                    "type": "string",
+                    "example": "DNI",
+                    "description": "`DNI` (default, 8 dígitos) o `CE` (carné de extranjería, 9 dígitos).",
+                    "enum": [
+                      "DNI",
+                      "CE"
+                    ]
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "documento": "12345678"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "licencia",
+                  "status": "ok",
+                  "data": {
+                    "pais": "PE",
+                    "documento": "12345678",
+                    "tipoDocumento": "DNI",
+                    "tieneLicencia": true,
+                    "licencias": [
+                      {
+                        "numero": "AB0040865",
+                        "clase": "A",
+                        "categoria": "I",
+                        "estado": "VIGENTE",
+                        "fechaExpedicion": "2019-05-10",
+                        "fechaRevalidacion": "2029-05-10",
+                        "restricciones": "SIN RESTRICCIONES"
+                      }
+                    ],
+                    "sanciones": [],
+                    "puntos": null
+                  },
+                  "portalUrl": "https://recordconductor.mtc.gob.pe/",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
     "/antecedentes-disciplinarios": {
       "post": {
         "operationId": "antecedentes-disciplinarios",
         "summary": "Antecedentes disciplinarios",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Antecedentes disciplinarios de una persona por documento, del sistema SIRI de la Procuraduría General de la Nación. Devuelve si registra sanciones o inhabilidades vigentes, el nombre completo del titular y el número del certificado para verificarlo ante la entidad. Cuando hay anotaciones vienen ESTRUCTURADAS —sanción, término, clase, delitos, providencia (autoridad y fechas) e inhabilidades con su vigencia—, no como bloque de texto. `inhabilitadoHasta` resume la fecha más lejana de todas: es lo que responde \"¿puedo vincular a esta persona hoy?\" sin recorrer el resto (un certificado real trajo 323 anotaciones, y `anotaciones` viene topada en 50 con el conteo real en `totalAnotaciones`). Sin antecedentes responde `tieneAntecedentes: false` — y esa respuesta también cobra: es el dato que se necesita para contratar o vincular a alguien. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3082,6 +3615,9 @@
       "post": {
         "operationId": "antecedentes-fiscales",
         "summary": "Antecedentes fiscales",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Antecedentes fiscales de una persona natural por documento, del Boletín de Responsables Fiscales (SIBOR) de la Contraloría General de la República. Devuelve si está reportada como responsable fiscal y el código con el que se comprueba la autenticidad del certificado ante la entidad. Es el requisito para contratar con el Estado y para posesionarse en cargos públicos. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3183,6 +3719,9 @@
       "post": {
         "operationId": "antecedentes-judiciales",
         "summary": "Antecedentes judiciales",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Antecedentes judiciales de una persona por documento, del sistema de la Policía Nacional. Certifica si la persona **tiene asuntos pendientes con las autoridades judiciales HOY**; por la Sentencia SU-458 de 2012 la consulta de terceros no revela condenas ya cumplidas o prescritas, así que no es un historial penal. `descripcion` trae la leyenda textual del registro, que tiene dos formas para el caso sin asuntos pendientes y no son intercambiables: conviene leerla, no solo la bandera. Devuelve además el nombre del titular en orden apellidos-nombres. **`nombre` vacío es una señal, no un hueco**: el registro omite esa línea cuando el documento no figura en la Registraduría. **Cuesta 2 créditos**: es el único endpoint de la familia que paga un resolvedor de captcha en cada consulta viva. Un hit de caché no cobra, y si la fuente falla se devuelven los 2. Costo: 2 créditos por consulta con datos.",
         "x-credits": 2,
         "security": [
@@ -3279,10 +3818,124 @@
         }
       }
     },
+    "/antecedentes-rnmc": {
+      "post": {
+        "operationId": "antecedentes-rnmc",
+        "summary": "Medidas correctivas (RNMC)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "Medidas correctivas pendientes por cumplir de una persona, del Registro Nacional de Medidas Correctivas (**RNMC**) creado por la **Ley 1801 de 2016**, el Código Nacional de Seguridad y Convivencia Ciudadana. Son las sanciones por comportamientos contrarios a la convivencia —riñas, consumo en espacio público, porte de armas blancas, ruido— y quedan pendientes hasta que la persona paga la multa o cumple la medida pedagógica. **No es lo mismo que `/api/antecedentes-judiciales`**: aquél son asuntos pendientes con autoridades JUDICIALES y éste sanciones de POLICÍA; una persona limpia en uno puede no estarlo en el otro, así que una verificación seria consulta los dos. Devuelve el veredicto, el nombre completo del titular **sin enmascarar**, el número de registro con el que se verifica el certificado ante la Policía y el texto oficial literal, listo para mostrar o imprimir. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. Una respuesta \"no tiene medidas\" **COBRA** —es el dato que se vino a comprar—; una fecha que no coincide responde 404 y no cobra. ⚠️ **Advertencia de cobertura que conviene conocer**: el registro certifica \"sin medidas correctivas\" también para documentos que **no existen**, así que este veredicto no prueba que la persona exista; para eso está `/api/cedula`. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber",
+                  "fechaExpedicion"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Es un registro de personas naturales: con NIT responde 400 `tipo_documento_no_soportado` sin cobrar y sin tocar la fuente.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "TI",
+                      "PA"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento. Alias aceptados: `doc`, `documento`."
+                  },
+                  "fechaExpedicion": {
+                    "type": "string",
+                    "example": "05/10/2018",
+                    "description": "Fecha de expedición del documento en formato **DD/MM/AAAA**. Se aceptan guiones y puntos como separador y se normalizan. NO se acepta AAAA-MM-DD: la fuente lo leería al revés y respondería \"no coincide\" sin explicar por qué. Alias aceptados: `fecha`, `fecha_expedicion`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050",
+                "fechaExpedicion": "05/10/2018"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "medidas-correctivas",
+                  "status": "ok",
+                  "data": {
+                    "documento": "1020304050",
+                    "tipoDocumento": "Cédula de Ciudadanía",
+                    "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                    "tieneAntecedentes": false,
+                    "descripcion": "No tiene medidas correctivas pendientes por cumplir",
+                    "medidas": [],
+                    "registroValidacion": "146449380",
+                    "fechaConsulta": "26/08/2026 03:32:47 p. m.",
+                    "textoOficial": "La Policía Nacional de Colombia informa: Que a la fecha, 26/08/2026 03:32:47 p. m. el ciudadano con Cédula de Ciudadanía Nº. 1020304050 y Nombre: JUAN CARLOS PEREZ GOMEZ. NO TIENE MEDIDAS CORRECTIVAS PENDIENTES POR CUMPLIR."
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
     "/listas-restrictivas": {
       "post": {
         "operationId": "listas-restrictivas",
         "summary": "Listas restrictivas (OFAC)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Búsqueda de una persona o empresa en las listas de sanciones de OFAC (Departamento del Tesoro de EE. UU.): la lista SDN —la \"lista Clinton\"— y las listas consolidadas no-SDN. Se consulta POR NOMBRE, no por documento: estas listas no manejan cédulas. Devuelve cada coincidencia con su puntaje 0–1, el programa de sanciones, la lista de origen y si el emparejamiento fue contra un alias (a.k.a.). La búsqueda cubre también los ~21.000 alias registrados, que es donde aparecen las variantes de escritura. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3388,6 +4041,9 @@
       "post": {
         "operationId": "notificaciones-internacionales",
         "summary": "Notificaciones rojas (INTERPOL)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Notificaciones rojas públicas de INTERPOL por nombre. Nombres y apellidos van SEPARADOS porque la fuente los filtra por campos distintos; mandarlo todo junto en uno solo no encuentra nada. Devuelve cada notificación con su identificador oficial, fecha de nacimiento, nacionalidades y el enlace a la ficha pública. Cuesta 1 crédito. **Hoy responde 503 `fuente_no_disponible` y no cobra**: la fuente rechaza todas nuestras salidas de red y queda pendiente habilitar una que acepte. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3489,6 +4145,9 @@
       "post": {
         "operationId": "secop",
         "summary": "Contratación estatal (SECOP II)",
+        "tags": [
+          "Empresas y Estado"
+        ],
         "description": "Contratos de una persona o una empresa con el Estado colombiano, del SECOP II de Colombia Compra Eficiente. Se busca por `documento` (NIT o cédula) o por `nombre` del proveedor; el documento manda si llegan los dos. Devuelve un **resumen agregado sobre el histórico completo** —total de contratos, valor contratado, valor pagado, entidades distintas y conteo por estado— y una página de hasta 50 contratos con entidad, objeto, modalidad, valores y fechas. Es la respuesta a \"¿este proveedor ya le ha contratado al Estado, a quién y por cuánto?\", el dato que se pide en una debida diligencia. **Sin contratos también responde 200 con datos y cobra**: \"no ha contratado con el Estado\" es exactamente lo que se vino a comprobar. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3626,6 +4285,9 @@
       "post": {
         "operationId": "rama-judicial",
         "summary": "Procesos judiciales",
+        "tags": [
+          "Empresas y Estado"
+        ],
         "description": "Procesos judiciales de la Consulta de Procesos Nacional Unificada de la Rama Judicial. Se busca por `radicado` (23 dígitos) o por `nombre` de una de las partes, indicando si es persona natural o jurídica. Devuelve despacho, departamento, fechas y las **partes procesales ya separadas por rol** (la fuente las entrega en un solo texto plano). Consultando por radicado agrega además el **detalle** (ponente, tipo y clase de proceso, ubicación del expediente) y las **últimas actuaciones con su anotación**, que es lo que responde \"en qué va el proceso\" y no solo \"existe\". `status` es siempre `info` cuando hay procesos, nunca `danger`: la lista incluye tutelas, casos cerrados y procesos donde la persona es la DEMANDANTE. Cuesta 1 crédito. Por nombre, cero procesos es un resultado válido y cobra; un radicado que no existe responde 404 y **no cobra**. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3785,6 +4447,9 @@
       "post": {
         "operationId": "sigep",
         "summary": "Declaraciones de bienes y rentas",
+        "tags": [
+          "Empresas y Estado"
+        ],
         "description": "Declaraciones de bienes y rentas y conflicto de interés (Ley 2013 de 2019) de servidores públicos y contratistas del Estado, del buscador ciudadano de la Función Pública. Se busca por `documento` o por `nombre`. Devuelve cada declaración con la entidad, el cargo, el motivo (ingreso, periódico o retiro), el número, la fecha de publicación y su estado, más un resumen con las entidades donde ha declarado. Responde \"¿esta persona de verdad trabaja o contrata con el Estado, dónde y desde cuándo?\". **No entrega el PDF de la declaración**: la descarga del portal sí valida captcha y no se puede automatizar; se devuelve `idDeclaracion` y `portalUrl` para bajarlo a mano. Cuesta 1 crédito, y \"no tiene declaraciones publicadas\" es una respuesta válida que cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -3905,6 +4570,9 @@
       "post": {
         "operationId": "rues",
         "summary": "Registro mercantil",
+        "tags": [
+          "Empresas y Estado"
+        ],
         "description": "Empresas y comerciantes inscritos en las Cámaras de Comercio (el registro que el público consulta como \"RUES\"). Se busca por `documento` (NIT o cédula, vía exacta y recomendada) o por `nombre`. Devuelve razón social, matrícula, cámara, **estado de la matrícula**, tipo de sociedad, organización jurídica, códigos CIIU principal y secundario, fechas de matrícula, renovación, vigencia y cancelación, el último año renovado, si está inscrita como proponente y el **representante legal con su documento**. La búsqueda por `nombre` es de **texto completo**: \"EL OSO\" encuentra también \"INVERSIONES ALTAMIRA EL OSO\", y los resultados llegan por relevancia. `resumen.totalCoincidencias` es el conteo real en las dos vías. Cuesta 1 crédito, y cero coincidencias es un resultado válido que cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -4037,6 +4705,9 @@
       "post": {
         "operationId": "cedula",
         "summary": "Nombre por documento",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Nombre completo del titular de un documento de identidad. Devuelve el nombre ya partido en `partes`, para no tener que adivinar del lado del cliente dónde termina el nombre y empieza el apellido. Consulta DOS registros en cascada: primero el registro social del DNP —instantáneo, y de regalo trae `sexo`, `edad`, `municipio` y `departamento`—, y si la persona no figura ahí cae al certificado de la Procuraduría, que cubre a cualquiera con documento colombiano pero tarda más. `origen` dice cuál respondió, así se sabe por qué unos campos vienen vacíos. Es el primer paso de cualquier verificación: confirmar que el documento existe y a quién pertenece antes de gastar consultas en antecedentes o en el vehículo. **Un documento sin titular registrado responde 404 y NO cobra** — a diferencia de los antecedentes, donde \"no registra\" sí cobra: acá el producto es el nombre, y si no vino no se entregó nada. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -4153,6 +4824,9 @@
       "post": {
         "operationId": "sisben",
         "summary": "Clasificación social (Sisbén y RUI)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Clasificación socioeconómica de una persona por documento, de la Ventanilla Social del DNP. Devuelve el **grupo del Sisbén IV** (A pobreza extrema · B pobreza moderada · C vulnerable · D no pobre/no vulnerable) con su subgrupo y descripción, el **grupo del RUI** —el Registro Universal de Ingresos, la escala que reemplazó al Sisbén como criterio de focalización— y los datos básicos de la persona: nombre, sexo, edad, municipio y departamento. Sirve para verificar elegibilidad a subsidios y programas sociales. **Una persona no registrada responde 404 y NO cobra.** ⚠️ Nota de calidad que conviene conocer: el endpoint oficial del grupo Sisbén le asigna \"D4 – no pobre, no vulnerable\" a documentos que **no existen**; acá la existencia la decide el registro de ingresos y el grupo solo se publica si esa verificación pasó, así que un `sisben: null` significa \"la persona existe pero no tiene grupo publicado\", nunca un dato inventado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -4272,7 +4946,10 @@
       "post": {
         "operationId": "rui",
         "summary": "Registro Universal de Ingresos (RUI)",
-        "description": "Grupo del **Registro Universal de Ingresos (RUI)** de una persona por documento, de la Ventanilla Social del DNP. Es **el mismo endpoint que `/api/sisben`** con otro nombre: la fuente entrega las dos escalas juntas y nosotros devolvemos las dos, así que da igual cuál llames. Existe porque el RUI reemplazó al Sisbén como criterio de focalización y quien busca por ese nombre no busca por el otro. Devuelve el grupo del RUI con su nivel y su grupo de ingresos, el **grupo del Sisbén IV** (A pobreza extrema · B pobreza moderada · C vulnerable · D no pobre/no vulnerable) con su subgrupo y descripción, el **grupo del RUI** —el Registro Universal de Ingresos, la escala que reemplazó al Sisbén como criterio de focalización— y los datos básicos de la persona: nombre, sexo, edad, municipio y departamento. Sirve para verificar elegibilidad a subsidios y programas sociales. **Una persona no registrada responde 404 y NO cobra.** ⚠️ Nota de calidad que conviene conocer: el endpoint oficial del grupo Sisbén le asigna \"D4 – no pobre, no vulnerable\" a documentos que **no existen**; acá la existencia la decide el registro de ingresos y el grupo solo se publica si esa verificación pasó, así que un `sisben: null` significa \"la persona existe pero no tiene grupo publicado\", nunca un dato inventado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "Grupo del **Registro Universal de Ingresos (RUI)** de una persona por documento, de la Ventanilla Social del DNP: el nivel y el grupo de ingresos con los que hoy se decide el acceso a programas sociales. **Es el mismo endpoint que `/api/sisben`** y devuelve el mismo objeto —la fuente entrega las dos escalas juntas y aquí se entregan las dos—, así que da igual cuál se llame; existe con nombre propio porque el RUI reemplazó al Sisbén como criterio de focalización y quien trae una regla escrita en grupos del RUI no puede traducirla a grupos del Sisbén. Junto al RUI vienen el grupo del **Sisbén IV** y los datos básicos de la persona; el detalle de esa escala está en `/api/sisben`. **Una persona no registrada responde 404 y NO cobra.** ⚠️ La existencia del documento la decide el registro de ingresos y no el grupo del Sisbén: el endpoint oficial de ese grupo le asigna \"D4 – no pobre, no vulnerable\" a documentos que **no existen**, así que aquí un `sisben: null` significa \"la persona existe y no tiene grupo publicado\", nunca un dato inventado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -4391,6 +5068,9 @@
       "post": {
         "operationId": "puesto-votacion",
         "summary": "Puesto de votación",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Dónde le toca votar a una persona, por cédula, del censo electoral de la Registraduría. Devuelve el **puesto** con su nombre oficial, la **dirección**, el **número de mesa**, el **municipio y departamento**, el **código DIVIPOL** del puesto —el mismo con el que la Registraduría publica logística y resultados— y las **coordenadas** del sitio con enlace de navegación, cuando la fuente lo tiene georreferenciado. Trae además `fechaInscripcion`, que es desde cuándo la persona figura en ese puesto: eso delata a quien acaba de trasladarse. **No es estacional**: consulta el lugar de votación vigente y responde también fuera de calendario electoral. Sirve para logística de transporte el día de elecciones, verificación de residencia electoral y validación de datos de afiliados. ⚠️ **Solo cédula de ciudadanía** — el censo electoral no maneja otro documento, y cualquier otro tipo responde 400 sin cobrar. **Un documento que no figura en el censo responde 404 y NO cobra**: acá el producto es el puesto, y si no vino no se entregó nada. La fuente distingue dos formas de \"no hay puesto\": que el documento no figure en el censo, y que tenga una **novedad** que lo saca de él (cédula cancelada por muerte, no expedida). Las dos responden 404 con el mensaje textual del registro y ninguna cobra: el estado de la cédula es otra pregunta, y no la vendemos como si fuera esta. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -4494,6 +5174,9 @@
       "post": {
         "operationId": "ruaf",
         "summary": "Afiliaciones a seguridad social",
+        "tags": [
+          "Antecedentes de personas"
+        ],
         "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — es el scrape más caro del catálogo de personas y sustituye a siete consultas. ⏱️ **Es también el más lento: cuenta con decenas de segundos**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra. Costo: 2 créditos por consulta con datos.",
         "x-credits": 2,
         "security": [
