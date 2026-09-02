@@ -1996,7 +1996,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, ficha técnica (categoría, tipología, combustible, transmisión, cilindraje) y clase. El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` cubre todas. Por `vin` la versión es única, así que `rangoMercado` colapsa en el propio valor; la curva año por año de esa versión viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. Costo: 1 crédito por consulta con datos.",
+        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase y la **ficha técnica completa** en `fichaTecnica` (38 campos: motor, dimensiones, capacidades, seguridad, equipamiento y clasificación — los mismos de `/api/avaluo-por-codigo`). El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` cubre todas. Por `vin` la versión es única, así que `rangoMercado` colapsa en el propio valor; la curva año por año de esa versión viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2064,17 +2064,58 @@
                   "source": "avaluo",
                   "status": "info",
                   "data": {
-                    "codigo": "08053096",
+                    "codigo": "05636023",
                     "marca": "MAZDA",
-                    "linea": "CX-30",
+                    "linea": "CX30 GRAND TOURING LX TP 2500CC 7AB R18 TC CT AWD",
                     "modelo": 2023,
-                    "valorComercial": 98000000,
+                    "valorComercial": 109100000,
                     "rangoMercado": {
-                      "min": 92000000,
-                      "max": 104000000
+                      "min": 109100000,
+                      "max": 109100000
                     },
-                    "clase": "CAMIONETA",
-                    "origen": "vin"
+                    "clase": "CAMIONETA PASAJ.",
+                    "origen": "vin",
+                    "codigoHomologado": "05606096",
+                    "fichaTecnica": {
+                      "cilindraje": 2488,
+                      "potencia": 186,
+                      "combustible": "GASOLINA",
+                      "sistemaAlimentacion": null,
+                      "transmision": "4X4",
+                      "tipoCaja": "TIPTRONICA",
+                      "traccion": "DOBLE",
+                      "peso": 1520,
+                      "largo": 4395,
+                      "ejes": 2,
+                      "puertas": 5,
+                      "capacidadPasajeros": 5,
+                      "capacidadCarga": null,
+                      "airbags": 7,
+                      "abs": true,
+                      "frenos": "DISCO/DISCO",
+                      "tipoDireccion": "ELÉCTRICA",
+                      "tipoFaros": "LED",
+                      "suspensionTrasera": null,
+                      "aireAcondicionado": true,
+                      "tipoAireAcondicionado": "AUTOMATICO",
+                      "sunroof": true,
+                      "camaraReversa": true,
+                      "sensoresParqueo": true,
+                      "exploradoras": true,
+                      "tapiceriaCuero": true,
+                      "tacometro": null,
+                      "vidriosElectricos": 4,
+                      "espejosElectricos": 2,
+                      "sillasElectricas": 1,
+                      "clase": "CAMIONETA PASAJ.",
+                      "categoria": "LIVIANO PASAJEROS",
+                      "tipologia": "UTILITARIO DEPORTIVO 4X4",
+                      "servicio": "PARTICULAR",
+                      "nacionalidad": "MEX",
+                      "importado": true,
+                      "segmentoTamano": "C",
+                      "segmentoCilindraje": "Y"
+                    }
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
@@ -2113,7 +2154,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Valor comercial FASECOLDA directo por código, sin resolver placa→código. Para aseguradoras y peritos que ya tienen el código FASECOLDA. Acepta `codeFasecolda` y opcionalmente `modelo` (año) para desambiguar el valor. Costo: 1 crédito por consulta con datos.",
+        "description": "Valor comercial FASECOLDA directo por código, sin resolver placa→código. Para aseguradoras y peritos que ya tienen el código FASECOLDA. Acepta `codeFasecolda` y opcionalmente `modelo` (año) para desambiguar el valor.\n\nDevuelve además la **ficha técnica completa** del vehículo en `fichaTecnica` (38 campos, sin costo adicional): motor (cilindraje, potencia, combustible), transmisión y tracción, dimensiones y capacidades (peso, largo, ejes, puertas, pasajeros, carga), seguridad (airbags, ABS, frenos, dirección, faros) y equipamiento (aire acondicionado, sunroof, cámara de reversa, sensores, exploradoras, tapicería en cuero, vidrios/espejos/sillas eléctricas), más la clasificación del gremio (clase, categoría, tipología, servicio, nacionalidad, importado, segmento).\n\n⚠️ En `fichaTecnica`, `null` significa **la guía no publica ese dato para este vehículo**, y es distinto de `false` (que sí es una afirmación: no lo tiene). Los campos planos históricos —`categoria`, `tipologia`, `combustible`, `transmision`, `cilindraje`— siguen viajando igual que siempre para no romper integraciones; en código nuevo, usar `fichaTecnica`. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2132,7 +2173,7 @@
                 "properties": {
                   "codeFasecolda": {
                     "type": "string",
-                    "example": "08053096",
+                    "example": "05636023",
                     "description": "Código FASECOLDA del vehículo (numérico). Alias aceptado: `codigo`."
                   },
                   "modelo": {
@@ -2148,7 +2189,7 @@
                 }
               },
               "example": {
-                "codeFasecolda": "08053096"
+                "codeFasecolda": "05636023"
               }
             }
           }
@@ -2162,16 +2203,57 @@
                   "source": "avaluo",
                   "status": "info",
                   "data": {
-                    "codigo": "08053096",
+                    "codigo": "05636023",
                     "marca": "MAZDA",
-                    "linea": "CX-30",
+                    "linea": "CX30 GRAND TOURING LX TP 2500CC 7AB R18 TC CT AWD",
                     "modelo": 2023,
-                    "valorComercial": 98000000,
+                    "valorComercial": 109100000,
                     "rangoMercado": {
-                      "min": 92000000,
-                      "max": 104000000
+                      "min": 109100000,
+                      "max": 109100000
                     },
-                    "clase": "CAMIONETA"
+                    "clase": "CAMIONETA PASAJ.",
+                    "codigoHomologado": "05606096",
+                    "fichaTecnica": {
+                      "cilindraje": 2488,
+                      "potencia": 186,
+                      "combustible": "GASOLINA",
+                      "sistemaAlimentacion": null,
+                      "transmision": "4X4",
+                      "tipoCaja": "TIPTRONICA",
+                      "traccion": "DOBLE",
+                      "peso": 1520,
+                      "largo": 4395,
+                      "ejes": 2,
+                      "puertas": 5,
+                      "capacidadPasajeros": 5,
+                      "capacidadCarga": null,
+                      "airbags": 7,
+                      "abs": true,
+                      "frenos": "DISCO/DISCO",
+                      "tipoDireccion": "ELÉCTRICA",
+                      "tipoFaros": "LED",
+                      "suspensionTrasera": null,
+                      "aireAcondicionado": true,
+                      "tipoAireAcondicionado": "AUTOMATICO",
+                      "sunroof": true,
+                      "camaraReversa": true,
+                      "sensoresParqueo": true,
+                      "exploradoras": true,
+                      "tapiceriaCuero": true,
+                      "tacometro": null,
+                      "vidriosElectricos": 4,
+                      "espejosElectricos": 2,
+                      "sillasElectricas": 1,
+                      "clase": "CAMIONETA PASAJ.",
+                      "categoria": "LIVIANO PASAJEROS",
+                      "tipologia": "UTILITARIO DEPORTIVO 4X4",
+                      "servicio": "PARTICULAR",
+                      "nacionalidad": "MEX",
+                      "importado": true,
+                      "segmentoTamano": "C",
+                      "segmentoCilindraje": "Y"
+                    }
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
@@ -2210,7 +2292,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: cilindraje, potencia, airbags, puertas y tracción. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
+        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: los campos planos de siempre (cilindraje, potencia, airbags, puertas, tracción) más `fichaTecnica`, con los 38 campos completos de la guía y sus valores normalizados. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3206,6 +3288,112 @@
                     ]
                   },
                   "portalUrl": "https://rec.mtc.gob.pe/Citv/ArConsultaCitv",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/soat-pe": {
+      "post": {
+        "operationId": "soat-pe",
+        "summary": "SOAT Perú",
+        "tags": [
+          "Fuera de Colombia"
+        ],
+        "description": "SOAT (seguro obligatorio de accidentes de tránsito) de un vehículo peruano por placa, desde el registro central de las aseguradoras. Devuelve si hay una póliza vigente y hasta cuándo, la aseguradora que la emitió, y el **histórico de pólizas** (del más reciente al más viejo) con estado, vigencia (inicio y fin), número de póliza, código único, código SBS de la aseguradora, uso y clase del vehículo, marca, modelo, número de asientos y tipo de certificado. `status` es `ok` con póliza vigente, `warn` si solo hay historial vencido e `info` sin pólizas. Una placa sin SOAT registrado es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. No incluye datos del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa peruana. Se aceptan guiones (`ABC-123`)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "soat",
+                  "status": "ok",
+                  "data": {
+                    "pais": "PE",
+                    "placa": "ABC123",
+                    "vigente": true,
+                    "vigenteHasta": "2027-07-08",
+                    "aseguradoraVigente": "Protecta",
+                    "certificados": [
+                      {
+                        "aseguradora": "Protecta",
+                        "estado": "VIGENTE",
+                        "vigenciaInicio": "2026-07-08",
+                        "vigenciaFin": "2027-07-08",
+                        "numeroPoliza": "000000000000070071834570",
+                        "codigoUnicoPoliza": "2090000000000000700718345701",
+                        "codigoSbsAseguradora": "209",
+                        "uso": "CARGA/TRANSPORTE",
+                        "clase": "CAMION",
+                        "marca": "HYUNDAI",
+                        "modelo": "EX 10",
+                        "asientos": 3,
+                        "tipoCertificado": "DIGITAL"
+                      }
+                    ]
+                  },
+                  "portalUrl": "https://www.apeseg.org.pe/consultas-soat/",
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "cost": 1
