@@ -447,7 +447,7 @@
         "tags": [
           "Vehículo (RUNT)"
         ],
-        "description": "Ficha completa del RUNT por placa: informacionGeneral (≈40 campos del vehículo), datosTecnicos, histórico completo de SOAT y de tecnomecánica (todas las vigencias, no solo la última), pólizas de responsabilidad civil, tarjeta de operación, blindaje, solicitudes, garantías mobiliarias, limitaciones a la propiedad y normalización. Es la respuesta más extensa de la API: si solo necesitas marca/línea/modelo usa Vehículo básico. Costo: 1 crédito por consulta con datos.",
+        "description": "Ficha completa del RUNT por placa: informacionGeneral (≈40 campos del vehículo), datosTecnicos, histórico completo de SOAT y de tecnomecánica (todas las vigencias, no solo la última), pólizas de responsabilidad civil, tarjeta de operación, blindaje, solicitudes, garantías mobiliarias, limitaciones a la propiedad y normalización. Desde 0.80.0 trae también las secciones que hasta ahora solo se veían en el portal del registro: desintegracion y certificadoDesintegracion (chatarrización: un certificado emitido significa que el vehículo no puede volver a circular), polizaCaucion, registroInicial y registroInicialInvc (autorización de registro inicial de vehículo nuevo de carga, y su variante del incentivo por reposición del 15%), certificadoDijin, informacionGps, informacionRepotenciado y permisosPcr. Son campos de cola larga: llegan en null salvo que el vehículo los tenga, y garantiasFavorDe pasa a traer el mismo contenido que garantiasMobiliarias porque es el rótulo con el que el registro los publica. Es la respuesta más extensa de la API: si solo necesitas marca/línea/modelo usa Vehículo básico. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -632,7 +632,17 @@
                     "garantiasMobiliarias": [],
                     "garantiasFavorDe": [],
                     "limitacionPropiedad": [],
-                    "normalizacionSaneamiento": []
+                    "normalizacionSaneamiento": [],
+                    "desintegracion": null,
+                    "certificadoDesintegracion": null,
+                    "polizaCaucion": null,
+                    "registroInicial": null,
+                    "registroInicialInvc": null,
+                    "certificadoDijin": null,
+                    "informacionGps": null,
+                    "informacionRepotenciado": null,
+                    "permisosPcr": [],
+                    "prendasGarantiaMobiliaria": []
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
@@ -827,7 +837,17 @@
                     "garantiasMobiliarias": [],
                     "garantiasFavorDe": [],
                     "limitacionPropiedad": [],
-                    "normalizacionSaneamiento": []
+                    "normalizacionSaneamiento": [],
+                    "desintegracion": null,
+                    "certificadoDesintegracion": null,
+                    "polizaCaucion": null,
+                    "registroInicial": null,
+                    "registroInicialInvc": null,
+                    "certificadoDijin": null,
+                    "informacionGps": null,
+                    "informacionRepotenciado": null,
+                    "permisosPcr": [],
+                    "prendasGarantiaMobiliaria": []
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
