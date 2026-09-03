@@ -73,7 +73,7 @@
         "tags": [
           "Reporte completo"
         ],
-        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` (con sus amparos) cuando el vehículo es de servicio público. Desde 0.71.0 llega también el HISTÓRICO completo, no solo lo vigente: `vehicle.tramites` (matrícula inicial, traspasos, cambios de color o de servicio, con fecha, organismo y estado), `soat.historico` y `rtm.historico` con todas las vigencias registradas, `vehicle.normalizacion` cuando el registro marca deficiencia de matrícula, el número de oficio de cada limitación en `antecedentes.embargos[].documento`, y en SIMIT el `departamento` y el `estadoCartera` de cada comparendo más el detalle de los `acuerdos` de pago. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
+        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA —con `fichaTecnica` de 38 campos y `origen`— y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` (con sus amparos) cuando el vehículo es de servicio público. Desde 0.71.0 llega también el HISTÓRICO completo, no solo lo vigente: `vehicle.tramites` (matrícula inicial, traspasos, cambios de color o de servicio, con fecha, organismo y estado), `soat.historico` y `rtm.historico` con todas las vigencias registradas, `vehicle.normalizacion` cuando el registro marca deficiencia de matrícula, el número de oficio de cada limitación en `antecedentes.embargos[].documento`, y en SIMIT el `departamento` y el `estadoCartera` de cada comparendo más el detalle de los `acuerdos` de pago. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
         "x-credits": 3,
         "security": [
           {
@@ -326,16 +326,58 @@
                     "fetchedAt": "2026-07-24T15:04:05.000Z",
                     "mode": "live",
                     "data": {
-                      "codigo": "08053096",
+                      "codigo": "05636023",
                       "marca": "MAZDA",
-                      "linea": "CX-30",
+                      "linea": "CX30 GRAND TOURING LX TP 2500CC 7AB R18 TC CT AWD",
                       "modelo": 2023,
-                      "valorComercial": 98000000,
+                      "valorComercial": 109100000,
                       "rangoMercado": {
-                        "min": 92000000,
-                        "max": 104000000
+                        "min": 109100000,
+                        "max": 109100000
                       },
-                      "clase": "CAMIONETA"
+                      "clase": "CAMIONETA PASAJ.",
+                      "codigoHomologado": "05606096",
+                      "fichaTecnica": {
+                        "cilindraje": 2488,
+                        "potencia": 186,
+                        "combustible": "GASOLINA",
+                        "sistemaAlimentacion": null,
+                        "transmision": "4X4",
+                        "tipoCaja": "TIPTRONICA",
+                        "traccion": "DOBLE",
+                        "peso": 1520,
+                        "largo": 4395,
+                        "ejes": 2,
+                        "puertas": 5,
+                        "capacidadPasajeros": 5,
+                        "capacidadCarga": null,
+                        "airbags": 7,
+                        "abs": true,
+                        "frenos": "DISCO/DISCO",
+                        "tipoDireccion": "ELÉCTRICA",
+                        "tipoFaros": "LED",
+                        "suspensionTrasera": null,
+                        "aireAcondicionado": true,
+                        "tipoAireAcondicionado": "AUTOMATICO",
+                        "sunroof": true,
+                        "camaraReversa": true,
+                        "sensoresParqueo": true,
+                        "exploradoras": true,
+                        "tapiceriaCuero": true,
+                        "tacometro": null,
+                        "vidriosElectricos": 4,
+                        "espejosElectricos": 2,
+                        "sillasElectricas": 1,
+                        "clase": "CAMIONETA PASAJ.",
+                        "categoria": "LIVIANO PASAJEROS",
+                        "tipologia": "UTILITARIO DEPORTIVO 4X4",
+                        "servicio": "PARTICULAR",
+                        "nacionalidad": "MEX",
+                        "importado": true,
+                        "segmentoTamano": "C",
+                        "segmentoCilindraje": "Y"
+                      },
+                      "origen": "vin"
                     }
                   },
                   "picoYPlaca": {
@@ -2094,7 +2136,6 @@
                       "max": 109100000
                     },
                     "clase": "CAMIONETA PASAJ.",
-                    "origen": "vin",
                     "codigoHomologado": "05606096",
                     "fichaTecnica": {
                       "cilindraje": 2488,
@@ -2135,7 +2176,8 @@
                       "importado": true,
                       "segmentoTamano": "C",
                       "segmentoCilindraje": "Y"
-                    }
+                    },
+                    "origen": "vin"
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
@@ -2438,7 +2480,47 @@
                         "airbags": 7,
                         "traccion": "DELANTERA",
                         "capacidadPasajeros": 5,
-                        "peso": 1370
+                        "peso": 1370,
+                        "fichaTecnica": {
+                          "cilindraje": 1798,
+                          "potencia": 168,
+                          "combustible": "GASOLINA",
+                          "sistemaAlimentacion": null,
+                          "transmision": "4X2",
+                          "tipoCaja": "TIPTRONICA",
+                          "traccion": "DELANTERA",
+                          "peso": 1370,
+                          "largo": 4630,
+                          "ejes": 2,
+                          "puertas": 4,
+                          "capacidadPasajeros": 5,
+                          "capacidadCarga": null,
+                          "airbags": 7,
+                          "abs": true,
+                          "frenos": "DISCO/DISCO",
+                          "tipoDireccion": "ELÉCTRICA",
+                          "tipoFaros": "LED",
+                          "suspensionTrasera": null,
+                          "aireAcondicionado": true,
+                          "tipoAireAcondicionado": "MANUAL",
+                          "sunroof": false,
+                          "camaraReversa": true,
+                          "sensoresParqueo": true,
+                          "exploradoras": false,
+                          "tapiceriaCuero": false,
+                          "tacometro": null,
+                          "vidriosElectricos": 4,
+                          "espejosElectricos": 2,
+                          "sillasElectricas": 0,
+                          "clase": "AUTOMOVIL",
+                          "categoria": "LIVIANO PASAJEROS",
+                          "tipologia": "SEDAN",
+                          "servicio": "PARTICULAR",
+                          "nacionalidad": "BRA",
+                          "importado": true,
+                          "segmentoTamano": "C",
+                          "segmentoCilindraje": "M"
+                        }
                       }
                     ],
                     "paginacion": {
