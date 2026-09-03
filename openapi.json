@@ -55,8 +55,16 @@
       "description": "Debida diligencia sobre la contraparte: registro mercantil, contratación con el Estado, procesos judiciales y declaración de bienes y rentas."
     },
     {
-      "name": "Fuera de Colombia",
-      "description": "Perú por placa y por documento: ficha del vehículo, revisión técnica, papeletas y récord del conductor. México por placa."
+      "name": "Vehículo Perú (SUNARP, MTC, SUTRAN)",
+      "description": "Ficha del vehículo peruano por placa: registro, revisión técnica, SOAT y papeletas."
+    },
+    {
+      "name": "Licencias de conducción Perú (MTC)",
+      "description": "Récord del conductor peruano por documento."
+    },
+    {
+      "name": "Vehículo México (REPUVE)",
+      "description": "Ficha y estado del vehículo mexicano por placa."
     }
   ],
   "servers": [
@@ -337,6 +345,12 @@
                       },
                       "clase": "CAMIONETA PASAJ.",
                       "codigoHomologado": "05606096",
+                      "codigoFoto": [
+                        {
+                          "id": 49202000,
+                          "nombre": "1618155-259.jpg"
+                        }
+                      ],
                       "fichaTecnica": {
                         "cilindraje": 2488,
                         "potencia": 186,
@@ -2058,7 +2072,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase y la **ficha técnica completa** en `fichaTecnica` (38 campos: motor, dimensiones, capacidades, seguridad, equipamiento y clasificación — los mismos de `/api/avaluo-por-codigo`). El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` cubre todas. Por `vin` la versión es única, así que `rangoMercado` colapsa en el propio valor; la curva año por año de esa versión viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. Costo: 1 crédito por consulta con datos.",
+        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase y la **ficha técnica completa** en `fichaTecnica` (38 campos: motor, dimensiones, capacidades, seguridad, equipamiento y clasificación — los mismos de `/api/avaluo-por-codigo`). El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` cubre todas. Por `vin` la versión es única, así que `rangoMercado` colapsa en el propio valor; la curva año por año de esa versión viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. `codigoFoto` trae los identificadores de la imagen que la guía archiva para esa versión —lista vacía si no tiene ninguna—: el nombre del archivo no siempre corresponde al código, así que no se puede deducir. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2137,6 +2151,12 @@
                     },
                     "clase": "CAMIONETA PASAJ.",
                     "codigoHomologado": "05606096",
+                    "codigoFoto": [
+                      {
+                        "id": 49202000,
+                        "nombre": "1618155-259.jpg"
+                      }
+                    ],
                     "fichaTecnica": {
                       "cilindraje": 2488,
                       "potencia": 186,
@@ -2216,7 +2236,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Valor comercial FASECOLDA directo por código, sin resolver placa→código. Para aseguradoras y peritos que ya tienen el código FASECOLDA. Acepta `codeFasecolda` y opcionalmente `modelo` (año) para desambiguar el valor.\n\nDevuelve además la **ficha técnica completa** del vehículo en `fichaTecnica` (38 campos, sin costo adicional): motor (cilindraje, potencia, combustible), transmisión y tracción, dimensiones y capacidades (peso, largo, ejes, puertas, pasajeros, carga), seguridad (airbags, ABS, frenos, dirección, faros) y equipamiento (aire acondicionado, sunroof, cámara de reversa, sensores, exploradoras, tapicería en cuero, vidrios/espejos/sillas eléctricas), más la clasificación del gremio (clase, categoría, tipología, servicio, nacionalidad, importado, segmento).\n\n⚠️ En `fichaTecnica`, `null` significa **la guía no publica ese dato para este vehículo**, y es distinto de `false` (que sí es una afirmación: no lo tiene). Los campos planos históricos —`categoria`, `tipologia`, `combustible`, `transmision`, `cilindraje`— siguen viajando igual que siempre para no romper integraciones; en código nuevo, usar `fichaTecnica`. Costo: 1 crédito por consulta con datos.",
+        "description": "Valor comercial FASECOLDA directo por código, sin resolver placa→código. Para aseguradoras y peritos que ya tienen el código FASECOLDA. Acepta `codeFasecolda` y opcionalmente `modelo` (año) para desambiguar el valor.\n\nDevuelve además la **ficha técnica completa** del vehículo en `fichaTecnica` (38 campos, sin costo adicional): motor (cilindraje, potencia, combustible), transmisión y tracción, dimensiones y capacidades (peso, largo, ejes, puertas, pasajeros, carga), seguridad (airbags, ABS, frenos, dirección, faros) y equipamiento (aire acondicionado, sunroof, cámara de reversa, sensores, exploradoras, tapicería en cuero, vidrios/espejos/sillas eléctricas), más la clasificación del gremio (clase, categoría, tipología, servicio, nacionalidad, importado, segmento).\n\n⚠️ En `fichaTecnica`, `null` significa **la guía no publica ese dato para este vehículo**, y es distinto de `false` (que sí es una afirmación: no lo tiene). Los campos planos históricos —`categoria`, `tipologia`, `combustible`, `transmision`, `cilindraje`— siguen viajando igual que siempre para no romper integraciones; en código nuevo, usar `fichaTecnica`.\n\n`codigoFoto` lista los identificadores de las imágenes que la guía tiene de esa versión (`id` y `nombre` de archivo), vacío cuando no hay ninguna. Se publica porque el nombre **no se deduce del código**: sobre 2.860 versiones medidas coincide con `codigo` en el 90,6% y con `codigoHomologado` en el 1,2%, pero en el 7,1% no es ninguno de los dos. Una versión puede traer dos entradas (la misma imagen en dos formatos, o dos imágenes distintas) y llegan en el orden de la guía, que no señala cuál es la principal. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2276,6 +2296,12 @@
                     },
                     "clase": "CAMIONETA PASAJ.",
                     "codigoHomologado": "05606096",
+                    "codigoFoto": [
+                      {
+                        "id": 49202000,
+                        "nombre": "1618155-259.jpg"
+                      }
+                    ],
                     "fichaTecnica": {
                       "cilindraje": 2488,
                       "potencia": 186,
@@ -2354,7 +2380,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: los campos planos de siempre (cilindraje, potencia, airbags, puertas, tracción) más `fichaTecnica`, con los 38 campos completos de la guía y sus valores normalizados. No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
+        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: los campos planos de siempre (cilindraje, potencia, airbags, puertas, tracción) más `fichaTecnica`, con los 38 campos completos de la guía y sus valores normalizados, y `codigoFoto` con los identificadores de su imagen (vacío si no hay). No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2481,6 +2507,13 @@
                         "traccion": "DELANTERA",
                         "capacidadPasajeros": 5,
                         "peso": 1370,
+                        "codigoHomologado": "09001145",
+                        "codigoFoto": [
+                          {
+                            "id": 41552000,
+                            "nombre": "1319272-223.jpg"
+                          }
+                        ],
                         "fichaTecnica": {
                           "cilindraje": 1798,
                           "potencia": 168,
@@ -3057,7 +3090,7 @@
         "operationId": "vehiculo-pe",
         "summary": "Vehículo Perú",
         "tags": [
-          "Fuera de Colombia"
+          "Vehículo Perú (SUNARP, MTC, SUTRAN)"
         ],
         "description": "Ficha técnica de un vehículo peruano por placa, desde el registro oficial de propiedad vehicular. Devuelve los 13 campos canónicos comunes a todos los países; en Perú el registro publica 5 de ellos y el resto llega en `null`, listados en `cobertura.noPublicados`. Una placa fuera del registro responde `no_encontrado`. No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -3174,7 +3207,7 @@
         "operationId": "vehiculo-mx",
         "summary": "Vehículo México",
         "tags": [
-          "Fuera de Colombia"
+          "Vehículo México (REPUVE)"
         ],
         "description": "Ficha técnica de un vehículo mexicano por placa, desde el registro público vehicular nacional, más su estado de robo cruzado contra cuatro fuentes: fiscalía, aseguradoras, avisos ministeriales y el registro de robo de EE. UU./Canadá. Devuelve los 13 campos canónicos comunes a todos los países; los que el registro no publica llegan en `null` y quedan listados en `cobertura.noPublicados`. Un vehículo fuera del padrón responde `no_inscrito` (la cobertura del registro es parcial y eso no es un error). No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -3300,7 +3333,7 @@
         "operationId": "revision-tecnica-pe",
         "summary": "Revisión técnica Perú",
         "tags": [
-          "Fuera de Colombia"
+          "Vehículo Perú (SUNARP, MTC, SUTRAN)"
         ],
         "description": "Certificados de inspección técnica vehicular (CITV) de un vehículo peruano por placa: el equivalente a la tecnomecánica. Devuelve si hay un certificado vigente y hasta cuándo, y los **tres certificados más recientes** (es lo que publica el registro) con número, vigencia, resultado, estado, centro de inspección, tipo de servicio y observaciones. `status` es `ok` con certificado vigente, `warn` si solo hay historial vencido e `info` sin certificados. Una placa sin certificados es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -3426,7 +3459,7 @@
         "operationId": "soat-pe",
         "summary": "SOAT Perú",
         "tags": [
-          "Fuera de Colombia"
+          "Vehículo Perú (SUNARP, MTC, SUTRAN)"
         ],
         "description": "SOAT (seguro obligatorio de accidentes de tránsito) de un vehículo peruano por placa, desde el registro central de las aseguradoras. Devuelve si hay una póliza vigente y hasta cuándo, la aseguradora que la emitió, y el **histórico de pólizas** (del más reciente al más viejo) con estado, vigencia (inicio y fin), número de póliza, código único, código SBS de la aseguradora, uso y clase del vehículo, marca, modelo, número de asientos y tipo de certificado. `status` es `ok` con póliza vigente, `warn` si solo hay historial vencido e `info` sin pólizas. Una placa sin SOAT registrado es una respuesta válida (`certificados` vacío, `vigente: false`) y cobra. No incluye datos del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -3532,7 +3565,7 @@
         "operationId": "multas-pe",
         "summary": "Papeletas Perú",
         "tags": [
-          "Fuera de Colombia"
+          "Vehículo Perú (SUNARP, MTC, SUTRAN)"
         ],
         "description": "Papeletas de tránsito PENDIENTES de un vehículo peruano por placa, unidas de tres registros: el récord nacional de infracciones en carreteras (`origen: \"nacional\"`), las papeletas de Lima Metropolitana (`origen: \"lima\"`) y las de la Provincia Constitucional del Callao (`origen: \"callao\"`). Devuelve el total, las pendientes, el monto pendiente en soles y cada papeleta con número, fecha, código y descripción de la infracción, gravedad, monto, estado y entidad. `monto` es la deuda viva: en Lima, importe + costas − descuento; en el Callao, el importe insoluto. El registro nacional no publica montos, así que ahí llega `null` y `montoPendiente` suma solo las que lo traen. `descripcion` es el texto de la infracción según el Reglamento Nacional de Tránsito y llega `null` cuando el código pertenece a otro reglamento; `tipoRegistro` es el rótulo con que el registro nacional clasifica el documento y nunca describe la infracción. Las pagadas no aparecen. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, los otros igual se entregan. `status` es `warn` con pendientes y `ok` sin ellas. Una placa sin papeletas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -3652,7 +3685,7 @@
         "operationId": "licencia-pe",
         "summary": "Licencia Perú",
         "tags": [
-          "Fuera de Colombia"
+          "Licencias de conducción Perú (MTC)"
         ],
         "description": "Récord del conductor peruano por documento: licencias de conducir con número, clase y categoría, estado (`VIGENTE` o compuestos como `CANCELADA/CONDUCTOR INHABILITADO`), fechas de expedición y revalidación y restricciones, más las sanciones (resolución, fechas de inicio y fin, y `estado` derivado de esas fechas). No devuelve nombre ni datos de la persona: solo lo que describe la licencia. `puntos` llega siempre `null`: el registro no los publica. `status` es `ok` con licencia vigente, `warn` con cualquier otro estado o sanción vigente e `info` sin licencia. Un documento sin licencia es una respuesta válida (`tieneLicencia: false`) y cobra; un DNI que no tenga exactamente 8 dígitos responde 400 `consulta_invalida` sin cobrar. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
