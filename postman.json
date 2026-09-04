@@ -2,7 +2,7 @@
   "info": {
     "name": "PlacApi API",
     "_postman_id": "placapi-collection",
-    "description": "Consulta de información vehicular de Colombia (RUNT, SOAT, tecnomecánica, SIMIT, impuestos, FASECOLDA, pico y placa) y licencias de conducción. Configura la variable `apiKey` con tu llave pk_live_… (créala en /integracion).",
+    "description": "Consulta de información vehicular y de personas en Colombia y Perú: ficha del vehículo y su propietario en el RUNT, SOAT y revisión tecnicomecánica, multas y comparendos del SIMIT, impuestos, avalúo comercial y ficha técnica FASECOLDA, pico y placa, licencias de conducción y antecedentes.\n\nAutenticación por header `x-api-key`: pon tu llave `pk_live_…` en la variable `apiKey` de la colección y las peticiones quedan listas para correr.\n\n- Documentación: https://placapi.com/docs\n- Sandbox, sin escribir código: https://placapi.com/integracion\n- OpenAPI 3.1: https://placapi.com/openapi.json\n- Precios y API key: https://placapi.com/comprar\n\nSe cobra por consulta con datos; una consulta sin resultado no gasta crédito.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -1760,6 +1760,306 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"rtm\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"PE\",\n    \"placa\": \"ABC123\",\n    \"vigente\": true,\n    \"vigenteHasta\": \"2027-03-09\",\n    \"certificados\": [\n      {\n        \"numero\": \"C-2026-013-123-003563\",\n        \"vigenciaInicio\": \"2026-03-09\",\n        \"vigenciaFin\": \"2027-03-09\",\n        \"resultado\": \"APROBADO\",\n        \"estado\": \"VIGENTE\",\n        \"centro\": \"REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.\",\n        \"direccion\": \"VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES\",\n        \"ambito\": null,\n        \"tipoServicio\": \"PARTICULAR\",\n        \"observacion\": \"Sin observaciones\"\n      },\n      {\n        \"numero\": \"C-2025-013-123-001484\",\n        \"vigenciaInicio\": \"2025-02-07\",\n        \"vigenciaFin\": \"2026-02-07\",\n        \"resultado\": \"APROBADO\",\n        \"estado\": \"VENCIDO\",\n        \"centro\": \"REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.\",\n        \"direccion\": \"VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES\",\n        \"ambito\": null,\n        \"tipoServicio\": \"PARTICULAR\",\n        \"observacion\": \"Sin observaciones\"\n      },\n      {\n        \"numero\": \"C-2024-013-123-001548\",\n        \"vigenciaInicio\": \"2024-02-07\",\n        \"vigenciaFin\": \"2025-02-07\",\n        \"resultado\": \"APROBADO\",\n        \"estado\": \"VENCIDO\",\n        \"centro\": \"REVISIONES TECNICAS DEL PERU SOCIEDAD ANONIMA CERRADA - REVISIONES TECNICAS DEL PERU S.A.C.\",\n        \"direccion\": \"VIA AUXILIAR DE LA AV. PANAMERICANA SUR A LA ALTURA DEL KM. 11.300 - LIMA - LIMA - SAN JUAN DE MIRAFLORES\",\n        \"ambito\": null,\n        \"tipoServicio\": \"PARTICULAR\",\n        \"observacion\": \"Sin observaciones\"\n      }\n    ]\n  },\n  \"portalUrl\": \"https://rec.mtc.gob.pe/Citv/ArConsultaCitv\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Consulta vehicular Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/vehiculo-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "vehiculo-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Ficha de un vehículo chileno por patente, con el **mismo contrato de trece campos** que Perú y México. Devuelve tipo, marca, línea, año, VIN y si el vehículo está o estuvo inscrito como transporte público o escolar (`servicioPublico`), más tres extras que Chile sí publica: el sello de emisiones, el número de motor y el de chasis. Los siete campos que los registros chilenos no publican llegan en `null` y quedan enumerados en `cobertura.noPublicados`, para distinguir \"este vehículo no tiene el dato\" de \"Chile no publica ese dato\". `servicioPublico` llega en `null` —no en `false`— si ese registro no respondió. No incluye datos del propietario. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/vehiculo-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "vehiculo-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Ficha de un vehículo chileno por patente, con el **mismo contrato de trece campos** que Perú y México. Devuelve tipo, marca, línea, año, VIN y si el vehículo está o estuvo inscrito como transporte público o escolar (`servicioPublico`), más tres extras que Chile sí publica: el sello de emisiones, el número de motor y el de chasis. Los siete campos que los registros chilenos no publican llegan en `null` y quedan enumerados en `cobertura.noPublicados`, para distinguir \"este vehículo no tiene el dato\" de \"Chile no publica ese dato\". `servicioPublico` llega en `null` —no en `false`— si ese registro no respondió. No incluye datos del propietario. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"vehiculo\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"placa\": \"BBCB01\",\n    \"clase\": null,\n    \"tipo\": \"AUTOMOVIL\",\n    \"carroceria\": null,\n    \"marca\": \"TOYOTA\",\n    \"linea\": \"NEW COROLLA LE 1.8\",\n    \"capacidadPasajeros\": null,\n    \"capacidadCargaKg\": null,\n    \"color\": null,\n    \"modelo\": 2016,\n    \"servicioPublico\": false,\n    \"vin\": \"5YFBURHEXGP323294\",\n    \"combustible\": null,\n    \"cilindraje\": null,\n    \"tipoSello\": \"SELLO VERDE\",\n    \"numeroMotor\": \"2ZRL702559\",\n    \"numeroChasis\": \"5YFBURHEXGP323294\",\n    \"servicioTransporte\": null\n  },\n  \"cobertura\": {\n    \"disponibles\": [\n      \"tipo\",\n      \"marca\",\n      \"linea\",\n      \"modelo\",\n      \"servicioPublico\",\n      \"vin\"\n    ],\n    \"noPublicados\": [\n      \"clase\",\n      \"carroceria\",\n      \"capacidadPasajeros\",\n      \"capacidadCargaKg\",\n      \"color\",\n      \"combustible\",\n      \"cilindraje\"\n    ]\n  },\n  \"portalUrl\": \"https://www.prt.cl/Paginas/RevisionTecnica.aspx\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Revisión técnica Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/revision-tecnica-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "revision-tecnica-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Revisión técnica de un vehículo chileno por patente, desde la base central que consolida todas las Plantas de Revisión Técnica del país. Devuelve si hay una revisión vigente y hasta cuándo, la ficha del vehículo (tipo, marca, modelo, año, motor, chasis y tipo de sello) y el **historial completo** de revisiones con fecha, planta, número de certificado, vencimiento y estado. Cada revisión aprobada aparece dos veces —`tipo: \"mecanica\"` y `tipo: \"gases\"`—: son las dos pruebas del mismo certificado y una puede faltar. `vigenteHasta` se entrega también cuando ya venció, para responder desde cuándo. `status` es `ok` con revisión vigente, `warn` si solo hay historial vencido e `info` sin revisiones. Una patente sin revisiones es una respuesta válida y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/revision-tecnica-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "revision-tecnica-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Revisión técnica de un vehículo chileno por patente, desde la base central que consolida todas las Plantas de Revisión Técnica del país. Devuelve si hay una revisión vigente y hasta cuándo, la ficha del vehículo (tipo, marca, modelo, año, motor, chasis y tipo de sello) y el **historial completo** de revisiones con fecha, planta, número de certificado, vencimiento y estado. Cada revisión aprobada aparece dos veces —`tipo: \"mecanica\"` y `tipo: \"gases\"`—: son las dos pruebas del mismo certificado y una puede faltar. `vigenteHasta` se entrega también cuando ya venció, para responder desde cuándo. `status` es `ok` con revisión vigente, `warn` si solo hay historial vencido e `info` sin revisiones. Una patente sin revisiones es una respuesta válida y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"rtm\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"placa\": \"BBCB01\",\n    \"vehiculo\": {\n      \"tipo\": \"AUTOMOVIL\",\n      \"marca\": \"TOYOTA\",\n      \"modelo\": \"NEW COROLLA LE 1.8\",\n      \"anioFabricacion\": \"2016\",\n      \"numeroMotor\": \"2ZRL702559\",\n      \"numeroChasis\": \"5YFBURHEXGP323294\",\n      \"vin\": null,\n      \"tipoSello\": \"SELLO VERDE\"\n    },\n    \"vigente\": false,\n    \"vigenteHasta\": \"2025-08-31\",\n    \"revisiones\": [\n      {\n        \"fecha\": \"2025-04-03\",\n        \"codigoPlanta\": \"B-1343\",\n        \"planta\": \"REVISIONES TÉCNICAS SAN DÁMASO S.A.\",\n        \"numeroCertificado\": \"B1343000000436281\",\n        \"fechaVencimiento\": \"2025-08-31\",\n        \"estado\": \"Aprobado\",\n        \"tipo\": \"mecanica\"\n      },\n      {\n        \"fecha\": \"2025-04-03\",\n        \"codigoPlanta\": \"B-1343\",\n        \"planta\": \"REVISIONES TÉCNICAS SAN DÁMASO S.A.\",\n        \"numeroCertificado\": \"B1343000000436281\",\n        \"fechaVencimiento\": \"2025-08-31\",\n        \"estado\": \"Aprobado\",\n        \"tipo\": \"gases\"\n      }\n    ]\n  },\n  \"portalUrl\": \"https://www.prt.cl/Paginas/RevisionTecnica.aspx\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "SOAP Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/soap-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "soap-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"BBCB01\",\n  \"poliza\": \"1234\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Valida el SOAP (seguro obligatorio) de un vehículo chileno contra el registro de las aseguradoras. **Pide dos datos: la patente y los últimos cuatro dígitos de la póliza**, porque el registro chileno los cruza y sin los dos no responde: no es una consulta por patente, es la verificación de un certificado que ya se tiene. Devuelve si el par existe en el registro (`encontrado`), si además sigue vigente (`vigente`), la aseguradora que lo emitió y el periodo de vigencia. `status` es `ok` con certificado vigente, `warn` si existe pero venció e `info` si el registro no reconoce ese par — esa última es la respuesta que delata un certificado falso, es un hallazgo válido y cobra. Se acepta el número de póliza completo: se toman sus cuatro últimos dígitos. No incluye datos del asegurado. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `poliza` (string, obligatorio). Últimos cuatro dígitos de la póliza SOAP. También se acepta el número completo; se toman los cuatro últimos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/soap-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "soap-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"BBCB01\",\n  \"poliza\": \"1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Valida el SOAP (seguro obligatorio) de un vehículo chileno contra el registro de las aseguradoras. **Pide dos datos: la patente y los últimos cuatro dígitos de la póliza**, porque el registro chileno los cruza y sin los dos no responde: no es una consulta por patente, es la verificación de un certificado que ya se tiene. Devuelve si el par existe en el registro (`encontrado`), si además sigue vigente (`vigente`), la aseguradora que lo emitió y el periodo de vigencia. `status` es `ok` con certificado vigente, `warn` si existe pero venció e `info` si el registro no reconoce ese par — esa última es la respuesta que delata un certificado falso, es un hallazgo válido y cobra. Se acepta el número de póliza completo: se toman sus cuatro últimos dígitos. No incluye datos del asegurado. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `poliza` (string, obligatorio). Últimos cuatro dígitos de la póliza SOAP. También se acepta el número completo; se toman los cuatro últimos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"soat\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"placa\": \"BBCB01\",\n    \"poliza\": \"1234\",\n    \"encontrado\": true,\n    \"vigente\": true,\n    \"aseguradora\": \"COMPAÑIA DE SEGUROS GENERALES\",\n    \"numeroPoliza\": null,\n    \"vigenciaInicio\": \"2026-04-01\",\n    \"vigenciaFin\": \"2027-03-31\"\n  },\n  \"portalUrl\": \"https://sisesoap.aach.cl/\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Multas Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/multas-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "multas-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Multas de tránsito de un vehículo chileno por patente, unidas de tres registros: el detalle con importes de los Juzgados de Policía Local de todo el país (`origen: \"detalle\"`), el consolidado nacional de multas no pagadas (`origen: \"nacional\"`) y las infracciones detectadas por cámaras en los últimos 60 días, que todavía no llegan al juzgado (`origen: \"camaras\"`). Devuelve el total, las pendientes, el monto pendiente en pesos y cada multa con juzgado, comuna, rol de la causa, fecha, monto, infracción y número de denuncia. El `monto` es multa + arancel, que es lo que se paga en ventanilla. Los dos primeros registros listan las mismas causas y **se cruzan por el rol**, así que ninguna aparece dos veces; una causa que solo está en el consolidado llega sin monto. Trae además `permisoCirculacion`, con las multas registradas al corte del 30 de noviembre y si eso bloquea el permiso del año siguiente, que es la pregunta comercial real. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, los otros se entregan igual, y si el consolidado nacional no respondió el `status` nunca es `ok`. No incluye datos del propietario. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/multas-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "multas-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Multas de tránsito de un vehículo chileno por patente, unidas de tres registros: el detalle con importes de los Juzgados de Policía Local de todo el país (`origen: \"detalle\"`), el consolidado nacional de multas no pagadas (`origen: \"nacional\"`) y las infracciones detectadas por cámaras en los últimos 60 días, que todavía no llegan al juzgado (`origen: \"camaras\"`). Devuelve el total, las pendientes, el monto pendiente en pesos y cada multa con juzgado, comuna, rol de la causa, fecha, monto, infracción y número de denuncia. El `monto` es multa + arancel, que es lo que se paga en ventanilla. Los dos primeros registros listan las mismas causas y **se cruzan por el rol**, así que ninguna aparece dos veces; una causa que solo está en el consolidado llega sin monto. Trae además `permisoCirculacion`, con las multas registradas al corte del 30 de noviembre y si eso bloquea el permiso del año siguiente, que es la pregunta comercial real. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, los otros se entregan igual, y si el consolidado nacional no respondió el `status` nunca es `ok`. No incluye datos del propietario. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"placa\": \"BBCB01\",\n    \"total\": 3,\n    \"pendientes\": 3,\n    \"montoPendiente\": 189263,\n    \"permisoCirculacion\": {\n      \"anio\": 2026,\n      \"multasAlCorte\": 3,\n      \"bloqueado\": true\n    },\n    \"multas\": [\n      {\n        \"origen\": \"detalle\",\n        \"juzgado\": \"1 JPL LAS CONDES\",\n        \"comuna\": \"LAS CONDES\",\n        \"rolCausa\": \"055185\",\n        \"fecha\": \"2025-07-03\",\n        \"monto\": 76701,\n        \"infraccion\": \"TRANSITAR SIN DISPOSITIVO ELECTRONICO POR AUTOPISTA CONCESIONADA\",\n        \"numeroDenuncia\": \"53540351\",\n        \"pagada\": false\n      },\n      {\n        \"origen\": \"detalle\",\n        \"juzgado\": \"1 JPL SANTIAGO\",\n        \"comuna\": \"SANTIAGO\",\n        \"rolCausa\": \"A6204\",\n        \"fecha\": \"2025-06-25\",\n        \"monto\": 112562,\n        \"infraccion\": \"ESTACIONAR EN SITIO PROHIBIDO Y SEÑALIZADO\",\n        \"numeroDenuncia\": \"54089414\",\n        \"pagada\": false\n      },\n      {\n        \"origen\": \"nacional\",\n        \"juzgado\": \"2 JPL SANTIAGO\",\n        \"comuna\": null,\n        \"rolCausa\": \"J313836 - 2023\",\n        \"fecha\": null,\n        \"monto\": null,\n        \"infraccion\": null,\n        \"numeroDenuncia\": null,\n        \"pagada\": false\n      }\n    ],\n    \"cobertura\": {\n      \"nacional\": \"ok\",\n      \"camaras\": \"sin_datos\",\n      \"detalle\": \"ok\"\n    }\n  },\n  \"portalUrl\": \"https://consultamultas.srcei.cl/ConsultaMultas/consultaMultasExterna.do\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
         }
       ]
     },

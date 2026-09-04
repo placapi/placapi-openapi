@@ -59,6 +59,10 @@
       "description": "Ficha del vehículo peruano por placa: registro, revisión técnica, SOAT y papeletas."
     },
     {
+      "name": "Vehículo Chile (Registro Civil, MTT, Juzgados de Policía Local)",
+      "description": "Documentos y deudas de un vehículo chileno por patente: revisión técnica y multas de tránsito."
+    },
+    {
       "name": "Licencias de conducción Perú (MTC)",
       "description": "Récord del conductor peruano por documento."
     },
@@ -3423,6 +3427,480 @@
                     ]
                   },
                   "portalUrl": "https://rec.mtc.gob.pe/Citv/ArConsultaCitv",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/vehiculo-cl": {
+      "post": {
+        "operationId": "vehiculo-cl",
+        "summary": "Consulta vehicular Chile",
+        "tags": [
+          "Vehículo Chile (Registro Civil, MTT, Juzgados de Policía Local)"
+        ],
+        "description": "Ficha de un vehículo chileno por patente, con el **mismo contrato de trece campos** que Perú y México. Devuelve tipo, marca, línea, año, VIN y si el vehículo está o estuvo inscrito como transporte público o escolar (`servicioPublico`), más tres extras que Chile sí publica: el sello de emisiones, el número de motor y el de chasis. Los siete campos que los registros chilenos no publican llegan en `null` y quedan enumerados en `cobertura.noPublicados`, para distinguir \"este vehículo no tiene el dato\" de \"Chile no publica ese dato\". `servicioPublico` llega en `null` —no en `false`— si ese registro no respondió. No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "BBCB01",
+                    "description": "Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "BBCB01"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "vehiculo",
+                  "status": "ok",
+                  "data": {
+                    "pais": "CL",
+                    "placa": "BBCB01",
+                    "clase": null,
+                    "tipo": "AUTOMOVIL",
+                    "carroceria": null,
+                    "marca": "TOYOTA",
+                    "linea": "NEW COROLLA LE 1.8",
+                    "capacidadPasajeros": null,
+                    "capacidadCargaKg": null,
+                    "color": null,
+                    "modelo": 2016,
+                    "servicioPublico": false,
+                    "vin": "5YFBURHEXGP323294",
+                    "combustible": null,
+                    "cilindraje": null,
+                    "tipoSello": "SELLO VERDE",
+                    "numeroMotor": "2ZRL702559",
+                    "numeroChasis": "5YFBURHEXGP323294",
+                    "servicioTransporte": null
+                  },
+                  "cobertura": {
+                    "disponibles": [
+                      "tipo",
+                      "marca",
+                      "linea",
+                      "modelo",
+                      "servicioPublico",
+                      "vin"
+                    ],
+                    "noPublicados": [
+                      "clase",
+                      "carroceria",
+                      "capacidadPasajeros",
+                      "capacidadCargaKg",
+                      "color",
+                      "combustible",
+                      "cilindraje"
+                    ]
+                  },
+                  "portalUrl": "https://www.prt.cl/Paginas/RevisionTecnica.aspx",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/revision-tecnica-cl": {
+      "post": {
+        "operationId": "revision-tecnica-cl",
+        "summary": "Revisión técnica Chile",
+        "tags": [
+          "Vehículo Chile (Registro Civil, MTT, Juzgados de Policía Local)"
+        ],
+        "description": "Revisión técnica de un vehículo chileno por patente, desde la base central que consolida todas las Plantas de Revisión Técnica del país. Devuelve si hay una revisión vigente y hasta cuándo, la ficha del vehículo (tipo, marca, modelo, año, motor, chasis y tipo de sello) y el **historial completo** de revisiones con fecha, planta, número de certificado, vencimiento y estado. Cada revisión aprobada aparece dos veces —`tipo: \"mecanica\"` y `tipo: \"gases\"`—: son las dos pruebas del mismo certificado y una puede faltar. `vigenteHasta` se entrega también cuando ya venció, para responder desde cuándo. `status` es `ok` con revisión vigente, `warn` si solo hay historial vencido e `info` sin revisiones. Una patente sin revisiones es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "BBCB01",
+                    "description": "Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "BBCB01"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "rtm",
+                  "status": "warn",
+                  "data": {
+                    "pais": "CL",
+                    "placa": "BBCB01",
+                    "vehiculo": {
+                      "tipo": "AUTOMOVIL",
+                      "marca": "TOYOTA",
+                      "modelo": "NEW COROLLA LE 1.8",
+                      "anioFabricacion": "2016",
+                      "numeroMotor": "2ZRL702559",
+                      "numeroChasis": "5YFBURHEXGP323294",
+                      "vin": null,
+                      "tipoSello": "SELLO VERDE"
+                    },
+                    "vigente": false,
+                    "vigenteHasta": "2025-08-31",
+                    "revisiones": [
+                      {
+                        "fecha": "2025-04-03",
+                        "codigoPlanta": "B-1343",
+                        "planta": "REVISIONES TÉCNICAS SAN DÁMASO S.A.",
+                        "numeroCertificado": "B1343000000436281",
+                        "fechaVencimiento": "2025-08-31",
+                        "estado": "Aprobado",
+                        "tipo": "mecanica"
+                      },
+                      {
+                        "fecha": "2025-04-03",
+                        "codigoPlanta": "B-1343",
+                        "planta": "REVISIONES TÉCNICAS SAN DÁMASO S.A.",
+                        "numeroCertificado": "B1343000000436281",
+                        "fechaVencimiento": "2025-08-31",
+                        "estado": "Aprobado",
+                        "tipo": "gases"
+                      }
+                    ]
+                  },
+                  "portalUrl": "https://www.prt.cl/Paginas/RevisionTecnica.aspx",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/soap-cl": {
+      "post": {
+        "operationId": "soap-cl",
+        "summary": "SOAP Chile",
+        "tags": [
+          "Vehículo Chile (Registro Civil, MTT, Juzgados de Policía Local)"
+        ],
+        "description": "Valida el SOAP (seguro obligatorio) de un vehículo chileno contra el registro de las aseguradoras. **Pide dos datos: la patente y los últimos cuatro dígitos de la póliza**, porque el registro chileno los cruza y sin los dos no responde: no es una consulta por patente, es la verificación de un certificado que ya se tiene. Devuelve si el par existe en el registro (`encontrado`), si además sigue vigente (`vigente`), la aseguradora que lo emitió y el periodo de vigencia. `status` es `ok` con certificado vigente, `warn` si existe pero venció e `info` si el registro no reconoce ese par — esa última es la respuesta que delata un certificado falso, es un hallazgo válido y cobra. Se acepta el número de póliza completo: se toman sus cuatro últimos dígitos. No incluye datos del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa",
+                  "poliza"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "BBCB01",
+                    "description": "Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos."
+                  },
+                  "poliza": {
+                    "type": "string",
+                    "example": "1234",
+                    "description": "Últimos cuatro dígitos de la póliza SOAP. También se acepta el número completo; se toman los cuatro últimos."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "BBCB01",
+                "poliza": "1234"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "soat",
+                  "status": "ok",
+                  "data": {
+                    "pais": "CL",
+                    "placa": "BBCB01",
+                    "poliza": "1234",
+                    "encontrado": true,
+                    "vigente": true,
+                    "aseguradora": "COMPAÑIA DE SEGUROS GENERALES",
+                    "numeroPoliza": null,
+                    "vigenciaInicio": "2026-04-01",
+                    "vigenciaFin": "2027-03-31"
+                  },
+                  "portalUrl": "https://sisesoap.aach.cl/",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/multas-cl": {
+      "post": {
+        "operationId": "multas-cl",
+        "summary": "Multas Chile",
+        "tags": [
+          "Vehículo Chile (Registro Civil, MTT, Juzgados de Policía Local)"
+        ],
+        "description": "Multas de tránsito de un vehículo chileno por patente, unidas de tres registros: el detalle con importes de los Juzgados de Policía Local de todo el país (`origen: \"detalle\"`), el consolidado nacional de multas no pagadas (`origen: \"nacional\"`) y las infracciones detectadas por cámaras en los últimos 60 días, que todavía no llegan al juzgado (`origen: \"camaras\"`). Devuelve el total, las pendientes, el monto pendiente en pesos y cada multa con juzgado, comuna, rol de la causa, fecha, monto, infracción y número de denuncia. El `monto` es multa + arancel, que es lo que se paga en ventanilla. Los dos primeros registros listan las mismas causas y **se cruzan por el rol**, así que ninguna aparece dos veces; una causa que solo está en el consolidado llega sin monto. Trae además `permisoCirculacion`, con las multas registradas al corte del 30 de noviembre y si eso bloquea el permiso del año siguiente, que es la pregunta comercial real. El bloque `cobertura` dice cómo respondió cada registro (`ok`, `sin_datos`, `error`): si uno falla, los otros se entregan igual, y si el consolidado nacional no respondió el `status` nunca es `ok`. No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "BBCB01",
+                    "description": "Patente chilena de 6 caracteres, en cualquiera de los tres formatos vigentes (`BBCB01`, `AA1234`, `BBB010`). Se aceptan guiones y puntos."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "BBCB01"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "multas",
+                  "status": "warn",
+                  "data": {
+                    "pais": "CL",
+                    "placa": "BBCB01",
+                    "total": 3,
+                    "pendientes": 3,
+                    "montoPendiente": 189263,
+                    "permisoCirculacion": {
+                      "anio": 2026,
+                      "multasAlCorte": 3,
+                      "bloqueado": true
+                    },
+                    "multas": [
+                      {
+                        "origen": "detalle",
+                        "juzgado": "1 JPL LAS CONDES",
+                        "comuna": "LAS CONDES",
+                        "rolCausa": "055185",
+                        "fecha": "2025-07-03",
+                        "monto": 76701,
+                        "infraccion": "TRANSITAR SIN DISPOSITIVO ELECTRONICO POR AUTOPISTA CONCESIONADA",
+                        "numeroDenuncia": "53540351",
+                        "pagada": false
+                      },
+                      {
+                        "origen": "detalle",
+                        "juzgado": "1 JPL SANTIAGO",
+                        "comuna": "SANTIAGO",
+                        "rolCausa": "A6204",
+                        "fecha": "2025-06-25",
+                        "monto": 112562,
+                        "infraccion": "ESTACIONAR EN SITIO PROHIBIDO Y SEÑALIZADO",
+                        "numeroDenuncia": "54089414",
+                        "pagada": false
+                      },
+                      {
+                        "origen": "nacional",
+                        "juzgado": "2 JPL SANTIAGO",
+                        "comuna": null,
+                        "rolCausa": "J313836 - 2023",
+                        "fecha": null,
+                        "monto": null,
+                        "infraccion": null,
+                        "numeroDenuncia": null,
+                        "pagada": false
+                      }
+                    ],
+                    "cobertura": {
+                      "nacional": "ok",
+                      "camaras": "sin_datos",
+                      "detalle": "ok"
+                    }
+                  },
+                  "portalUrl": "https://consultamultas.srcei.cl/ConsultaMultas/consultaMultasExterna.do",
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "cost": 1
