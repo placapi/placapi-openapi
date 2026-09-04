@@ -40,7 +40,7 @@
     },
     {
       "name": "Avalúo comercial (FASECOLDA)",
-      "description": "Valor comercial de referencia por placa o por código FASECOLDA."
+      "description": "Valor comercial de referencia por placa, por VIN o por código FASECOLDA."
     },
     {
       "name": "Impuestos y movilidad",
@@ -67,8 +67,8 @@
       "description": "Récord del conductor peruano por documento."
     },
     {
-      "name": "Vehículo México (REPUVE)",
-      "description": "Ficha y estado del vehículo mexicano por placa."
+      "name": "México (CDMX, AMIS)",
+      "description": "Multas, verificación, licencia y reporte de robo de un vehículo mexicano."
     }
   ],
   "servers": [
@@ -2377,6 +2377,171 @@
         }
       }
     },
+    "/avaluo-por-vin": {
+      "post": {
+        "operationId": "avaluo-por-vin",
+        "summary": "Avalúo FASECOLDA por VIN",
+        "tags": [
+          "Avalúo comercial (FASECOLDA)"
+        ],
+        "description": "Valor comercial FASECOLDA y **ficha técnica completa** por VIN (número de chasis), sin placa ni documento del propietario. Misma respuesta que `/api/avaluo` —código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase, `fichaTecnica` con sus 38 campos, `valoresPorAnio` y `codigoFoto`— pero entrando directo: FASECOLDA siempre se consultó por VIN, y en la versión por placa el documento del propietario existe solo para que el registro nacional devuelva ese número. Quien ya lo tiene a la vista se ahorra ese paso, su espera y su modo de falla más común (el documento que no corresponde al propietario activo).\n\n⚠️ FASECOLDA **no decodifica los VIN de los modelos nuevos** (medido: ninguno de los 2025, uno de cada nueve de 2026). Para esos casos existe el respaldo por catálogo, que identifica el grupo compatible con marca + año + línea + cilindraje: por eso este endpoint acepta esos cuatro datos como campos opcionales. Mandarlos es la diferencia entre recibir un avalúo aproximado y no recibir ninguno en un vehículo 0 km; con un VIN que la fuente sí decodifica se ignoran. `origen` dice cuál de los dos caminos respondió (`vin` o `catalogo`) y, con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` las cubre todas.\n\nValor de referencia del gremio asegurador, no un avalúo pericial. Un VIN que no resuelve por ningún camino responde `data: null` y no cobra. Cuesta 1 crédito por consulta con datos. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vin"
+                ],
+                "properties": {
+                  "vin": {
+                    "type": "string",
+                    "example": "9GAJC6915FB040270",
+                    "description": "VIN o número de chasis: 11 a 17 caracteres, sin las letras I, O ni Q (el estándar las excluye para no confundirlas con 1 y 0). El rango llega hasta 11 porque las motos y los vehículos viejos traen series más cortas que el VIN moderno de 17. Alias aceptado: `chasis`."
+                  },
+                  "marca": {
+                    "type": "string",
+                    "example": "MAZDA",
+                    "description": "Marca del vehículo. Solo se usa si FASECOLDA no decodifica el VIN; entonces es obligatoria de hecho para que el respaldo por catálogo encuentre algo."
+                  },
+                  "linea": {
+                    "type": "string",
+                    "example": "CX-30",
+                    "description": "Línea o referencia tal como la nombra la tarjeta de propiedad (`CX-30`, `NS 200`). Sin línea el respaldo no adivina: una marca y un año enteros no son un avalúo."
+                  },
+                  "modelo": {
+                    "type": "number",
+                    "example": 2026,
+                    "description": "Año del modelo. En el catálogo vehicular colombiano «modelo» es el año, no la línea. Con el camino por VIN ajusta el valor al año pedido."
+                  },
+                  "cilindraje": {
+                    "type": "number",
+                    "example": 2000,
+                    "description": "Cilindraje en centímetros cúbicos. Acota el grupo de versiones cuando el respaldo por catálogo tiene que elegir."
+                  },
+                  "clase": {
+                    "type": "string",
+                    "example": "CAMIONETA",
+                    "description": "Clase del vehículo (`AUTOMOVIL`, `CAMIONETA`, `MOTOCICLETA`…). Orienta la categoría del catálogo, que en la fuente está separada por tipo."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "vin": "9GAJC6915FB040270"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "avaluo",
+                  "status": "info",
+                  "data": {
+                    "codigo": "05636023",
+                    "marca": "MAZDA",
+                    "linea": "CX30 GRAND TOURING LX TP 2500CC 7AB R18 TC CT AWD",
+                    "modelo": 2023,
+                    "valorComercial": 109100000,
+                    "rangoMercado": {
+                      "min": 109100000,
+                      "max": 109100000
+                    },
+                    "clase": "CAMIONETA PASAJ.",
+                    "codigoHomologado": "05606096",
+                    "codigoFoto": [
+                      {
+                        "id": 49202000,
+                        "nombre": "1618155-259.jpg"
+                      }
+                    ],
+                    "fichaTecnica": {
+                      "cilindraje": 2488,
+                      "potencia": 186,
+                      "combustible": "GASOLINA",
+                      "sistemaAlimentacion": null,
+                      "transmision": "4X4",
+                      "tipoCaja": "TIPTRONICA",
+                      "traccion": "DOBLE",
+                      "peso": 1520,
+                      "largo": 4395,
+                      "ejes": 2,
+                      "puertas": 5,
+                      "capacidadPasajeros": 5,
+                      "capacidadCarga": null,
+                      "airbags": 7,
+                      "abs": true,
+                      "frenos": "DISCO/DISCO",
+                      "tipoDireccion": "ELÉCTRICA",
+                      "tipoFaros": "LED",
+                      "suspensionTrasera": null,
+                      "aireAcondicionado": true,
+                      "tipoAireAcondicionado": "AUTOMATICO",
+                      "sunroof": true,
+                      "camaraReversa": true,
+                      "sensoresParqueo": true,
+                      "exploradoras": true,
+                      "tapiceriaCuero": true,
+                      "tacometro": null,
+                      "vidriosElectricos": 4,
+                      "espejosElectricos": 2,
+                      "sillasElectricas": 1,
+                      "clase": "CAMIONETA PASAJ.",
+                      "categoria": "LIVIANO PASAJEROS",
+                      "tipologia": "UTILITARIO DEPORTIVO 4X4",
+                      "servicio": "PARTICULAR",
+                      "nacionalidad": "MEX",
+                      "importado": true,
+                      "segmentoTamano": "C",
+                      "segmentoCilindraje": "Y"
+                    },
+                    "origen": "vin"
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
     "/catalogo": {
       "post": {
         "operationId": "catalogo",
@@ -3206,14 +3371,14 @@
         }
       }
     },
-    "/vehiculo-mx": {
+    "/multas-mx": {
       "post": {
-        "operationId": "vehiculo-mx",
-        "summary": "Vehículo México",
+        "operationId": "multas-mx",
+        "summary": "Multas México (CDMX)",
         "tags": [
-          "Vehículo México (REPUVE)"
+          "México (CDMX, AMIS)"
         ],
-        "description": "Ficha técnica de un vehículo mexicano por placa, desde el registro público vehicular nacional, más su estado de robo cruzado contra cuatro fuentes: fiscalía, aseguradoras, avisos ministeriales y el registro de robo de EE. UU./Canadá. Devuelve los 13 campos canónicos comunes a todos los países; los que el registro no publica llegan en `null` y quedan listados en `cobertura.noPublicados`. Un vehículo fuera del padrón responde `no_inscrito` (la cobertura del registro es parcial y eso no es un error). No incluye datos del propietario. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "description": "Multas de tránsito y sanciones de un vehículo de la Ciudad de México por placa, desde la consulta pública de adeudos de la Secretaría de Administración y Finanzas de la CDMX. Devuelve las infracciones de tránsito (con folio, fecha, situación, motivo, fundamento del reglamento y sanción en unidades de cuenta) y las sanciones de medio ambiente, más la tenencia año por año. El registro publica HISTORIAL: las pagadas vienen con `situacion: \"Pagada\"`, y `infraccionesPendientes` / `sancionesPendientes` son el corte vivo. La sanción está en UMA (unidades de cuenta), no en pesos: el portal no lo convierte en esta respuesta. Una placa que el padrón de la CDMX no reconoce responde `encontrado: false` (cobertura: solo vehículos emplacados en la CDMX). `status` es `warn` con deuda pendiente y `ok` sin ella. Una placa sin multas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3232,8 +3397,8 @@
                 "properties": {
                   "placa": {
                     "type": "string",
-                    "example": "ABC1234",
-                    "description": "Placa mexicana, sin guiones ni espacios."
+                    "example": "344WYD",
+                    "description": "Placa mexicana, sin guiones ni espacios (5 a 8 caracteres)."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -3243,7 +3408,7 @@
                 }
               },
               "example": {
-                "placa": "ABC1234"
+                "placa": "344WYD"
               }
             }
           }
@@ -3254,56 +3419,325 @@
             "content": {
               "application/json": {
                 "example": {
-                  "source": "vehiculo",
+                  "source": "multas",
+                  "status": "warn",
+                  "data": {
+                    "pais": "MX",
+                    "placa": "344WYD",
+                    "encontrado": true,
+                    "mensaje": null,
+                    "totalInfracciones": 3,
+                    "infraccionesPendientes": 0,
+                    "infracciones": [
+                      {
+                        "folio": "01153492841",
+                        "fecha": "2015-10-13",
+                        "situacion": "Pagada",
+                        "motivo": "POR ESTACIONARSE EN ZONAS O VÍAS PÚBLICAS DONDE EXISTA SEÑALIZACIÓN VÍAL RESTRICTIVA",
+                        "articulo": "12",
+                        "fraccion": "II",
+                        "parrafo": null,
+                        "inciso": null,
+                        "sancion": 10
+                      }
+                    ],
+                    "totalSanciones": 0,
+                    "sancionesPendientes": 0,
+                    "sanciones": [],
+                    "tenencia": {
+                      "total": 11,
+                      "mensaje": null,
+                      "anios": [
+                        {
+                          "anio": 2024,
+                          "estado": "No pagada"
+                        },
+                        {
+                          "anio": 2023,
+                          "estado": "No pagada"
+                        }
+                      ]
+                    }
+                  },
+                  "portalUrl": "https://data.finanzas.cdmx.gob.mx/consulta_adeudos",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/verificacion-mx": {
+      "post": {
+        "operationId": "verificacion-mx",
+        "summary": "Verificación México (CDMX)",
+        "tags": [
+          "México (CDMX, AMIS)"
+        ],
+        "description": "Verificación vehicular de la Ciudad de México por placa: el equivalente mexicano de la tecnomecánica. Devuelve si el vehículo puede tramitar el holograma de verificación (`puedeVerificar`, la MISMA regla del portal: sin adeudos de tenencia, sin pérdida del derecho y con puntaje de fotocívicas íntegro), el puntaje de fotocívicas con su mensaje, las sanciones de medio ambiente que incluyen las de holograma (circular sin holograma vigente) y la vigencia de la tarjeta de circulación. Una placa que el padrón de la CDMX no reconoce responde `encontrado: false` (cobertura: solo vehículos emplacados en la CDMX). `status` es `ok` si puede verificar, `warn` si tiene un adeudo que se lo impide e `info` sin señales o fuera del padrón. Una placa sin problemas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "344WYD",
+                    "description": "Placa mexicana, sin guiones ni espacios (5 a 8 caracteres)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "344WYD"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "rtm",
+                  "status": "warn",
+                  "data": {
+                    "pais": "MX",
+                    "placa": "344WYD",
+                    "encontrado": true,
+                    "mensaje": null,
+                    "puedeVerificar": false,
+                    "fotocivicas": {
+                      "puntaje": 10,
+                      "mensaje": "¡Felicidades! Conservaste todos tus puntos"
+                    },
+                    "sancionesVerificacion": [],
+                    "tarjetaCirculacion": {
+                      "estatus": "Vencida",
+                      "fechaVigencia": "2013-02-05"
+                    }
+                  },
+                  "portalUrl": "https://data.finanzas.cdmx.gob.mx/consulta_adeudos",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/licencia-mx": {
+      "post": {
+        "operationId": "licencia-mx",
+        "summary": "Licencia México (CDMX)",
+        "tags": [
+          "México (CDMX, AMIS)"
+        ],
+        "description": "Vigencia de la licencia de conducir de la Ciudad de México por CURP, desde el portal de finanzas de la CDMX. Devuelve si el registro reporta vigencia para esa CURP y la vigencia tal como la publica el portal. ⚠️ No es el registro nacional de licencias — México no tiene uno público — y la respuesta negativa del portal agrupa dos cosas: sin datos en CDMX O licencia permanente (el programa 2024+, que no tiene vigencia). Por eso `encontrada: false` no afirma que la persona no tenga licencia: solo que la ciudad no reporta una vigencia, y el `mensaje` del portal viaja completo. Una CURP mal formada responde 400 sin cobrar. `status` es `ok` con vigencia reportada e `info` sin ella (respuesta válida que cobra). Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "curp"
+                ],
+                "properties": {
+                  "curp": {
+                    "type": "string",
+                    "example": "AAAA000000HDFXXX01",
+                    "description": "CURP de 18 caracteres (4 letras, 6 dígitos, 1 letra y 7 alfanuméricos). Se aceptan espacios y guiones."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "curp": "AAAA000000HDFXXX01"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "licencia",
                   "status": "ok",
                   "data": {
                     "pais": "MX",
-                    "placa": "ABC1234",
-                    "clase": "AUTOMOVIL",
-                    "tipo": null,
-                    "carroceria": "HATCHBACK",
-                    "marca": "BMW",
-                    "linea": "120IA",
-                    "capacidadPasajeros": null,
-                    "capacidadCargaKg": null,
-                    "color": null,
-                    "modelo": 2019,
-                    "servicioPublico": null,
-                    "vin": "WBA1S1106K7D61956",
-                    "combustible": null,
-                    "cilindraje": null,
-                    "reporteRobo": {
-                      "reportado": false,
-                      "fuentes": {
-                        "fiscalia": false,
-                        "ocra": false,
-                        "usaCanada": false,
-                        "avisosJudiciales": false
-                      }
-                    }
+                    "curp": "AAAA000000HDFXXX01",
+                    "encontrada": true,
+                    "vigencia": "2027-05-10",
+                    "mensaje": null
                   },
-                  "cobertura": {
-                    "disponibles": [
-                      "clase",
-                      "carroceria",
-                      "marca",
-                      "linea",
-                      "modelo",
-                      "vin",
-                      "cilindraje"
-                    ],
-                    "noPublicados": [
-                      "tipo",
-                      "capacidadPasajeros",
-                      "capacidadCargaKg",
-                      "color",
-                      "servicioPublico",
-                      "combustible"
-                    ]
-                  },
-                  "portalUrl": "https://www2.repuve.gob.mx:8443/ciudadania/",
+                  "portalUrl": "https://data.finanzas.cdmx.gob.mx/consulta_adeudos",
                   "mode": "live",
-                  "fetchedAt": "2026-07-24T15:04:05.000Z"
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/soat-mx": {
+      "post": {
+        "operationId": "soat-mx",
+        "summary": "Reporte de robo AMIS (México)",
+        "tags": [
+          "México (CDMX, AMIS)"
+        ],
+        "description": "Reporte de robo de un vehículo mexicano por VIN, desde el padrón de vehículos con reporte de robo que alimentan las aseguradoras (AMIS/OCRA): el dato \"asegurador\" que México publica, equivalente honesto del SOAT — México no tiene un registro nacional de pólizas vigentes consultable por placa. Devuelve si el padrón tiene reporte de robo activo y el veredicto del portal tal cual (`mensaje`, p. ej. \"SIN REPORTE DE ROBO\"). `status` es `danger` con reporte y `ok` sin él. Un VIN sin reporte es una respuesta válida y cobra. No incluye datos del propietario ni del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vin"
+                ],
+                "properties": {
+                  "vin": {
+                    "type": "string",
+                    "example": "WBA1S1106K7D61956",
+                    "description": "VIN/NIV de 17 caracteres alfanuméricos. Alias aceptados: `niv`, `serie`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "vin": "WBA1S1106K7D61956"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "soat",
+                  "status": "ok",
+                  "data": {
+                    "pais": "MX",
+                    "vin": "WBA1S1106K7D61956",
+                    "reportado": false,
+                    "mensaje": "SIN REPORTE DE ROBO"
+                  },
+                  "portalUrl": "http://reporterobo.amis.com.mx/reporterobo/",
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
                 }
               }
             }
@@ -3705,7 +4139,7 @@
         "tags": [
           "Vehículo Chile (Registro Civil, MTT, Juzgados de Policía Local)"
         ],
-        "description": "Valida el SOAP (seguro obligatorio) de un vehículo chileno contra el registro de las aseguradoras. **Pide dos datos: la patente y los últimos cuatro dígitos de la póliza**, porque el registro chileno los cruza y sin los dos no responde: no es una consulta por patente, es la verificación de un certificado que ya se tiene. Devuelve si el par existe en el registro (`encontrado`), si además sigue vigente (`vigente`), la aseguradora que lo emitió y el periodo de vigencia. `status` es `ok` con certificado vigente, `warn` si existe pero venció e `info` si el registro no reconoce ese par — esa última es la respuesta que delata un certificado falso, es un hallazgo válido y cobra. Se acepta el número de póliza completo: se toman sus cuatro últimos dígitos. No incluye datos del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "description": "Valida el SOAP (seguro obligatorio) de un vehículo chileno contra el registro de las aseguradoras. **Pide dos datos: la patente y los últimos cuatro dígitos de la póliza**, porque el registro chileno los cruza y sin los dos no responde: no es una consulta por patente, es la verificación de un certificado que ya se tiene. Devuelve si el par existe en el registro (`encontrado`), si además sigue vigente (`vigente`), la aseguradora que lo emitió y el periodo de vigencia. Cuando el par existe entrega además el certificado completo: número de póliza, folio, prima, la ficha del vehículo asegurado (tipo, marca, línea, año y número de motor) y el dígito verificador de la patente, que es el que pide el detalle de multas chileno. `status` es `ok` con certificado vigente, `warn` si existe pero venció e `info` si el registro no reconoce ese par — esa última es la respuesta que delata un certificado falso, es un hallazgo válido y cobra. Se acepta el número de póliza completo: se toman sus cuatro últimos dígitos. No incluye datos del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3761,10 +4195,18 @@
                     "poliza": "1234",
                     "encontrado": true,
                     "vigente": true,
+                    "digitoVerificador": "2",
                     "aseguradora": "COMPAÑIA DE SEGUROS GENERALES",
-                    "numeroPoliza": null,
+                    "numeroPoliza": "70591234",
+                    "folio": "9821871234",
                     "vigenciaInicio": "2026-04-01",
-                    "vigenciaFin": "2027-03-31"
+                    "vigenciaFin": "2027-03-31",
+                    "tipo": "AUTOMOVIL",
+                    "marca": "CHEVROLET",
+                    "linea": "CORSA",
+                    "modelo": 2006,
+                    "numeroMotor": "7H5071910",
+                    "prima": 7990
                   },
                   "portalUrl": "https://sisesoap.aach.cl/",
                   "mode": "live",

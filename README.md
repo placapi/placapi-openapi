@@ -22,7 +22,7 @@ Devuelve JSON. Sin scraping del lado del cliente y sin captchas.
 
 | Archivo | Qué es |
 |---|---|
-| [`openapi.json`](openapi.json) | Especificación OpenAPI 3.1 completa, con esquemas de petición y respuesta de los 41 endpoints |
+| [`openapi.json`](openapi.json) | Especificación OpenAPI 3.1 completa, con esquemas de petición y respuesta de los 49 endpoints |
 | [`postman.json`](postman.json) | Colección de Postman lista para importar |
 
 Los dos se **generan desde el catálogo de la API**, así que nunca se desincronizan del servicio
