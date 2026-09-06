@@ -3114,7 +3114,7 @@
         "tags": [
           "Licencias de conducción"
         ],
-        "description": "Licencias de conducción por cédula (RUNT ciudadano): datos del conductor (nombre, estado de conductor y de ciudadano, número y fecha de inscripción), el arreglo `licenses` con una entrada por categoría —categoría, estado, número, organismo que expide, expedición, vencimiento, restricciones y, si aplica, resolución y fechas de suspensión— y los bloques de infracciones, solicitudes, certificados de aptitud y médicos, trámites SICOV, pagos ANSV, validaciones de identidad e impuestos de tránsito. Los bloques que el RUNT devuelve vacíos para la mayoría de documentos llegan como arreglos vacíos, no como null. Desde el 6-ago-2026 la fuente oficial exige el `primerApellido` del titular y devuelve el nombre ENMASCARADO (`J**N P***Z`): si no mandas el apellido se intenta resolver, y si no se logra la respuesta es 400 `apellido_requerido` sin cobrar. Costo: 1 crédito por consulta con datos.",
+        "description": "Licencias de conducción por cédula (RUNT ciudadano): datos del conductor (nombre, estado de conductor y de ciudadano, número y fecha de inscripción), el arreglo `licenses` con una entrada por categoría —categoría, estado, número, organismo que expide, expedición, vencimiento, restricciones y, si aplica, resolución y fechas de suspensión— y los bloques de infracciones, solicitudes, certificados de aptitud y médicos, trámites SICOV, pagos ANSV, validaciones de identidad e impuestos de tránsito. Los bloques que el RUNT devuelve vacíos para la mayoría de documentos llegan como arreglos vacíos, no como null. Desde el 6-ago-2026 la fuente oficial exige el `primerApellido` del titular y devuelve el nombre ENMASCARADO (`J**N P***Z`). Acá el campo es OPCIONAL y define el precio: **1 crédito si envías el apellido, 2 si no lo mandas** —en ese caso lo averiguamos por ti—. Si no lo mandas y tampoco se logra averiguar, la respuesta es 400 `apellido_requerido` y no cobra. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3155,7 +3155,7 @@
                   "primerApellido": {
                     "type": "string",
                     "example": "PÉREZ",
-                    "description": "Primer apellido del titular del documento. La fuente oficial lo exige desde el 6-ago-2026: si no lo mandas se intenta resolver y, si no se logra, la respuesta es 400 con `code: \"apellido_requerido\"` y NO se cobra el crédito. Alias aceptado: `apellido`."
+                    "description": "Primer apellido del titular del documento. La fuente oficial lo exige desde el 6-ago-2026, pero acá es OPCIONAL: **1 crédito si envías el apellido, 2 si no lo mandas** (lo averiguamos por ti). Si no lo mandas y tampoco se logra averiguar, la respuesta es 400 con `code: \"apellido_requerido\"` y no cobra. Una vez averiguado queda asociado al documento, así que la siguiente consulta de esa misma cédula vuelve a costar 1. Alias aceptado: `apellido`."
                   },
                   "refresh": {
                     "type": "boolean",
