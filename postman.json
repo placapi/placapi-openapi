@@ -966,7 +966,7 @@
             }
           }
         },
-        "description": "Departamento donde está matriculado el vehículo y enlace al portal oficial de impuestos. El departamento se resuelve desde el organismo de tránsito del RUNT por placa. NO liquida el impuesto: ningún departamento lo expone por API (todos blindan el portal con captcha y cuestionario), así que `data` siempre viene null y el valor está en `portalUrl` + el mensaje de `error`. Gratis: no cobra crédito.\n\nGratis: no cobra crédito.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+        "description": "Estado del impuesto vehicular por departamento. El departamento se resuelve desde el organismo de tránsito del RUNT por placa.\n\nEn **14 departamentos** (Antioquia, Arauca, Bogotá D.C., Bolívar, Caldas, Caquetá, Casanare, Córdoba, Huila, Norte de Santander, Putumayo, Risaralda, Santander y Valle del Cauca) `data` trae el histórico por vigencia en `anios` —año, valor, si está pagado y, cuando la fuente la publica, la fecha límite— más `totalPendiente`.\n\nEn el resto, `data` viene null y el valor está en `portalUrl` + el mensaje de `error`.\n\n⚠️ **`deudaSinMonto: true` es deuda real.** Algunos departamentos publican QUÉ vigencias se deben pero no cuánto: en ese caso `totalPendiente` llega en 0, las vigencias van en `vigenciasAdeudadas` y `status` es `warn`. **No leas `totalPendiente: 0` como paz y salvo sin mirar `deudaSinMonto`.** Nunca estimamos un monto que la fuente no dé.\n\nGratis: no cobra crédito.\n\nGratis: no cobra crédito.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
       },
       "response": [
         {
@@ -997,7 +997,7 @@
                 }
               }
             },
-            "description": "Departamento donde está matriculado el vehículo y enlace al portal oficial de impuestos. El departamento se resuelve desde el organismo de tránsito del RUNT por placa. NO liquida el impuesto: ningún departamento lo expone por API (todos blindan el portal con captcha y cuestionario), así que `data` siempre viene null y el valor está en `portalUrl` + el mensaje de `error`. Gratis: no cobra crédito.\n\nGratis: no cobra crédito.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+            "description": "Estado del impuesto vehicular por departamento. El departamento se resuelve desde el organismo de tránsito del RUNT por placa.\n\nEn **14 departamentos** (Antioquia, Arauca, Bogotá D.C., Bolívar, Caldas, Caquetá, Casanare, Córdoba, Huila, Norte de Santander, Putumayo, Risaralda, Santander y Valle del Cauca) `data` trae el histórico por vigencia en `anios` —año, valor, si está pagado y, cuando la fuente la publica, la fecha límite— más `totalPendiente`.\n\nEn el resto, `data` viene null y el valor está en `portalUrl` + el mensaje de `error`.\n\n⚠️ **`deudaSinMonto: true` es deuda real.** Algunos departamentos publican QUÉ vigencias se deben pero no cuánto: en ese caso `totalPendiente` llega en 0, las vigencias van en `vigenciasAdeudadas` y `status` es `warn`. **No leas `totalPendiente: 0` como paz y salvo sin mirar `deudaSinMonto`.** Nunca estimamos un monto que la fuente no dé.\n\nGratis: no cobra crédito.\n\nGratis: no cobra crédito.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
           },
           "status": "OK",
           "code": 200,
@@ -1009,7 +1009,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n  \"source\": \"Bogotá D.C.\",\n  \"status\": \"info\",\n  \"data\": null,\n  \"portalUrl\": \"https://www.haciendabogota.gov.co/es/sdh/pagos-impuesto-vehiculos\",\n  \"error\": \"Tu vehículo está matriculado en Bogotá D.C. Paga tu impuesto en el portal oficial del departamento.\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+          "body": "{\n  \"source\": \"Risaralda\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"departamento\": \"Risaralda\",\n    \"anios\": [\n      {\n        \"anio\": 2024,\n        \"valor\": 34000,\n        \"pagado\": true\n      },\n      {\n        \"anio\": 2025,\n        \"valor\": 305000,\n        \"pagado\": true\n      },\n      {\n        \"anio\": 2026,\n        \"valor\": 0,\n        \"pagado\": false\n      }\n    ],\n    \"totalPendiente\": 0,\n    \"deudaSinMonto\": true,\n    \"vigenciasAdeudadas\": [\n      2026\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
         }
       ]
     },
@@ -3666,7 +3666,7 @@
             }
           }
         },
-        "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — es el scrape más caro del catálogo de personas y sustituye a siete consultas. ⏱️ **Es también el más lento: cuenta con decenas de segundos**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `TI`, `RC`, `PA`, `PPT`, `PEP`. Tipo de documento. Por defecto `CC`. Con NIT responde 400 `tipo_documento_no_soportado`: el RUAF es un registro de personas naturales.\n- `docNumber` (string, obligatorio). Número de documento. Alias aceptados: `doc`, `documento`.\n- `fechaExpedicion` (string, obligatorio). Fecha de expedición del documento en formato **DD/MM/AAAA**. Se aceptan guiones y puntos como separador y se normalizan. NO se acepta AAAA-MM-DD: la fuente lo leería al revés y respondería \"no coincide\" sin explicar por qué. Alias aceptados: `fecha`, `fecha_expedicion`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+        "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — sustituye a siete consultas. ⏱️ **Es de los más lentos del catálogo: cuenta con unos 10 segundos y picos de más**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `TI`, `RC`, `PA`, `PPT`, `PEP`. Tipo de documento. Por defecto `CC`. Con NIT responde 400 `tipo_documento_no_soportado`: el RUAF es un registro de personas naturales.\n- `docNumber` (string, obligatorio). Número de documento. Alias aceptados: `doc`, `documento`.\n- `fechaExpedicion` (string, obligatorio). Fecha de expedición del documento en formato **DD/MM/AAAA**. Se aceptan guiones y puntos como separador y se normalizan. NO se acepta AAAA-MM-DD: la fuente lo leería al revés y respondería \"no coincide\" sin explicar por qué. Alias aceptados: `fecha`, `fecha_expedicion`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
       },
       "response": [
         {
@@ -3697,7 +3697,7 @@
                 }
               }
             },
-            "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — es el scrape más caro del catálogo de personas y sustituye a siete consultas. ⏱️ **Es también el más lento: cuenta con decenas de segundos**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `TI`, `RC`, `PA`, `PPT`, `PEP`. Tipo de documento. Por defecto `CC`. Con NIT responde 400 `tipo_documento_no_soportado`: el RUAF es un registro de personas naturales.\n- `docNumber` (string, obligatorio). Número de documento. Alias aceptados: `doc`, `documento`.\n- `fechaExpedicion` (string, obligatorio). Fecha de expedición del documento en formato **DD/MM/AAAA**. Se aceptan guiones y puntos como separador y se normalizan. NO se acepta AAAA-MM-DD: la fuente lo leería al revés y respondería \"no coincide\" sin explicar por qué. Alias aceptados: `fecha`, `fecha_expedicion`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+            "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — sustituye a siete consultas. ⏱️ **Es de los más lentos del catálogo: cuenta con unos 10 segundos y picos de más**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `TI`, `RC`, `PA`, `PPT`, `PEP`. Tipo de documento. Por defecto `CC`. Con NIT responde 400 `tipo_documento_no_soportado`: el RUAF es un registro de personas naturales.\n- `docNumber` (string, obligatorio). Número de documento. Alias aceptados: `doc`, `documento`.\n- `fechaExpedicion` (string, obligatorio). Fecha de expedición del documento en formato **DD/MM/AAAA**. Se aceptan guiones y puntos como separador y se normalizan. NO se acepta AAAA-MM-DD: la fuente lo leería al revés y respondería \"no coincide\" sin explicar por qué. Alias aceptados: `fecha`, `fecha_expedicion`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
           },
           "status": "OK",
           "code": 200,
@@ -3710,6 +3710,231 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"afiliaciones-seguridad-social\",\n  \"status\": \"info\",\n  \"data\": {\n    \"documento\": \"1020304050\",\n    \"tipoDocumento\": \"CC\",\n    \"fechaCorte\": \"2026-08-14\",\n    \"persona\": {\n      \"nombre\": \"MARIA FERNANDA GOMEZ RUIZ\",\n      \"primerNombre\": \"MARIA\",\n      \"segundoNombre\": \"FERNANDA\",\n      \"primerApellido\": \"GOMEZ\",\n      \"segundoApellido\": \"RUIZ\",\n      \"sexo\": \"F\"\n    },\n    \"salud\": {\n      \"tiene\": true,\n      \"registros\": [\n        {\n          \"administradora\": \"NUEVA EPS S.A.\",\n          \"regimen\": \"Contributivo\",\n          \"fechaAfiliacion\": \"01/11/2024\",\n          \"estado\": \"Activo\",\n          \"tipoAfiliado\": \"COTIZANTE\",\n          \"ubicacion\": \"SANTIAGO DE CALI\",\n          \"actividadEconomica\": \"\",\n          \"tipoMiembro\": \"\"\n        }\n      ]\n    },\n    \"pensiones\": {\n      \"tiene\": true,\n      \"registros\": [\n        {\n          \"administradora\": \"FONDO DE PENSIONES DE EJEMPLO S.A.\",\n          \"regimen\": \"PENSIONES: AHORRO INDIVIDUAL\",\n          \"fechaAfiliacion\": \"2022-09-06\",\n          \"estado\": \"Inactivo\",\n          \"tipoAfiliado\": \"\",\n          \"ubicacion\": \"\",\n          \"actividadEconomica\": \"\",\n          \"tipoMiembro\": \"\"\n        }\n      ]\n    },\n    \"riesgosLaborales\": {\n      \"tiene\": true,\n      \"registros\": []\n    },\n    \"compensacionFamiliar\": {\n      \"tiene\": true,\n      \"registros\": []\n    },\n    \"cesantias\": {\n      \"tiene\": true,\n      \"registros\": []\n    },\n    \"pensionado\": {\n      \"tiene\": false,\n      \"registros\": []\n    },\n    \"asistenciaSocial\": {\n      \"tiene\": true,\n      \"registros\": [\n        {\n          \"administradora\": \"DEPARTAMENTO PARA LA PROSPERIDAD SOCIAL\",\n          \"programa\": \"Jovenes en Acción\",\n          \"fechaVinculacion\": \"2020-09-03\",\n          \"estadoVinculacion\": \"Activo\",\n          \"estadoBeneficio\": \"Terminado\",\n          \"fechaUltimoBeneficio\": \"2021-10-29\",\n          \"ubicacion\": \"Risaralda- PEREIRA\"\n        }\n      ]\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 2\n}"
+        }
+      ]
+    },
+    {
+      "name": "Afiliación en salud (ADRES)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/eps",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "eps"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "La afiliación en salud de una persona por documento, de la Base de Datos Única de Afiliados (BDUA) que administra la ADRES: la **EPS**, el **régimen** (contributivo o subsidiado), el **estado** (activo/retirado), el **tipo de afiliado** (cotizante, beneficiario, cabeza de familia) y las fechas de afiliación y finalización, junto con los datos básicos de la persona y su ciudad. Responde en segundos y no pide fecha de expedición del documento. `afiliaciones` trae el historial completo —una fila por traslado de EPS o cambio de régimen— y la fila ACTIVA es la afiliación vigente. Es la misma sección `salud` de `/api/ruaf` en versión puntual: aquella exige la fecha de expedición y cuesta 2 créditos con decenas de segundos de espera; esta responde \"¿qué EPS tiene hoy?\" por 1. ⚠️ La fuente enmascara la fecha de nacimiento (`**/**/**`), así que sale `null`. **Una persona no registrada en BDUA responde 404 y NO cobra.** Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `TI`, `CE`, `PA`, `RC`, `NU`, `AS`, `MS`, `CD`, `CN`, `SC`, `PE`, `PT`, `PC`. Tipo de documento. Por defecto `CC`. Son los códigos del registro de salud: PE = Permiso Especial de Permanencia, PT = Permiso por Protección Temporal, PC = PEP-Tutor, NU = NUIP. Se aceptan también los nombres del resto del catálogo: `PEP` se traduce a PE y `PPT` a PT. Con NIT responde 400 `bad_request` sin cobrar (lo rechaza la validación de entrada, sin ir a la fuente): es un registro de personas naturales.\n- `docNumber` (string, obligatorio). Número de documento: de 1 a 14 dígitos, o de 8 a 10 caracteres alfanuméricos para pasaportes y permisos (es la forma que acepta el registro). Alias aceptados: `doc`, `documento`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eps",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eps"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "La afiliación en salud de una persona por documento, de la Base de Datos Única de Afiliados (BDUA) que administra la ADRES: la **EPS**, el **régimen** (contributivo o subsidiado), el **estado** (activo/retirado), el **tipo de afiliado** (cotizante, beneficiario, cabeza de familia) y las fechas de afiliación y finalización, junto con los datos básicos de la persona y su ciudad. Responde en segundos y no pide fecha de expedición del documento. `afiliaciones` trae el historial completo —una fila por traslado de EPS o cambio de régimen— y la fila ACTIVA es la afiliación vigente. Es la misma sección `salud` de `/api/ruaf` en versión puntual: aquella exige la fecha de expedición y cuesta 2 créditos con decenas de segundos de espera; esta responde \"¿qué EPS tiene hoy?\" por 1. ⚠️ La fuente enmascara la fecha de nacimiento (`**/**/**`), así que sale `null`. **Una persona no registrada en BDUA responde 404 y NO cobra.** Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `TI`, `CE`, `PA`, `RC`, `NU`, `AS`, `MS`, `CD`, `CN`, `SC`, `PE`, `PT`, `PC`. Tipo de documento. Por defecto `CC`. Son los códigos del registro de salud: PE = Permiso Especial de Permanencia, PT = Permiso por Protección Temporal, PC = PEP-Tutor, NU = NUIP. Se aceptan también los nombres del resto del catálogo: `PEP` se traduce a PE y `PPT` a PT. Con NIT responde 400 `bad_request` sin cobrar (lo rechaza la validación de entrada, sin ir a la fuente): es un registro de personas naturales.\n- `docNumber` (string, obligatorio). Número de documento: de 1 a 14 dígitos, o de 8 a 10 caracteres alfanuméricos para pasaportes y permisos (es la forma que acepta el registro). Alias aceptados: `doc`, `documento`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"afiliacion-salud-adres\",\n  \"status\": \"info\",\n  \"data\": {\n    \"documento\": \"1020304050\",\n    \"tipoDocumento\": \"CC\",\n    \"persona\": {\n      \"nombres\": \"MARIA FERNANDA\",\n      \"apellidos\": \"GOMEZ RUIZ\",\n      \"fechaNacimiento\": null,\n      \"departamento\": \"VALLE\",\n      \"municipio\": \"SANTIAGO DE CALI\"\n    },\n    \"afiliaciones\": [\n      {\n        \"estado\": \"ACTIVO\",\n        \"entidad\": \"NUEVA EPS S.A.\",\n        \"regimen\": \"CONTRIBUTIVO\",\n        \"fechaAfiliacion\": \"01/09/2018\",\n        \"fechaFinalizacion\": null,\n        \"tipoAfiliado\": \"COTIZANTE\"\n      }\n    ],\n    \"fechaImpresion\": \"09/07/2026 12:26:07\"\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Afiliación a ARL SURA (riesgos laborales)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/arl-sura",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "arl-sura"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "La afiliación a riesgos laborales de una persona en la ARL SURA —la administradora más grande del país— por documento, sin fecha de expedición. Devuelve el veredicto `afiliado`, el estado de la afiliación, el nombre del afiliado y el `codigoValidacion` del certificado oficial (validable por un mes en arlsura.com.co). Responde en segundos. Es la sección `riesgosLaborales` de `/api/ruaf` en versión puntual para una ARL: aquella exige la fecha de expedición y cuesta 2 créditos con decenas de segundos de espera; esta responde \"¿está afiliado a ARL SURA?\" por 1. ⚠️ **No cubre las otras ARL** (Positiva, Colmena…): para saber EN CUÁL está una persona, la respuesta completa es `/api/ruaf`. Una persona no afiliada a ARL SURA responde 404 y NO cobra (no es una negativa completa: SURA es una de varias ARL). Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `TI`, `RC`, `PA`, `CD`, `SC`, `PEP`, `PPT`. Tipo de documento. Por defecto `CC`. Es el universo de personas del portal de ARL SURA: PEP = Permiso Especial de Permanencia, PPT = Permiso por Protección Temporal. Con NIT responde 400 `bad_request` sin cobrar: esta consulta es de afiliación de personas, no de empresas.\n- `docNumber` (string, obligatorio). Número de documento: de 3 a 16 caracteres, letras mayúsculas o dígitos (el pasaporte lleva letras; el rango es el que valida el portal). Alias aceptados: `doc`, `documento`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/arl-sura",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "arl-sura"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "La afiliación a riesgos laborales de una persona en la ARL SURA —la administradora más grande del país— por documento, sin fecha de expedición. Devuelve el veredicto `afiliado`, el estado de la afiliación, el nombre del afiliado y el `codigoValidacion` del certificado oficial (validable por un mes en arlsura.com.co). Responde en segundos. Es la sección `riesgosLaborales` de `/api/ruaf` en versión puntual para una ARL: aquella exige la fecha de expedición y cuesta 2 créditos con decenas de segundos de espera; esta responde \"¿está afiliado a ARL SURA?\" por 1. ⚠️ **No cubre las otras ARL** (Positiva, Colmena…): para saber EN CUÁL está una persona, la respuesta completa es `/api/ruaf`. Una persona no afiliada a ARL SURA responde 404 y NO cobra (no es una negativa completa: SURA es una de varias ARL). Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `TI`, `RC`, `PA`, `CD`, `SC`, `PEP`, `PPT`. Tipo de documento. Por defecto `CC`. Es el universo de personas del portal de ARL SURA: PEP = Permiso Especial de Permanencia, PPT = Permiso por Protección Temporal. Con NIT responde 400 `bad_request` sin cobrar: esta consulta es de afiliación de personas, no de empresas.\n- `docNumber` (string, obligatorio). Número de documento: de 3 a 16 caracteres, letras mayúsculas o dígitos (el pasaporte lleva letras; el rango es el que valida el portal). Alias aceptados: `doc`, `documento`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"arl-sura\",\n  \"status\": \"info\",\n  \"data\": {\n    \"documento\": \"1020304050\",\n    \"tipoDocumento\": \"CC\",\n    \"afiliado\": true,\n    \"estado\": \"ACTIVO\",\n    \"nombre\": \"MARIA FERNANDA GOMEZ RUIZ\",\n    \"fechaCertificacion\": \"07 de septiembre de 2026\",\n    \"codigoValidacion\": \"C10203040501234567890\"\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Registro de talento humano en salud (RETHUS)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/rethus",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rethus"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "La inscripción de una persona en el Registro Único Nacional del Talento Humano en Salud (RETHUS) de MinSalud, por documento, sin fecha de expedición. Responde la pregunta puntual \"¿está inscrito como profesional de la salud?\" con los datos de la persona, su estado de identificación, las PROFESIONES registradas (título, acto administrativo, entidad reportadora) y las prestaciones de servicios de salud declaradas (lugar, modalidad, fechas). Responde en segundos y es el complemento del registro del profesional frente a la afiliación al sistema de `/api/eps`: una dice dónde está asegurada la persona, la otra si ejerce una profesión de la salud registrada. ⚠️ Los tipos de documento son los del registro: solo `CC`, `CE`, `PT` (protección temporal) y `TI`. `primerNombre` y `primerApellido` son opcionales (el registro no los exige) y se reenvían tal cual. Una persona sin inscripción responde 404 y NO cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `PT`, `TI`. Tipo de documento. Por defecto `CC`. Es el universo del registro: CE = Cédula de Extranjería, PT = Permiso por Protección Temporal (acepta `PPT` como alias), TI = Tarjeta de Identidad. No hay pasaporte ni registro civil en este registro. Con otro valor responde 400 `bad_request` sin cobrar.\n- `docNumber` (string, obligatorio). Número de documento: de 1 a 12 caracteres, letras mayúsculas o dígitos (es el máximo que acepta el registro). Alias aceptados: `doc`, `documento`.\n- `primerNombre` (string, opcional). Opcional. Primer nombre, tal como aparece en el documento. El registro no lo exige hoy y se reenvía tal cual; sirve de blinda por si el registro empieza a pedirlo. Máximo 12 caracteres. Alias: `nombre`.\n- `primerApellido` (string, opcional). Opcional. Primer apellido, tal como aparece en el documento. Máximo 12 caracteres. Alias: `apellido`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rethus",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rethus"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "La inscripción de una persona en el Registro Único Nacional del Talento Humano en Salud (RETHUS) de MinSalud, por documento, sin fecha de expedición. Responde la pregunta puntual \"¿está inscrito como profesional de la salud?\" con los datos de la persona, su estado de identificación, las PROFESIONES registradas (título, acto administrativo, entidad reportadora) y las prestaciones de servicios de salud declaradas (lugar, modalidad, fechas). Responde en segundos y es el complemento del registro del profesional frente a la afiliación al sistema de `/api/eps`: una dice dónde está asegurada la persona, la otra si ejerce una profesión de la salud registrada. ⚠️ Los tipos de documento son los del registro: solo `CC`, `CE`, `PT` (protección temporal) y `TI`. `primerNombre` y `primerApellido` son opcionales (el registro no los exige) y se reenvían tal cual. Una persona sin inscripción responde 404 y NO cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `PT`, `TI`. Tipo de documento. Por defecto `CC`. Es el universo del registro: CE = Cédula de Extranjería, PT = Permiso por Protección Temporal (acepta `PPT` como alias), TI = Tarjeta de Identidad. No hay pasaporte ni registro civil en este registro. Con otro valor responde 400 `bad_request` sin cobrar.\n- `docNumber` (string, obligatorio). Número de documento: de 1 a 12 caracteres, letras mayúsculas o dígitos (es el máximo que acepta el registro). Alias aceptados: `doc`, `documento`.\n- `primerNombre` (string, opcional). Opcional. Primer nombre, tal como aparece en el documento. El registro no lo exige hoy y se reenvía tal cual; sirve de blinda por si el registro empieza a pedirlo. Máximo 12 caracteres. Alias: `nombre`.\n- `primerApellido` (string, opcional). Opcional. Primer apellido, tal como aparece en el documento. Máximo 12 caracteres. Alias: `apellido`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"inscripcion-talento-humano-salud\",\n  \"status\": \"info\",\n  \"data\": {\n    \"documento\": \"1020304050\",\n    \"tipoDocumento\": \"CC\",\n    \"inscrito\": true,\n    \"persona\": {\n      \"primerNombre\": \"MARIA FERNANDA\",\n      \"segundoNombre\": \"\",\n      \"primerApellido\": \"GOMEZ\",\n      \"segundoApellido\": \"RUIZ\",\n      \"estadoIdentificacion\": \"Vigente\"\n    },\n    \"profesiones\": [\n      {\n        \"tipoPrograma\": \"UNV\",\n        \"origenObtencion\": \"Local\",\n        \"profesion\": \"MEDICINA\",\n        \"fechaInicioEjercer\": \"2019-03-10\",\n        \"actoAdministrativo\": \"150573\",\n        \"entidadReportadora\": \"COLEGIO MEDICO COLOMBIANO\"\n      }\n    ],\n    \"prestacionesSSO\": [\n      {\n        \"tipoPrestacion\": \"Presto SSO\",\n        \"tipoLugar\": \"Local\",\n        \"lugar\": \"COLOMBIA|VALLE|SANTIAGO DE CALI\",\n        \"fechaInicio\": \"2024-11-03\",\n        \"fechaFin\": \"2025-11-02\",\n        \"modalidad\": \"Prestación de Servicios Profesionales de Salud en IPS Habilitada\",\n        \"programa\": \"Medicina\",\n        \"entidadReportadora\": \"COLEGIO MEDICO COLOMBIANO\"\n      }\n    ],\n    \"fechaConsulta\": \"2026-09-07→2:21:35 PM\"\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
         }
       ]
     }

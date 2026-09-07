@@ -1971,7 +1971,7 @@
         "tags": [
           "Impuestos y movilidad"
         ],
-        "description": "Departamento donde está matriculado el vehículo y enlace al portal oficial de impuestos. El departamento se resuelve desde el organismo de tránsito del RUNT por placa. NO liquida el impuesto: ningún departamento lo expone por API (todos blindan el portal con captcha y cuestionario), así que `data` siempre viene null y el valor está en `portalUrl` + el mensaje de `error`. Gratis: no cobra crédito. Gratis: no cobra crédito.",
+        "description": "Estado del impuesto vehicular por departamento. El departamento se resuelve desde el organismo de tránsito del RUNT por placa.\n\nEn **14 departamentos** (Antioquia, Arauca, Bogotá D.C., Bolívar, Caldas, Caquetá, Casanare, Córdoba, Huila, Norte de Santander, Putumayo, Risaralda, Santander y Valle del Cauca) `data` trae el histórico por vigencia en `anios` —año, valor, si está pagado y, cuando la fuente la publica, la fecha límite— más `totalPendiente`.\n\nEn el resto, `data` viene null y el valor está en `portalUrl` + el mensaje de `error`.\n\n⚠️ **`deudaSinMonto: true` es deuda real.** Algunos departamentos publican QUÉ vigencias se deben pero no cuánto: en ese caso `totalPendiente` llega en 0, las vigencias van en `vigenciasAdeudadas` y `status` es `warn`. **No leas `totalPendiente: 0` como paz y salvo sin mirar `deudaSinMonto`.** Nunca estimamos un monto que la fuente no dé.\n\nGratis: no cobra crédito. Gratis: no cobra crédito.",
         "x-credits": 0,
         "security": [
           {
@@ -2036,11 +2036,33 @@
             "content": {
               "application/json": {
                 "example": {
-                  "source": "Bogotá D.C.",
-                  "status": "info",
-                  "data": null,
-                  "portalUrl": "https://www.haciendabogota.gov.co/es/sdh/pagos-impuesto-vehiculos",
-                  "error": "Tu vehículo está matriculado en Bogotá D.C. Paga tu impuesto en el portal oficial del departamento.",
+                  "source": "Risaralda",
+                  "status": "warn",
+                  "data": {
+                    "departamento": "Risaralda",
+                    "anios": [
+                      {
+                        "anio": 2024,
+                        "valor": 34000,
+                        "pagado": true
+                      },
+                      {
+                        "anio": 2025,
+                        "valor": 305000,
+                        "pagado": true
+                      },
+                      {
+                        "anio": 2026,
+                        "valor": 0,
+                        "pagado": false
+                      }
+                    ],
+                    "totalPendiente": 0,
+                    "deudaSinMonto": true,
+                    "vigenciasAdeudadas": [
+                      2026
+                    ]
+                  },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
                 }
@@ -6422,7 +6444,7 @@
         "tags": [
           "Antecedentes de personas"
         ],
-        "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — es el scrape más caro del catálogo de personas y sustituye a siete consultas. ⏱️ **Es también el más lento: cuenta con decenas de segundos**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra. Costo: 2 créditos por consulta con datos.",
+        "description": "Todas las afiliaciones de una persona al sistema de seguridad social, del RUAF del Ministerio de Salud, en UNA llamada: **salud** (EPS, régimen, tipo de afiliado y estado), **pensiones** (fondo y régimen), **riesgos laborales** (ARL), **caja de compensación**, **cesantías**, si está **pensionada** y a qué **programas de asistencia social** está vinculada. Responde \"¿esta persona está cotizando hoy, dónde y por qué régimen?\" — la pregunta de una vinculación laboral o un estudio de seguridad. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. `fechaCorte` dice hasta cuándo están actualizados los datos, que NO es la fecha de la consulta: el Ministerio consolida con rezago. **Cuesta 2 créditos** — sustituye a siete consultas. ⏱️ **Es de los más lentos del catálogo: cuenta con unos 10 segundos y picos de más**, porque el informe lo genera un visor de reportes del Ministerio que no se puede apurar; conviene llamarlo de forma asíncrona y no dentro de una petición web con el usuario esperando. Una fecha que no coincide responde 404 y no cobra. Costo: 2 créditos por consulta con datos.",
         "x-credits": 2,
         "security": [
           {
@@ -6563,6 +6585,376 @@
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "cost": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/eps": {
+      "post": {
+        "operationId": "eps",
+        "summary": "Afiliación en salud (ADRES)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "La afiliación en salud de una persona por documento, de la Base de Datos Única de Afiliados (BDUA) que administra la ADRES: la **EPS**, el **régimen** (contributivo o subsidiado), el **estado** (activo/retirado), el **tipo de afiliado** (cotizante, beneficiario, cabeza de familia) y las fechas de afiliación y finalización, junto con los datos básicos de la persona y su ciudad. Responde en segundos y no pide fecha de expedición del documento. `afiliaciones` trae el historial completo —una fila por traslado de EPS o cambio de régimen— y la fila ACTIVA es la afiliación vigente. Es la misma sección `salud` de `/api/ruaf` en versión puntual: aquella exige la fecha de expedición y cuesta 2 créditos con decenas de segundos de espera; esta responde \"¿qué EPS tiene hoy?\" por 1. ⚠️ La fuente enmascara la fecha de nacimiento (`**/**/**`), así que sale `null`. **Una persona no registrada en BDUA responde 404 y NO cobra.** Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Son los códigos del registro de salud: PE = Permiso Especial de Permanencia, PT = Permiso por Protección Temporal, PC = PEP-Tutor, NU = NUIP. Se aceptan también los nombres del resto del catálogo: `PEP` se traduce a PE y `PPT` a PT. Con NIT responde 400 `bad_request` sin cobrar (lo rechaza la validación de entrada, sin ir a la fuente): es un registro de personas naturales.",
+                    "enum": [
+                      "CC",
+                      "TI",
+                      "CE",
+                      "PA",
+                      "RC",
+                      "NU",
+                      "AS",
+                      "MS",
+                      "CD",
+                      "CN",
+                      "SC",
+                      "PE",
+                      "PT",
+                      "PC"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento: de 1 a 14 dígitos, o de 8 a 10 caracteres alfanuméricos para pasaportes y permisos (es la forma que acepta el registro). Alias aceptados: `doc`, `documento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "afiliacion-salud-adres",
+                  "status": "info",
+                  "data": {
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "persona": {
+                      "nombres": "MARIA FERNANDA",
+                      "apellidos": "GOMEZ RUIZ",
+                      "fechaNacimiento": null,
+                      "departamento": "VALLE",
+                      "municipio": "SANTIAGO DE CALI"
+                    },
+                    "afiliaciones": [
+                      {
+                        "estado": "ACTIVO",
+                        "entidad": "NUEVA EPS S.A.",
+                        "regimen": "CONTRIBUTIVO",
+                        "fechaAfiliacion": "01/09/2018",
+                        "fechaFinalizacion": null,
+                        "tipoAfiliado": "COTIZANTE"
+                      }
+                    ],
+                    "fechaImpresion": "09/07/2026 12:26:07"
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/arl-sura": {
+      "post": {
+        "operationId": "arl-sura",
+        "summary": "Afiliación a ARL SURA (riesgos laborales)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "La afiliación a riesgos laborales de una persona en la ARL SURA —la administradora más grande del país— por documento, sin fecha de expedición. Devuelve el veredicto `afiliado`, el estado de la afiliación, el nombre del afiliado y el `codigoValidacion` del certificado oficial (validable por un mes en arlsura.com.co). Responde en segundos. Es la sección `riesgosLaborales` de `/api/ruaf` en versión puntual para una ARL: aquella exige la fecha de expedición y cuesta 2 créditos con decenas de segundos de espera; esta responde \"¿está afiliado a ARL SURA?\" por 1. ⚠️ **No cubre las otras ARL** (Positiva, Colmena…): para saber EN CUÁL está una persona, la respuesta completa es `/api/ruaf`. Una persona no afiliada a ARL SURA responde 404 y NO cobra (no es una negativa completa: SURA es una de varias ARL). Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Es el universo de personas del portal de ARL SURA: PEP = Permiso Especial de Permanencia, PPT = Permiso por Protección Temporal. Con NIT responde 400 `bad_request` sin cobrar: esta consulta es de afiliación de personas, no de empresas.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "TI",
+                      "RC",
+                      "PA",
+                      "CD",
+                      "SC",
+                      "PEP",
+                      "PPT"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento: de 3 a 16 caracteres, letras mayúsculas o dígitos (el pasaporte lleva letras; el rango es el que valida el portal). Alias aceptados: `doc`, `documento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "arl-sura",
+                  "status": "info",
+                  "data": {
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "afiliado": true,
+                    "estado": "ACTIVO",
+                    "nombre": "MARIA FERNANDA GOMEZ RUIZ",
+                    "fechaCertificacion": "07 de septiembre de 2026",
+                    "codigoValidacion": "C10203040501234567890"
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/rethus": {
+      "post": {
+        "operationId": "rethus",
+        "summary": "Registro de talento humano en salud (RETHUS)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "La inscripción de una persona en el Registro Único Nacional del Talento Humano en Salud (RETHUS) de MinSalud, por documento, sin fecha de expedición. Responde la pregunta puntual \"¿está inscrito como profesional de la salud?\" con los datos de la persona, su estado de identificación, las PROFESIONES registradas (título, acto administrativo, entidad reportadora) y las prestaciones de servicios de salud declaradas (lugar, modalidad, fechas). Responde en segundos y es el complemento del registro del profesional frente a la afiliación al sistema de `/api/eps`: una dice dónde está asegurada la persona, la otra si ejerce una profesión de la salud registrada. ⚠️ Los tipos de documento son los del registro: solo `CC`, `CE`, `PT` (protección temporal) y `TI`. `primerNombre` y `primerApellido` son opcionales (el registro no los exige) y se reenvían tal cual. Una persona sin inscripción responde 404 y NO cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Es el universo del registro: CE = Cédula de Extranjería, PT = Permiso por Protección Temporal (acepta `PPT` como alias), TI = Tarjeta de Identidad. No hay pasaporte ni registro civil en este registro. Con otro valor responde 400 `bad_request` sin cobrar.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "PT",
+                      "TI"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento: de 1 a 12 caracteres, letras mayúsculas o dígitos (es el máximo que acepta el registro). Alias aceptados: `doc`, `documento`."
+                  },
+                  "primerNombre": {
+                    "type": "string",
+                    "example": "MARIA",
+                    "description": "Opcional. Primer nombre, tal como aparece en el documento. El registro no lo exige hoy y se reenvía tal cual; sirve de blinda por si el registro empieza a pedirlo. Máximo 12 caracteres. Alias: `nombre`."
+                  },
+                  "primerApellido": {
+                    "type": "string",
+                    "example": "GOMEZ",
+                    "description": "Opcional. Primer apellido, tal como aparece en el documento. Máximo 12 caracteres. Alias: `apellido`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "inscripcion-talento-humano-salud",
+                  "status": "info",
+                  "data": {
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "inscrito": true,
+                    "persona": {
+                      "primerNombre": "MARIA FERNANDA",
+                      "segundoNombre": "",
+                      "primerApellido": "GOMEZ",
+                      "segundoApellido": "RUIZ",
+                      "estadoIdentificacion": "Vigente"
+                    },
+                    "profesiones": [
+                      {
+                        "tipoPrograma": "UNV",
+                        "origenObtencion": "Local",
+                        "profesion": "MEDICINA",
+                        "fechaInicioEjercer": "2019-03-10",
+                        "actoAdministrativo": "150573",
+                        "entidadReportadora": "COLEGIO MEDICO COLOMBIANO"
+                      }
+                    ],
+                    "prestacionesSSO": [
+                      {
+                        "tipoPrestacion": "Presto SSO",
+                        "tipoLugar": "Local",
+                        "lugar": "COLOMBIA|VALLE|SANTIAGO DE CALI",
+                        "fechaInicio": "2024-11-03",
+                        "fechaFin": "2025-11-02",
+                        "modalidad": "Prestación de Servicios Profesionales de Salud en IPS Habilitada",
+                        "programa": "Medicina",
+                        "entidadReportadora": "COLEGIO MEDICO COLOMBIANO"
+                      }
+                    ],
+                    "fechaConsulta": "2026-09-07→2:21:35 PM"
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
                 }
               }
             }
