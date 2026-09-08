@@ -7,7 +7,7 @@ PlacApi resuelve en una llamada lo que hoy exige captchas y portales separados: 
 **RUNT** por placa, las multas del **SIMIT**, el **SOAT** y la **revisión tecnomecánica**, el
 impuesto vehicular, el avalúo **FASECOLDA**, el **pico y placa** de 30 ciudades, las licencias
 de conducción, los antecedentes de una persona y los registros **RUES**, **SISBEN** y **RUAF**.
-Devuelve JSON. Sin scraping del lado del cliente y sin captchas.
+Devuelve JSON. Sin captchas y sin portales que integrar del lado del cliente.
 
 | | |
 |---|---|
