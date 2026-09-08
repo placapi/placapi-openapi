@@ -325,12 +325,31 @@
                   },
                   "impuestos": {
                     "source": "Bogotá D.C.",
-                    "status": "info",
+                    "status": "warn",
                     "fetchedAt": "2026-07-24T15:04:05.000Z",
                     "mode": "live",
-                    "data": null,
-                    "portalUrl": "https://www.haciendabogota.gov.co/es/sdh/pagos-impuesto-vehiculos",
-                    "error": "Tu vehículo está matriculado en Bogotá D.C. Paga tu impuesto en el portal oficial del departamento."
+                    "data": {
+                      "departamento": "Bogotá D.C.",
+                      "anios": [
+                        {
+                          "anio": 2024,
+                          "valor": 412000,
+                          "pagado": true
+                        },
+                        {
+                          "anio": 2025,
+                          "valor": 438000,
+                          "pagado": true
+                        },
+                        {
+                          "anio": 2026,
+                          "valor": 465000,
+                          "pagado": false
+                        }
+                      ],
+                      "totalPendiente": 465000
+                    },
+                    "portalUrl": "https://www.haciendabogota.gov.co/es/sdh/pagos-impuesto-vehiculos"
                   },
                   "fasecolda": {
                     "source": "avaluo",
@@ -2793,7 +2812,7 @@
         "tags": [
           "Vehículo (RUNT)"
         ],
-        "description": "Historial de reclamaciones ante aseguradoras de un vehículo (fuente FASECOLDA, desde 2008): fecha, amparo y `severidad` de cada registro. Solo pide la placa. `severidad: \"mayor\"` = la aseguradora indemnizó el vehículo completo (pérdida total); `\"menor\"` = indemnizó una reparación; `\"desconocida\"` = amparo que la fuente no cataloga. `perdidaTotal` es true SOLO si hay al menos un registro de severidad mayor, así que un carro con reclamaciones menores devuelve `perdidaTotal: false` con `totalSiniestros > 0`. Cobertura parcial: cubre únicamente vehículos que estuvieron asegurados, así que `perdidaTotal: false` significa «no figura», no «nunca chocó». La fuente no informa el valor indemnizado ni la aseguradora. `status` es danger con pérdida total, warn con reclamaciones menores y ok sin registros. Cuesta 2 créditos (el scrape es lento y la fuente topa las consultas diarias). Costo: 2 créditos por consulta con datos.",
+        "description": "Historial de reclamaciones ante aseguradoras de un vehículo (fuente FASECOLDA, desde 2008): fecha, amparo y `severidad` de cada registro. Solo pide la placa. `severidad: \"mayor\"` = la aseguradora indemnizó el vehículo completo (pérdida total); `\"menor\"` = indemnizó una reparación; `\"desconocida\"` = amparo que la fuente no cataloga. `perdidaTotal` es true SOLO si hay al menos un registro de severidad mayor, así que un carro con reclamaciones menores devuelve `perdidaTotal: false` con `totalSiniestros > 0`. Cobertura parcial: cubre únicamente vehículos que estuvieron asegurados, así que `perdidaTotal: false` significa «no figura», no «nunca chocó». La fuente no informa el valor indemnizado ni la aseguradora. `status` es danger con pérdida total, warn con reclamaciones menores y ok sin registros. Cuesta 2 créditos (la fuente topa las consultas diarias). Costo: 2 créditos por consulta con datos.",
         "x-credits": 2,
         "security": [
           {
