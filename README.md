@@ -35,7 +35,7 @@ real. La versión viva siempre está en `https://placapi.com/openapi.json` y
 curl -X POST 'https://placapi.com/api/consulta' \
   -H 'x-api-key: pk_live_TU_CLAVE' \
   -H 'content-type: application/json' \
-  -d '{"placa":"ABC123","docType":"CC","docNumber":"1010111935"}'
+  -d '{"placa":"ABC123","docType":"CC","docNumber":"1020304050"}'
 ```
 
 La API key se genera en <https://placapi.com/integracion>. El registro incluye una consulta de
