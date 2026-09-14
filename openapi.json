@@ -1202,7 +1202,7 @@
         "tags": [
           "Multas y comparendos (SIMIT)"
         ],
-        "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada y valor) y cuántos acuerdos de pago hay. `status`: ok sin multas, warn con multas y danger si la deuda pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
+        "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: une las multas del vehículo con las del documento enviado (también las de otras placas de esa persona, que le bloquean trámites como el traspaso), sin repetir ninguna. Devuelve el total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada, valor, `placa` a la que está asociada y `tipo`: `comparendo` vigente o `resolucion` si ya escaló) y cuántos acuerdos de pago hay. Para separar la deuda del vehículo, filtrar `multas` por `placa`. El total consolida las dos clases a propósito e incluye lo pendiente de los acuerdos de pago; para la lista de solo comparendos vigentes está /api/comparendos. `status`: ok sin deuda, warn con deuda (multas o acuerdos pendientes) y danger si la deuda pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -1280,7 +1280,9 @@
                         "infraccion": "No respetar pico y placa",
                         "codigo": "C14",
                         "estado": "pendiente",
-                        "valor": 522700
+                        "valor": 522700,
+                        "tipo": "comparendo",
+                        "placa": "ABC123"
                       }
                     ],
                     "acuerdosPago": 0
@@ -2873,6 +2875,109 @@
                     ],
                     "fuente": "Reclamaciones reportadas por aseguradoras",
                     "cobertura": "Solo vehículos que estuvieron asegurados; reclamaciones reportadas por las aseguradoras desde 2008."
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra nunca (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/accidentes-bogota": {
+      "post": {
+        "operationId": "accidentes-bogota",
+        "summary": "Accidentes de tránsito en Bogotá",
+        "tags": [
+          "Vehículo (RUNT)"
+        ],
+        "description": "Accidentes de tránsito registrados por la autoridad de movilidad de Bogotá (informes IPAT) de un vehículo, por placa: fecha, gravedad (`SOLO DAÑOS`, `CON HERIDOS`, `CON MUERTOS`), número de formulario y código del informe, más recientes primero, con `gravedadMaxima` como resumen. Complementa a `/api/perdida-total`: esa fuente solo ve reclamaciones de vehículos asegurados y de mayor cuantía, mientras este registro incluye los choques sin heridos y no exige que el vehículo esté asegurado — a cambio cubre únicamente Bogotá. Una placa sin registros devuelve `totalAccidentes: 0` y cobra: «no registra accidentes» es una respuesta definitiva. `status` es danger con heridos o muertos, warn con solo daños y ok sin registros. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "accidentes",
+                  "status": "danger",
+                  "data": {
+                    "placa": "ABC123",
+                    "totalAccidentes": 2,
+                    "gravedadMaxima": "con_heridos",
+                    "accidentes": [
+                      {
+                        "fecha": "2019-03-15",
+                        "fechaTexto": "VIERNES, 15 MARZO 2019 06:00 AM",
+                        "gravedad": "CON HERIDOS",
+                        "formulario": "11036135",
+                        "ipat": "A000966585"
+                      },
+                      {
+                        "fecha": "2012-09-13",
+                        "fechaTexto": "JUEVES, 13 SEPTIEMBRE 2012 08:20 AM",
+                        "gravedad": "SOLO DAÑOS",
+                        "formulario": "998877",
+                        "ipat": "A000000000"
+                      }
+                    ],
+                    "fuente": "Accidentes de tránsito reportados por la autoridad de tránsito de Bogotá",
+                    "cobertura": "Solo accidentes ocurridos en Bogotá; no cubre otras ciudades. Incluye choques sin heridos (solo daños)."
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"

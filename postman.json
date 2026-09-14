@@ -441,7 +441,7 @@
             }
           }
         },
-        "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada y valor) y cuántos acuerdos de pago hay. `status`: ok sin multas, warn con multas y danger si la deuda pasa de $1.000.000.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+        "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: une las multas del vehículo con las del documento enviado (también las de otras placas de esa persona, que le bloquean trámites como el traspaso), sin repetir ninguna. Devuelve el total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada, valor, `placa` a la que está asociada y `tipo`: `comparendo` vigente o `resolucion` si ya escaló) y cuántos acuerdos de pago hay. Para separar la deuda del vehículo, filtrar `multas` por `placa`. El total consolida las dos clases a propósito e incluye lo pendiente de los acuerdos de pago; para la lista de solo comparendos vigentes está /api/comparendos. `status`: ok sin deuda, warn con deuda (multas o acuerdos pendientes) y danger si la deuda pasa de $1.000.000.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
       },
       "response": [
         {
@@ -472,7 +472,7 @@
                 }
               }
             },
-            "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada y valor) y cuántos acuerdos de pago hay. `status`: ok sin multas, warn con multas y danger si la deuda pasa de $1.000.000.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+            "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: une las multas del vehículo con las del documento enviado (también las de otras placas de esa persona, que le bloquean trámites como el traspaso), sin repetir ninguna. Devuelve el total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada, valor, `placa` a la que está asociada y `tipo`: `comparendo` vigente o `resolucion` si ya escaló) y cuántos acuerdos de pago hay. Para separar la deuda del vehículo, filtrar `multas` por `placa`. El total consolida las dos clases a propósito e incluye lo pendiente de los acuerdos de pago; para la lista de solo comparendos vigentes está /api/comparendos. `status`: ok sin deuda, warn con deuda (multas o acuerdos pendientes) y danger si la deuda pasa de $1.000.000.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
           },
           "status": "OK",
           "code": 200,
@@ -484,7 +484,7 @@
             }
           ],
           "cookie": [],
-          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"totalDeuda\": 522700,\n    \"totalMultas\": 1,\n    \"multas\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C14\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700\n      }\n    ],\n    \"acuerdosPago\": 0\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"totalDeuda\": 522700,\n    \"totalMultas\": 1,\n    \"multas\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C14\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700,\n        \"tipo\": \"comparendo\",\n        \"placa\": \"ABC123\"\n      }\n    ],\n    \"acuerdosPago\": 0\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
         }
       ]
     },
@@ -1385,6 +1385,81 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"siniestros\",\n  \"status\": \"danger\",\n  \"data\": {\n    \"placa\": \"ABC123\",\n    \"perdidaTotal\": true,\n    \"totalSiniestros\": 2,\n    \"siniestros\": [\n      {\n        \"fecha\": \"2022-09-13\",\n        \"amparo\": \"Pérdida Mayor Cuantía\",\n        \"severidad\": \"mayor\"\n      },\n      {\n        \"fecha\": \"2015-01-20\",\n        \"amparo\": \"Pérdida Menor Cuantía\",\n        \"severidad\": \"menor\"\n      }\n    ],\n    \"fuente\": \"Reclamaciones reportadas por aseguradoras\",\n    \"cobertura\": \"Solo vehículos que estuvieron asegurados; reclamaciones reportadas por las aseguradoras desde 2008.\"\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Accidentes de tránsito en Bogotá",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/accidentes-bogota",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "accidentes-bogota"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"ABC123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Accidentes de tránsito registrados por la autoridad de movilidad de Bogotá (informes IPAT) de un vehículo, por placa: fecha, gravedad (`SOLO DAÑOS`, `CON HERIDOS`, `CON MUERTOS`), número de formulario y código del informe, más recientes primero, con `gravedadMaxima` como resumen. Complementa a `/api/perdida-total`: esa fuente solo ve reclamaciones de vehículos asegurados y de mayor cuantía, mientras este registro incluye los choques sin heridos y no exige que el vehículo esté asegurado — a cambio cubre únicamente Bogotá. Una placa sin registros devuelve `totalAccidentes: 0` y cobra: «no registra accidentes» es una respuesta definitiva. `status` es danger con heridos o muertos, warn con solo daños y ok sin registros. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accidentes-bogota",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accidentes-bogota"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"ABC123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Accidentes de tránsito registrados por la autoridad de movilidad de Bogotá (informes IPAT) de un vehículo, por placa: fecha, gravedad (`SOLO DAÑOS`, `CON HERIDOS`, `CON MUERTOS`), número de formulario y código del informe, más recientes primero, con `gravedadMaxima` como resumen. Complementa a `/api/perdida-total`: esa fuente solo ve reclamaciones de vehículos asegurados y de mayor cuantía, mientras este registro incluye los choques sin heridos y no exige que el vehículo esté asegurado — a cambio cubre únicamente Bogotá. Una placa sin registros devuelve `totalAccidentes: 0` y cobra: «no registra accidentes» es una respuesta definitiva. `status` es danger con heridos o muertos, warn con solo daños y ok sin registros. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra nunca.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"accidentes\",\n  \"status\": \"danger\",\n  \"data\": {\n    \"placa\": \"ABC123\",\n    \"totalAccidentes\": 2,\n    \"gravedadMaxima\": \"con_heridos\",\n    \"accidentes\": [\n      {\n        \"fecha\": \"2019-03-15\",\n        \"fechaTexto\": \"VIERNES, 15 MARZO 2019 06:00 AM\",\n        \"gravedad\": \"CON HERIDOS\",\n        \"formulario\": \"11036135\",\n        \"ipat\": \"A000966585\"\n      },\n      {\n        \"fecha\": \"2012-09-13\",\n        \"fechaTexto\": \"JUEVES, 13 SEPTIEMBRE 2012 08:20 AM\",\n        \"gravedad\": \"SOLO DAÑOS\",\n        \"formulario\": \"998877\",\n        \"ipat\": \"A000000000\"\n      }\n    ],\n    \"fuente\": \"Accidentes de tránsito reportados por la autoridad de tránsito de Bogotá\",\n    \"cobertura\": \"Solo accidentes ocurridos en Bogotá; no cubre otras ciudades. Incluye choques sin heridos (solo daños).\"\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
         }
       ]
     },
