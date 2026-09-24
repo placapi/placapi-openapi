@@ -85,7 +85,7 @@
         "tags": [
           "Reporte completo"
         ],
-        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA —con `fichaTecnica` de 38 campos y `origen`— y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` (con sus amparos) cuando el vehículo es de servicio público. Desde 0.71.0 llega también el HISTÓRICO completo, no solo lo vigente: `vehicle.tramites` (matrícula inicial, traspasos, cambios de color o de servicio, con fecha, organismo y estado), `soat.historico` y `rtm.historico` con todas las vigencias registradas, `vehicle.normalizacion` cuando el registro marca deficiencia de matrícula, el número de oficio de cada limitación en `antecedentes.embargos[].documento`, y en SIMIT el `departamento` y el `estadoCartera` de cada comparendo más el detalle de los `acuerdos` de pago. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
+        "description": "Todo el conjunto de fuentes en UNA sola llamada: bundle vehicular completo (RUNT, SOAT, tecnomecánica, antecedentes, multas SIMIT, impuesto, avalúo FASECOLDA —con `fichaTecnica` de 38 campos y `origen`— y pico y placa) MÁS la licencia de conducción del propietario (por la misma cédula). Con `ciudad` o `lat`/`lng` (geolocaliza la ciudad; manda sobre `ciudad`) el pico y placa se filtra a esa ciudad y agrega `picoYPlaca.ubicacion`; sin ubicación trae todas las ciudades monitoreadas. El tipo de vehículo se detecta solo desde la clase RUNT; el dígito de placa evaluado lo fija cada ciudad y viene en `digitoPlaca` (por defecto primero para moto, último para carro). El bloque `vehicle` trae además la ficha técnica del registro —capacidad de carga y peso bruto en kg, ejes, llantas, pasajeros, puertas, número de serie y de licencia de tránsito, y las señales `regrabados`, `repotenciado`, `importado`, `vehiculoEnsenanza`, `antiguoClasico` y `seguridadEstado`—, más `tarjetaOperacion` y `polizasRc` (con sus amparos) cuando el vehículo es de servicio público. Desde 0.71.0 llega también el HISTÓRICO completo, no solo lo vigente: `vehicle.tramites` (matrícula inicial, traspasos, cambios de color o de servicio, con fecha, organismo y estado), `soat.historico` y `rtm.historico` con todas las vigencias registradas, `vehicle.normalizacion` cuando el registro marca deficiencia de matrícula, el número de oficio de cada limitación en `antecedentes.embargos[].documento`, y en SIMIT el `departamento` y el `estadoCartera` de cada comparendo, a quién está asociado cada uno (`asociadaDocumento`: la persona consultada es la infractora; `asociadaPlaca`: es de la placa consultada) y el detalle de los `acuerdos` de pago. Cada campo llega `null` (o lista vacía) si el registro no lo reporta para ese vehículo: la ficha se llena por tipo, un vehículo de carga trae capacidad y ejes donde un automóvil trae pasajeros y puertas. Cuesta 3 créditos: la mitad de lo que valen sueltas las fuentes que reúne. Costo: 3 créditos por consulta con datos.",
         "x-credits": 3,
         "security": [
           {
@@ -1202,7 +1202,7 @@
         "tags": [
           "Multas y comparendos (SIMIT)"
         ],
-        "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: une las multas del vehículo con las del documento enviado (también las de otras placas de esa persona, que le bloquean trámites como el traspaso), sin repetir ninguna. Devuelve el total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada, valor, `placa` a la que está asociada y `tipo`: `comparendo` vigente o `resolucion` si ya escaló) y cuántos acuerdos de pago hay. Para separar la deuda del vehículo, filtrar `multas` por `placa`. El total consolida las dos clases a propósito e incluye lo pendiente de los acuerdos de pago; para la lista de solo comparendos vigentes está /api/comparendos. `status`: ok sin deuda, warn con deuda (multas o acuerdos pendientes) y danger si la deuda pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
+        "description": "Comparendos y deuda del SIMIT consolidados por placa + documento: une las multas del vehículo con las del documento enviado (también las de otras placas de esa persona, que le bloquean trámites como el traspaso), sin repetir ninguna. Devuelve el total adeudado en pesos, número de multas, el detalle de cada una (fecha, organismo, infracción, código, estado pendiente/acuerdo/pagada, valor, `placa` a la que está asociada y `tipo`: `comparendo` vigente o `resolucion` si ya escaló) y cuántos acuerdos de pago hay. Cada multa dice a quién está asociada: `asociadaDocumento` es `true` si la persona del documento es la infractora y `false` si la multa sale solo por la placa (otro conductor, un dueño anterior); `asociadaPlaca` es `true` si es de la placa consultada y `false` si es de esa persona en otro vehículo. Para quedarse con la deuda de la persona, filtrar por `asociadaDocumento`; con la del vehículo, por `asociadaPlaca`. El total consolida las dos clases a propósito e incluye lo pendiente de los acuerdos de pago; para la lista de solo comparendos vigentes está /api/comparendos. `status`: ok sin deuda, warn con deuda (multas o acuerdos pendientes) y danger si la deuda pasa de $1.000.000. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -1268,10 +1268,10 @@
               "application/json": {
                 "example": {
                   "source": "multas",
-                  "status": "warn",
+                  "status": "danger",
                   "data": {
-                    "totalDeuda": 522700,
-                    "totalMultas": 1,
+                    "totalDeuda": 1045400,
+                    "totalMultas": 2,
                     "multas": [
                       {
                         "comparendoId": "11001000000012345678",
@@ -1282,7 +1282,22 @@
                         "estado": "pendiente",
                         "valor": 522700,
                         "tipo": "comparendo",
-                        "placa": "ABC123"
+                        "placa": "ABC123",
+                        "asociadaDocumento": true,
+                        "asociadaPlaca": true
+                      },
+                      {
+                        "comparendoId": "11001000000087654321",
+                        "fecha": "2025-06-02",
+                        "organismo": "SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ",
+                        "infraccion": "Estacionar un vehículo en sitios prohibidos",
+                        "codigo": "C02",
+                        "estado": "pendiente",
+                        "valor": 522700,
+                        "tipo": "resolucion",
+                        "placa": "ABC123",
+                        "asociadaDocumento": false,
+                        "asociadaPlaca": true
                       }
                     ],
                     "acuerdosPago": 0
