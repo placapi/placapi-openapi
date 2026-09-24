@@ -1464,6 +1464,81 @@
       ]
     },
     {
+      "name": "Reporte de hurto del vehículo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/reporte-hurto",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "reporte-hurto"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"ABC123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Denuncias de hurto y demás procesos penales en los que quedó vinculado un vehículo, solo con la placa. Cada registro dice el papel del vehículo en el caso (`categoria`: `hurto`, `receptacion` —vehículo robado decomisado a quien lo tenía—, `abuso_de_confianza`, `incautacion`, `accidente`, `usado_en_delito`, `otro`), el tipo de vinculación literal, la fecha, el número de noticia criminal, el delito, el estado del caso (`ACTIVO` o `INACTIVO` con su motivo de archivo) y los datos del vehículo tal como quedaron en el caso, para cotejarlos con la ficha (una placa mal digitada en una denuncia cae sobre otra placa). Resume con `reportadoHurto` y `denunciaHurtoActiva`, e incluye procesos de extinción de dominio. `status` es danger con una denuncia de hurto activa, warn con cualquier otro registro y ok sin registros. Una placa sin registros cobra: es una respuesta definitiva, aunque no prueba que el vehículo nunca se haya robado (un robo recuperado sin denuncia no aparece). Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reporte-hurto",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reporte-hurto"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"ABC123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Denuncias de hurto y demás procesos penales en los que quedó vinculado un vehículo, solo con la placa. Cada registro dice el papel del vehículo en el caso (`categoria`: `hurto`, `receptacion` —vehículo robado decomisado a quien lo tenía—, `abuso_de_confianza`, `incautacion`, `accidente`, `usado_en_delito`, `otro`), el tipo de vinculación literal, la fecha, el número de noticia criminal, el delito, el estado del caso (`ACTIVO` o `INACTIVO` con su motivo de archivo) y los datos del vehículo tal como quedaron en el caso, para cotejarlos con la ficha (una placa mal digitada en una denuncia cae sobre otra placa). Resume con `reportadoHurto` y `denunciaHurtoActiva`, e incluye procesos de extinción de dominio. `status` es danger con una denuncia de hurto activa, warn con cualquier otro registro y ok sin registros. Una placa sin registros cobra: es una respuesta definitiva, aunque no prueba que el vehículo nunca se haya robado (un robo recuperado sin denuncia no aparece). Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"hurto\",\n  \"status\": \"danger\",\n  \"data\": {\n    \"placa\": \"ABC123\",\n    \"reportadoHurto\": true,\n    \"denunciaHurtoActiva\": true,\n    \"totalRegistros\": 2,\n    \"registros\": [\n      {\n        \"categoria\": \"hurto\",\n        \"tipoVinculacion\": \"HURTADO\",\n        \"fechaVinculacion\": \"2026-09-21\",\n        \"noticiaCriminal\": \"760016000193202612345\",\n        \"vehiculo\": {\n          \"marca\": \"YAMAHA\",\n          \"linea\": \"FZN150D (FZ-S)\",\n          \"modelo\": \"2025\",\n          \"clase\": \"FAMILIAR\",\n          \"servicio\": \"PRIVADO\",\n          \"color\": \"AZUL\"\n        },\n        \"delitos\": [\n          \"HURTO CALIFICADO DE AUTOMOTOR MENOR CUANTIA ART. 240 C.P.\"\n        ],\n        \"estadoCaso\": \"ACTIVO\",\n        \"motivoEstado\": null,\n        \"etapa\": \"INDAGACIÓN\",\n        \"fechaHechos\": \"2026-09-20\",\n        \"seccional\": \"DIRECCIÓN SECCIONAL DE CALI\",\n        \"reservado\": false,\n        \"detalleDisponible\": true\n      },\n      {\n        \"categoria\": \"accidente\",\n        \"tipoVinculacion\": \"ELEMENTO CAUSANTE DEL DELITO\",\n        \"fechaVinculacion\": \"2023-05-14\",\n        \"noticiaCriminal\": \"760016000193202300987\",\n        \"vehiculo\": {\n          \"marca\": \"YAMAHA\",\n          \"linea\": \"FZN150D (FZ-S)\",\n          \"modelo\": \"2025\",\n          \"clase\": \"FAMILIAR\",\n          \"servicio\": \"PRIVADO\",\n          \"color\": \"AZUL\"\n        },\n        \"delitos\": [\n          \"LESIONES CULPOSAS ART. 120 C.P. MEDIO MOTORIZADO INCISO 2\"\n        ],\n        \"estadoCaso\": \"INACTIVO\",\n        \"motivoEstado\": \"Archivo por conducta atipica art.79 c.p.\",\n        \"etapa\": \"INDAGACIÓN\",\n        \"fechaHechos\": \"2023-05-13\",\n        \"seccional\": \"DIRECCIÓN SECCIONAL DE CALI\",\n        \"reservado\": false,\n        \"detalleDisponible\": true\n      }\n    ],\n    \"extincionDominio\": [],\n    \"bienesAdministrados\": 0,\n    \"fuente\": \"Noticias criminales y procesos de extinción de dominio registrados por la autoridad judicial\",\n    \"cobertura\": \"Denuncias y procesos penales en los que la placa quedó vinculada. Un vehículo robado y recuperado sin denuncia no aparece; una denuncia activa no significa que el vehículo siga desaparecido. Compara los datos del vehículo de cada registro con la ficha: una placa mal digitada en una denuncia puede caer sobre otra placa.\"\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\"\n}"
+        }
+      ]
+    },
+    {
       "name": "Prendas / garantías mobiliarias",
       "request": {
         "method": "POST",
