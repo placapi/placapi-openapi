@@ -502,7 +502,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -737,7 +737,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -943,7 +943,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1060,7 +1060,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1178,7 +1178,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1315,7 +1315,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1429,7 +1429,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1548,7 +1548,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1661,7 +1661,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1775,7 +1775,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1880,7 +1880,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -1983,7 +1983,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -2007,7 +2007,7 @@
         "tags": [
           "Impuestos y movilidad"
         ],
-        "description": "Estado del impuesto vehicular por departamento. El departamento se resuelve desde el organismo de tránsito del RUNT por placa.\n\nEn **22 departamentos** (Antioquia, Arauca, Bogotá D.C., Bolívar, Boyacá, Caldas, Caquetá, Casanare, Cauca, Cesar, Córdoba, Guaviare, Huila, Magdalena, Meta, Norte de Santander, Putumayo, Risaralda, Santander, Sucre, Tolima y Valle del Cauca) `data` trae el histórico por vigencia en `anios` —año, valor, si está pagado y, cuando la fuente la publica, la fecha límite— más `totalPendiente`.\n\nEn Cundinamarca la gobernación publica qué vigencias tienen una factura oficial sin pagar, pero no cuánto se debe hoy: ahí `data` solo llega con `deudaSinMonto` (ver abajo), nunca con un monto ni como paz y salvo. Sin facturas pendientes, `data` viene null.\n\nEn el resto, `data` viene null y el valor está en `portalUrl` + el mensaje de `error`.\n\n⚠️ **`deudaSinMonto: true` es deuda real.** Algunos departamentos publican QUÉ vigencias se deben pero no cuánto: en ese caso `totalPendiente` llega en 0, las vigencias van en `vigenciasAdeudadas` y `status` es `warn`. **No leas `totalPendiente: 0` como paz y salvo sin mirar `deudaSinMonto`.** Nunca estimamos un monto que la fuente no dé.\n\n⚠️ **`sinDeudaEnCobro: true` tampoco es paz y salvo.** Cuando la entidad afirma que esa placa no tiene deuda EN COBRO, `data` llega con `sinDeudaEnCobro: true`, `totalPendiente` en 0 y `status` `info` — nunca `ok`. Es un dato, pero acotado: puede haber una declaración pendiente o presentada con error que todavía no entra en cobro, y la advertencia viaja en `error`.\n\n**2 créditos**, y solo cuando la fuente responde por la placa: cuenta con vigencias, `deudaSinMonto` o `sinDeudaEnCobro`. Si el departamento no tiene consulta en línea, o la fuente rechaza el documento o la placa, `data` viene null, el valor está en `portalUrl` + `error`, y se reembolsa.\n\nℹ️ Cuando la entidad rechaza el documento o la placa, la respuesta trae además `errorCode` con el código del contrato (`propietario_no_coincide`, `vehiculo_no_registrado`, `consulta_sin_resultado`) para poder ramificar sin leer el texto. **Va dentro de un `200`, no de un `404`**: la respuesta sigue teniendo valor —el enlace al portal oficial— y este endpoint nunca cobra un sin-resultado. Costo: 2 créditos por consulta con datos.",
+        "description": "Estado del impuesto vehicular por departamento. El departamento se resuelve desde el organismo de tránsito del RUNT por placa.\n\nEn **22 departamentos** (Antioquia, Arauca, Bogotá D.C., Bolívar, Boyacá, Caldas, Caquetá, Casanare, Cauca, Cesar, Córdoba, Guaviare, Huila, Magdalena, Meta, Norte de Santander, Putumayo, Risaralda, Santander, Sucre, Tolima y Valle del Cauca) `data` trae el histórico por vigencia en `anios` —año, valor, si está pagado y, cuando la fuente la publica, la fecha límite— más `totalPendiente`.\n\nEn Cundinamarca la gobernación publica sus facturas oficiales por vigencia, pero no cuánto se debe hoy: `data` llega con `deudaSinMonto` cuando hay facturas sin pagar, o al día con `vigenciasPagadas` cuando la factura del año en curso existe y todas están pagadas. Nunca con un monto. Sin la factura del año en curso, `data` viene null.\n\nEn el resto, `data` viene null y el valor está en `portalUrl` + el mensaje de `error`.\n\n**`resultado` dice siempre en qué caso está la respuesta**, para ramificar sin leer el texto. Con `data` (cobra 2): `con_deuda`, `deuda_sin_monto`, `al_dia` y `sin_deuda_en_cobro`. Sin `data` (no cobra): `vehiculo_no_encontrado`, `documento_no_corresponde`, `no_sujeto` (moto de hasta 125 cc o servicio público, Ley 488 de 1998, art. 141), `sin_resultado` (la entidad respondió y no tiene estado de cuenta que dar), `sin_consulta_en_linea` (solo `portalUrl`), `departamento_no_identificado` y `fuente_no_disponible`. El mismo campo viaja en el bloque `impuestos` de `/api/consulta-full`, que agrega `no_consultado` cuando no hubo ficha del vehículo.\n\n⚠️ **`deudaSinMonto: true` es deuda real.** Algunos departamentos publican QUÉ vigencias se deben pero no cuánto: en ese caso `totalPendiente` llega en 0, las vigencias van en `vigenciasAdeudadas` y `status` es `warn`. **No leas `totalPendiente: 0` como paz y salvo sin mirar `deudaSinMonto`.** Nunca estimamos un monto que la fuente no dé.\n\n⚠️ **`sinDeudaEnCobro: true` tampoco es paz y salvo.** Cuando la entidad afirma que esa placa no tiene deuda EN COBRO, `data` llega con `sinDeudaEnCobro: true`, `totalPendiente` en 0 y `status` `info` — nunca `ok`. Es un dato, pero acotado: puede haber una declaración pendiente o presentada con error que todavía no entra en cobro, y la advertencia viaja en `error`.\n\n**2 créditos**, y solo cuando la fuente responde por la placa: cuenta con vigencias, `deudaSinMonto` o `sinDeudaEnCobro`. Si el departamento no tiene consulta en línea, o la fuente rechaza el documento o la placa, `data` viene null, el valor está en `portalUrl` + `error`, y se reembolsa.\n\nℹ️ Cuando la entidad rechaza el documento o la placa, la respuesta trae además `code` (y `errorCode`, con el mismo valor) del contrato: `propietario_no_coincide`, `vehiculo_no_registrado` o `consulta_sin_resultado`. **Va dentro de un `200`, no de un `404`**: la respuesta sigue teniendo valor —el enlace al portal oficial— y este endpoint nunca cobra un sin-resultado. La única respuesta que no es `200` es `fuente_no_disponible`: **`502`** con `code: source_error`, como en el resto de la API; no cobra y reintentar sirve. Costo: 2 créditos por consulta con datos.",
         "x-credits": 2,
         "security": [
           {
@@ -2074,6 +2074,7 @@
                 "example": {
                   "source": "Risaralda",
                   "status": "warn",
+                  "resultado": "deuda_sin_monto",
                   "data": {
                     "departamento": "Risaralda",
                     "anios": [
@@ -2100,7 +2101,8 @@
                     ]
                   },
                   "mode": "live",
-                  "fetchedAt": "2026-07-24T15:04:05.000Z"
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 2
                 }
               }
             }
@@ -2112,7 +2114,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -2276,7 +2278,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -2420,7 +2422,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -2585,7 +2587,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -2805,7 +2807,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -2904,7 +2906,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3007,7 +3009,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3147,7 +3149,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3242,7 +3244,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3391,7 +3393,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3540,7 +3542,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3657,7 +3659,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3777,7 +3779,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3875,7 +3877,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -3964,7 +3966,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4052,7 +4054,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4178,7 +4180,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4300,7 +4302,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4418,7 +4420,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4526,7 +4528,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4660,7 +4662,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4766,7 +4768,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4886,7 +4888,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -4996,7 +4998,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5140,7 +5142,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5244,7 +5246,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5347,7 +5349,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5455,7 +5457,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5563,7 +5565,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5667,7 +5669,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5807,7 +5809,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -5969,7 +5971,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6092,7 +6094,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6227,7 +6229,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6346,7 +6348,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6468,7 +6470,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6590,7 +6592,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6696,7 +6698,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6872,7 +6874,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -6997,7 +6999,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -7104,7 +7106,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -7187,7 +7189,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -7270,7 +7272,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
@@ -7408,7 +7410,7 @@
             "description": "No autenticado o API key inválida (code: unauthorized)."
           },
           "402": {
-            "description": "Sin créditos suficientes (code: no_credits)."
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
           },
           "404": {
             "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
