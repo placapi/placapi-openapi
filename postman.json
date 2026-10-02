@@ -789,6 +789,81 @@
       ]
     },
     {
+      "name": "Estado de cuenta de tránsito",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/estado-cuenta-transito",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "estado-cuenta-transito"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Toda la deuda de tránsito de una persona por cédula (fuente SIMIT) en una sola respuesta: sus comparendos, sus resoluciones sancionatorias —las multas en firme— y sus acuerdos de pago, cada bloque con su conteo, su subtotal y el detalle de cada ítem en la misma forma que entregan `/api/comparendos`, `/api/resoluciones` y `/api/acuerdos-pago`. **Cuesta 2 créditos**: pedir los tres por separado cuesta 3.\n\n`totalDeuda` es el total del estado de cuenta de la persona, la cifra con la que hay que comparar; no sumes los subtotales, porque una misma infracción puede figurar en dos bloques. `pazSalvo` es `true` solo si ese total es 0. Úsalo cuando la pregunta es si alguien debe algo: consultar solo los comparendos deja por fuera a quien debe una multa en firme o está pagando un acuerdo. `status`: ok sin deuda ni ítems, warn con deuda y danger si pasa de $1.000.000. Una persona sin deuda también es una consulta con datos y se cobra; la respuesta trae `cost` con lo cobrado (0 si salió de caché).\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/estado-cuenta-transito",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "estado-cuenta-transito"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Toda la deuda de tránsito de una persona por cédula (fuente SIMIT) en una sola respuesta: sus comparendos, sus resoluciones sancionatorias —las multas en firme— y sus acuerdos de pago, cada bloque con su conteo, su subtotal y el detalle de cada ítem en la misma forma que entregan `/api/comparendos`, `/api/resoluciones` y `/api/acuerdos-pago`. **Cuesta 2 créditos**: pedir los tres por separado cuesta 3.\n\n`totalDeuda` es el total del estado de cuenta de la persona, la cifra con la que hay que comparar; no sumes los subtotales, porque una misma infracción puede figurar en dos bloques. `pazSalvo` es `true` solo si ese total es 0. Úsalo cuando la pregunta es si alguien debe algo: consultar solo los comparendos deja por fuera a quien debe una multa en firme o está pagando un acuerdo. `status`: ok sin deuda ni ítems, warn con deuda y danger si pasa de $1.000.000. Una persona sin deuda también es una consulta con datos y se cobra; la respuesta trae `cost` con lo cobrado (0 si salió de caché).\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento. Alias aceptado: `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"multas\",\n  \"status\": \"danger\",\n  \"data\": {\n    \"documentNumber\": \"1020304050\",\n    \"totalDeuda\": 1860416,\n    \"pazSalvo\": false,\n    \"totalComparendos\": 1,\n    \"deudaComparendos\": 522700,\n    \"comparendos\": [\n      {\n        \"comparendoId\": \"11001000000012345678\",\n        \"fecha\": \"2025-03-15\",\n        \"organismo\": \"SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ\",\n        \"infraccion\": \"No respetar pico y placa\",\n        \"codigo\": \"C14\",\n        \"estado\": \"pendiente\",\n        \"valor\": 522700,\n        \"departamento\": \"BOGOTÁ D.C.\",\n        \"tipo\": \"comparendo\"\n      }\n    ],\n    \"totalResoluciones\": 1,\n    \"deudaResoluciones\": 837716,\n    \"resoluciones\": [\n      {\n        \"comparendoId\": \"0002204801\",\n        \"fecha\": \"2025-09-15\",\n        \"organismo\": \"Jamundí\",\n        \"infraccion\": \"No detenerse ante una luz roja o amarilla de semáforo\",\n        \"codigo\": \"D04\",\n        \"estado\": \"pendiente\",\n        \"valor\": 837716,\n        \"departamento\": \"Valle del Cauca\",\n        \"tipo\": \"resolucion\"\n      }\n    ],\n    \"totalAcuerdos\": 1,\n    \"pendienteAcuerdos\": 500000,\n    \"acuerdos\": [\n      {\n        \"resolucion\": \"324\",\n        \"fechaResolucion\": \"2018-02-16\",\n        \"estado\": \"Acuerdo de pago\",\n        \"valorAcuerdo\": 837716,\n        \"pendiente\": 500000,\n        \"secretaria\": \"Bello\",\n        \"departamento\": \"Antioquia\"\n      }\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 2\n}"
+        }
+      ]
+    },
+    {
       "name": "Suspensión de licencia",
       "request": {
         "method": "POST",

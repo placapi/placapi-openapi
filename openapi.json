@@ -1792,6 +1792,152 @@
         }
       }
     },
+    "/estado-cuenta-transito": {
+      "post": {
+        "operationId": "estado-cuenta-transito",
+        "summary": "Estado de cuenta de tránsito",
+        "tags": [
+          "Multas y comparendos (SIMIT)"
+        ],
+        "description": "Toda la deuda de tránsito de una persona por cédula (fuente SIMIT) en una sola respuesta: sus comparendos, sus resoluciones sancionatorias —las multas en firme— y sus acuerdos de pago, cada bloque con su conteo, su subtotal y el detalle de cada ítem en la misma forma que entregan `/api/comparendos`, `/api/resoluciones` y `/api/acuerdos-pago`. **Cuesta 2 créditos**: pedir los tres por separado cuesta 3.\n\n`totalDeuda` es el total del estado de cuenta de la persona, la cifra con la que hay que comparar; no sumes los subtotales, porque una misma infracción puede figurar en dos bloques. `pazSalvo` es `true` solo si ese total es 0. Úsalo cuando la pregunta es si alguien debe algo: consultar solo los comparendos deja por fuera a quien debe una multa en firme o está pagando un acuerdo. `status`: ok sin deuda ni ítems, warn con deuda y danger si pasa de $1.000.000. Una persona sin deuda también es una consulta con datos y se cobra; la respuesta trae `cost` con lo cobrado (0 si salió de caché). Costo: 2 créditos por consulta con datos.",
+        "x-credits": 2,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docType",
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. se normalizan a PPT.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "NIT",
+                      "PA",
+                      "TI",
+                      "CD",
+                      "PPT",
+                      "RC"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento. Alias aceptado: `doc`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "multas",
+                  "status": "danger",
+                  "data": {
+                    "documentNumber": "1020304050",
+                    "totalDeuda": 1860416,
+                    "pazSalvo": false,
+                    "totalComparendos": 1,
+                    "deudaComparendos": 522700,
+                    "comparendos": [
+                      {
+                        "comparendoId": "11001000000012345678",
+                        "fecha": "2025-03-15",
+                        "organismo": "SECRETARÍA DISTRITAL DE MOVILIDAD DE BOGOTÁ",
+                        "infraccion": "No respetar pico y placa",
+                        "codigo": "C14",
+                        "estado": "pendiente",
+                        "valor": 522700,
+                        "departamento": "BOGOTÁ D.C.",
+                        "tipo": "comparendo"
+                      }
+                    ],
+                    "totalResoluciones": 1,
+                    "deudaResoluciones": 837716,
+                    "resoluciones": [
+                      {
+                        "comparendoId": "0002204801",
+                        "fecha": "2025-09-15",
+                        "organismo": "Jamundí",
+                        "infraccion": "No detenerse ante una luz roja o amarilla de semáforo",
+                        "codigo": "D04",
+                        "estado": "pendiente",
+                        "valor": 837716,
+                        "departamento": "Valle del Cauca",
+                        "tipo": "resolucion"
+                      }
+                    ],
+                    "totalAcuerdos": 1,
+                    "pendienteAcuerdos": 500000,
+                    "acuerdos": [
+                      {
+                        "resolucion": "324",
+                        "fechaResolucion": "2018-02-16",
+                        "estado": "Acuerdo de pago",
+                        "valorAcuerdo": 837716,
+                        "pendiente": 500000,
+                        "secretaria": "Bello",
+                        "departamento": "Antioquia"
+                      }
+                    ]
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
     "/suspension-licencia": {
       "post": {
         "operationId": "suspension-licencia",
