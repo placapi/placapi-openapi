@@ -51,6 +51,10 @@
       "description": "Verificación de una PERSONA, no de un vehículo: identidad, clasificación social, seguridad social, puesto de votación, disciplinarios, fiscales, judiciales y medidas correctivas por documento; listas de sanciones y notificaciones internacionales por nombre."
     },
     {
+      "name": "Certificados en PDF",
+      "description": "Las cinco verificaciones de antecedentes de una persona en una llamada, con PDF: el certificado original de la entidad cuando lo expide (disciplinario, fiscal) y una constancia de PlacApi cuando no (judicial, OFAC, ONU)."
+    },
+    {
       "name": "Empresas y Estado",
       "description": "Debida diligencia sobre la contraparte: registro mercantil, contratación con el Estado, procesos judiciales y declaración de bienes y rentas."
     },
@@ -67,8 +71,8 @@
       "description": "Récord del conductor peruano por documento."
     },
     {
-      "name": "México (CDMX, AMIS)",
-      "description": "Multas, verificación, licencia y reporte de robo de un vehículo mexicano."
+      "name": "México (CDMX)",
+      "description": "Multas, verificación y licencia de un vehículo mexicano."
     }
   ],
   "servers": [
@@ -3827,7 +3831,7 @@
         "operationId": "multas-mx",
         "summary": "Multas México (CDMX)",
         "tags": [
-          "México (CDMX, AMIS)"
+          "México (CDMX)"
         ],
         "description": "Multas de tránsito y sanciones de un vehículo de la Ciudad de México por placa, desde la consulta pública de adeudos de la Secretaría de Administración y Finanzas de la CDMX. Devuelve las infracciones de tránsito (con folio, fecha, situación, motivo, fundamento del reglamento y sanción en unidades de cuenta) y las sanciones de medio ambiente, más la tenencia año por año. El registro publica HISTORIAL: las pagadas vienen con `situacion: \"Pagada\"`, y `infraccionesPendientes` / `sancionesPendientes` son el corte vivo. La sanción está en UMA (unidades de cuenta), no en pesos: el portal no lo convierte en esta respuesta. Una placa que el padrón de la CDMX no reconoce responde `encontrado: false` (cobertura: solo vehículos emplacados en la CDMX). `status` es `warn` con deuda pendiente y `ok` sin ella. Una placa sin multas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -3947,7 +3951,7 @@
         "operationId": "verificacion-mx",
         "summary": "Verificación México (CDMX)",
         "tags": [
-          "México (CDMX, AMIS)"
+          "México (CDMX)"
         ],
         "description": "Verificación vehicular de la Ciudad de México por placa: el equivalente mexicano de la tecnomecánica. Devuelve si el vehículo puede tramitar el holograma de verificación (`puedeVerificar`, la MISMA regla del portal: sin adeudos de tenencia, sin pérdida del derecho y con puntaje de fotocívicas íntegro), el puntaje de fotocívicas con su mensaje, las sanciones de medio ambiente que incluyen las de holograma (circular sin holograma vigente) y la vigencia de la tarjeta de circulación. Una placa que el padrón de la CDMX no reconoce responde `encontrado: false` (cobertura: solo vehículos emplacados en la CDMX). `status` es `ok` si puede verificar, `warn` si tiene un adeudo que se lo impide e `info` sin señales o fuera del padrón. Una placa sin problemas es una respuesta válida y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -4045,7 +4049,7 @@
         "operationId": "licencia-mx",
         "summary": "Licencia México (CDMX)",
         "tags": [
-          "México (CDMX, AMIS)"
+          "México (CDMX)"
         ],
         "description": "Vigencia de la licencia de conducir de la Ciudad de México por CURP, desde el portal de finanzas de la CDMX. Devuelve si el registro reporta vigencia para esa CURP y la vigencia tal como la publica el portal. ⚠️ No es el registro nacional de licencias — México no tiene uno público — y la respuesta negativa del portal agrupa dos cosas: sin datos en CDMX O licencia permanente (el programa 2024+, que no tiene vigencia). Por eso `encontrada: false` no afirma que la persona no tenga licencia: solo que la ciudad no reporta una vigencia, y el `mensaje` del portal viaja completo. Una CURP mal formada responde 400 sin cobrar. `status` es `ok` con vigencia reportada e `info` sin ella (respuesta válida que cobra). Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
@@ -4098,94 +4102,6 @@
                     "mensaje": null
                   },
                   "portalUrl": "https://data.finanzas.cdmx.gob.mx/consulta_adeudos",
-                  "mode": "live",
-                  "fetchedAt": "2026-07-24T15:04:05.000Z",
-                  "cost": 1
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
-          },
-          "401": {
-            "description": "No autenticado o API key inválida (code: unauthorized)."
-          },
-          "402": {
-            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
-          },
-          "404": {
-            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
-          },
-          "429": {
-            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
-          },
-          "500": {
-            "description": "Error interno (code: internal_error)."
-          },
-          "502": {
-            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
-          }
-        }
-      }
-    },
-    "/soat-mx": {
-      "post": {
-        "operationId": "soat-mx",
-        "summary": "Reporte de robo AMIS (México)",
-        "tags": [
-          "México (CDMX, AMIS)"
-        ],
-        "description": "Reporte de robo de un vehículo mexicano por VIN, desde el padrón de vehículos con reporte de robo que alimentan las aseguradoras (AMIS/OCRA): el dato \"asegurador\" que México publica, equivalente honesto del SOAT — México no tiene un registro nacional de pólizas vigentes consultable por placa. Devuelve si el padrón tiene reporte de robo activo y el veredicto del portal tal cual (`mensaje`, p. ej. \"SIN REPORTE DE ROBO\"). `status` es `danger` con reporte y `ok` sin él. Un VIN sin reporte es una respuesta válida y cobra. No incluye datos del propietario ni del asegurado. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
-        "x-credits": 1,
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "vin"
-                ],
-                "properties": {
-                  "vin": {
-                    "type": "string",
-                    "example": "WBA1S1106K7D61956",
-                    "description": "VIN/NIV de 17 caracteres alfanuméricos. Alias aceptados: `niv`, `serie`."
-                  },
-                  "refresh": {
-                    "type": "boolean",
-                    "example": false,
-                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
-                  }
-                }
-              },
-              "example": {
-                "vin": "WBA1S1106K7D61956"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
-            "content": {
-              "application/json": {
-                "example": {
-                  "source": "soat",
-                  "status": "ok",
-                  "data": {
-                    "pais": "MX",
-                    "vin": "WBA1S1106K7D61956",
-                    "reportado": false,
-                    "mensaje": "SIN REPORTE DE ROBO"
-                  },
-                  "portalUrl": "http://reporterobo.amis.com.mx/reporterobo/",
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "cost": 1
@@ -5804,6 +5720,250 @@
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/certificado-antecedentes": {
+      "post": {
+        "operationId": "certificado-antecedentes",
+        "summary": "Certificados de antecedentes en PDF",
+        "tags": [
+          "Certificados en PDF"
+        ],
+        "description": "Las cinco verificaciones de antecedentes de una persona en **una sola llamada**, cada una con su **PDF para ver o descargar**: disciplinarios (Procuraduría), fiscales (Contraloría), judiciales (Policía Nacional) y las listas de sanciones de **OFAC** y de la **ONU**. Procuraduría y Contraloría entregan el **certificado original** que expide la entidad (`pdf.tipo: \"oficial\"`), con su número o código de verificación. La Policía, OFAC y la ONU no expiden documento: para ellas el PDF es una **constancia de consulta** que emite PlacApi (`pdf.tipo: \"constancia\"`) y dice que no reemplaza un certificado de la entidad. Basta con el documento: el nombre para buscar en OFAC y ONU se toma del registro, y se busca también en variantes cortas (primer nombre y apellidos) para que no se escape alguien listado con menos nombres; si mandas `nombre`, se usa ese. `consultas` permite pedir solo algunas. **Cobro por consulta: 2 créditos con resultado y PDF, 1 con resultado sin PDF, 0 si falla o no aplica** — 10 créditos las cinco completas, y la respuesta declara el total en `cost`. Tarda lo que la consulta más lenta: la Procuraduría expide el certificado en unos 7 s con el registro sano y hasta 140 s en un bache. Costo: 10 créditos por consulta con datos.",
+        "x-credits": 10,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Obligatorio si pides alguna de `disciplinario`, `fiscal` o `judicial` (lo son por defecto). Cada registro maneja los suyos —disciplinario: CC, CE, NIT, PPT, PEP; fiscal: CC, CE, TI, PA, PPT, PEP; judicial: CC, CE, PA, CD—; la consulta que no maneja el tipo enviado responde `code: \"no_aplica\"` y no cobra.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "NIT",
+                      "PA",
+                      "TI",
+                      "CD",
+                      "PPT",
+                      "PEP"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento. Alias aceptado: `doc`."
+                  },
+                  "nombre": {
+                    "type": "string",
+                    "example": "JUAN PEREZ GOMEZ",
+                    "description": "Nombre completo para OFAC y ONU. OPCIONAL si mandas el documento: sin él se toma el del registro. Obligatorio si solo pides `ofac` u `onu`."
+                  },
+                  "consultas": {
+                    "type": "array",
+                    "example": [
+                      "disciplinario",
+                      "fiscal",
+                      "judicial",
+                      "ofac",
+                      "onu"
+                    ],
+                    "description": "Qué consultar: cualquier combinación de `disciplinario`, `fiscal`, `judicial`, `ofac`, `onu` (arreglo en JSON o separadas por coma en GET). Por defecto, las cinco. Solo se reservan los créditos de las pedidas.",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "disciplinario",
+                        "fiscal",
+                        "judicial",
+                        "ofac",
+                        "onu"
+                      ]
+                    }
+                  },
+                  "primerNombre": {
+                    "type": "string",
+                    "example": "JUAN",
+                    "description": "Primer nombre del titular. OPCIONAL: solo agiliza la consulta disciplinaria. No cambia el resultado."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "certificado-antecedentes",
+                  "status": "ok",
+                  "documento": {
+                    "docType": "CC",
+                    "docNumber": "1020304050"
+                  },
+                  "nombreConsultado": {
+                    "valor": "JUAN CARLOS PEREZ GOMEZ",
+                    "origen": "registro",
+                    "variantes": [
+                      "JUAN CARLOS PEREZ GOMEZ",
+                      "JUAN PEREZ GOMEZ",
+                      "JUAN PEREZ",
+                      "JUAN CARLOS PEREZ"
+                    ]
+                  },
+                  "consultas": {
+                    "disciplinario": {
+                      "status": "ok",
+                      "data": {
+                        "documento": "1020304050",
+                        "tipoDocumento": "Cédula de ciudadanía",
+                        "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                        "tieneAntecedentes": false,
+                        "descripcion": "No registra sanciones ni inhabilidades vigentes",
+                        "anotaciones": [],
+                        "totalAnotaciones": 0,
+                        "inhabilitadoHasta": "",
+                        "certificadoNumero": "304326366",
+                        "fechaExpedicion": "06 de octubre del 2026"
+                      },
+                      "pdf": {
+                        "tipo": "oficial",
+                        "url": "https://placapi.com/api/certificados/Xk3v9QpL2mN7rT1wY5zA8cE4gH6jK0bD",
+                        "expiraEn": "2026-10-09T15:04:05.000Z",
+                        "nombreArchivo": "certificado-disciplinario-1020304050.pdf",
+                        "bytes": 52557,
+                        "sha256": "9f2c1e7a4b8d3f6e0a5c2b9d8e7f6a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f"
+                      },
+                      "cost": 2
+                    },
+                    "fiscal": {
+                      "status": "ok",
+                      "data": {
+                        "documento": "1020304050",
+                        "tipoDocumento": "Cédula de Ciudadanía",
+                        "tieneAntecedentes": false,
+                        "descripcion": "No se encuentra reportado como responsable fiscal",
+                        "codigoVerificacion": "1020304050261006095647",
+                        "fechaConsulta": "martes 06 de octubre de 2026 09:56:47"
+                      },
+                      "pdf": {
+                        "tipo": "oficial",
+                        "url": "https://placapi.com/api/certificados/Rt5yU8iO1pA4sD7fG0hJ3kL6zX9cV2bN",
+                        "expiraEn": "2026-10-09T15:04:05.000Z",
+                        "nombreArchivo": "certificado-fiscal-1020304050.pdf",
+                        "bytes": 48081,
+                        "sha256": "3b7e9a1c5d2f8e4a6b0c9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
+                      },
+                      "cost": 2
+                    },
+                    "judicial": {
+                      "status": "ok",
+                      "data": {
+                        "documento": "1020304050",
+                        "nombre": "PEREZ GOMEZ JUAN CARLOS",
+                        "tipoDocumento": "Cédula de Ciudadanía",
+                        "tieneAntecedentes": false,
+                        "descripcion": "No tiene asuntos pendientes con las autoridades judiciales",
+                        "anotaciones": [],
+                        "fechaConsulta": "06/10/2026 10:04:05 AM"
+                      },
+                      "pdf": {
+                        "tipo": "constancia",
+                        "url": "https://placapi.com/api/certificados/Mn8bV5cX2zL9kJ6hG3fD0sA7pO4iU1yT",
+                        "expiraEn": "2026-10-09T15:04:05.000Z",
+                        "nombreArchivo": "constancia-judicial-1020304050.pdf",
+                        "bytes": 5371,
+                        "sha256": "c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5"
+                      },
+                      "cost": 2
+                    },
+                    "ofac": {
+                      "status": "ok",
+                      "data": {
+                        "nombreConsultado": "JUAN CARLOS PEREZ GOMEZ",
+                        "tieneAntecedentes": false,
+                        "descripcion": "No aparece en las listas de sanciones consultadas",
+                        "enListas": false,
+                        "totalCoincidencias": 0,
+                        "coincidencias": [],
+                        "listaActualizada": "2026-07-24T15:04:05.000Z"
+                      },
+                      "pdf": {
+                        "tipo": "constancia",
+                        "url": "https://placapi.com/api/certificados/Qw2eR5tY8uI1oP4aS7dF0gH3jK6lZ9xC",
+                        "expiraEn": "2026-10-09T15:04:05.000Z",
+                        "nombreArchivo": "constancia-ofac-1020304050.pdf",
+                        "bytes": 5123,
+                        "sha256": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2"
+                      },
+                      "cost": 2
+                    },
+                    "onu": {
+                      "status": "ok",
+                      "data": {
+                        "nombreConsultado": "JUAN CARLOS PEREZ GOMEZ",
+                        "tieneAntecedentes": false,
+                        "descripcion": "No aparece en la lista de sanciones del Consejo de Seguridad de la ONU",
+                        "enLista": false,
+                        "totalCoincidencias": 0,
+                        "coincidencias": [],
+                        "listaActualizada": "2026-07-24T15:04:05.000Z"
+                      },
+                      "pdf": {
+                        "tipo": "constancia",
+                        "url": "https://placapi.com/api/certificados/Zx1cV4bN7mQ0wE3rT6yU9iO2pA5sD8fG",
+                        "expiraEn": "2026-10-09T15:04:05.000Z",
+                        "nombreArchivo": "constancia-onu-1020304050.pdf",
+                        "bytes": 5011,
+                        "sha256": "e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6"
+                      },
+                      "cost": 2
+                    }
+                  },
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "mode": "live",
+                  "cost": 10
                 }
               }
             }

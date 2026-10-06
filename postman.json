@@ -2139,81 +2139,6 @@
       ]
     },
     {
-      "name": "Reporte de robo AMIS (México)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/soat-mx",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "soat-mx"
-          ]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"vin\": \"WBA1S1106K7D61956\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "description": "Reporte de robo de un vehículo mexicano por VIN, desde el padrón de vehículos con reporte de robo que alimentan las aseguradoras (AMIS/OCRA): el dato \"asegurador\" que México publica, equivalente honesto del SOAT — México no tiene un registro nacional de pólizas vigentes consultable por placa. Devuelve si el padrón tiene reporte de robo activo y el veredicto del portal tal cual (`mensaje`, p. ej. \"SIN REPORTE DE ROBO\"). `status` es `danger` con reporte y `ok` sin él. Un VIN sin reporte es una respuesta válida y cobra. No incluye datos del propietario ni del asegurado. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `vin` (string, obligatorio). VIN/NIV de 17 caracteres alfanuméricos. Alias aceptados: `niv`, `serie`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
-      },
-      "response": [
-        {
-          "name": "200 OK — ejemplo",
-          "originalRequest": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/soat-mx",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "soat-mx"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"vin\": \"WBA1S1106K7D61956\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "description": "Reporte de robo de un vehículo mexicano por VIN, desde el padrón de vehículos con reporte de robo que alimentan las aseguradoras (AMIS/OCRA): el dato \"asegurador\" que México publica, equivalente honesto del SOAT — México no tiene un registro nacional de pólizas vigentes consultable por placa. Devuelve si el padrón tiene reporte de robo activo y el veredicto del portal tal cual (`mensaje`, p. ej. \"SIN REPORTE DE ROBO\"). `status` es `danger` con reporte y `ok` sin él. Un VIN sin reporte es una respuesta válida y cobra. No incluye datos del propietario ni del asegurado. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `vin` (string, obligatorio). VIN/NIV de 17 caracteres alfanuméricos. Alias aceptados: `niv`, `serie`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
-          },
-          "status": "OK",
-          "code": 200,
-          "_postman_previewlanguage": "json",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json; charset=utf-8"
-            }
-          ],
-          "cookie": [],
-          "body": "{\n  \"source\": \"soat\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"MX\",\n    \"vin\": \"WBA1S1106K7D61956\",\n    \"reportado\": false,\n    \"mensaje\": \"SIN REPORTE DE ROBO\"\n  },\n  \"portalUrl\": \"http://reporterobo.amis.com.mx/reporterobo/\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
-        }
-      ]
-    },
-    {
       "name": "Revisión técnica Perú",
       "request": {
         "method": "POST",
@@ -3260,6 +3185,81 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"notificaciones-internacionales\",\n  \"status\": \"danger\",\n  \"data\": {\n    \"nombreConsultado\": \"JUAN PEREZ GOMEZ\",\n    \"tieneAntecedentes\": true,\n    \"descripcion\": \"Coincide con 1 notificación(es) roja(s) publicada(s)\",\n    \"tieneNotificacion\": true,\n    \"totalCoincidencias\": 1,\n    \"notificaciones\": [\n      {\n        \"id\": \"2025/81694\",\n        \"nombres\": \"JUAN\",\n        \"apellidos\": \"PEREZ GOMEZ\",\n        \"fechaNacimiento\": \"1985/03/14\",\n        \"nacionalidades\": [\n          \"CO\"\n        ],\n        \"fichaUrl\": \"https://www.interpol.int/en/How-we-work/Notices/Red-Notices/View-Red-Notices#2025-81694\"\n      }\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Certificados de antecedentes en PDF",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/certificado-antecedentes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "certificado-antecedentes"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Las cinco verificaciones de antecedentes de una persona en **una sola llamada**, cada una con su **PDF para ver o descargar**: disciplinarios (Procuraduría), fiscales (Contraloría), judiciales (Policía Nacional) y las listas de sanciones de **OFAC** y de la **ONU**. Procuraduría y Contraloría entregan el **certificado original** que expide la entidad (`pdf.tipo: \"oficial\"`), con su número o código de verificación. La Policía, OFAC y la ONU no expiden documento: para ellas el PDF es una **constancia de consulta** que emite PlacApi (`pdf.tipo: \"constancia\"`) y dice que no reemplaza un certificado de la entidad. Basta con el documento: el nombre para buscar en OFAC y ONU se toma del registro, y se busca también en variantes cortas (primer nombre y apellidos) para que no se escape alguien listado con menos nombres; si mandas `nombre`, se usa ese. `consultas` permite pedir solo algunas. **Cobro por consulta: 2 créditos con resultado y PDF, 1 con resultado sin PDF, 0 si falla o no aplica** — 10 créditos las cinco completas, y la respuesta declara el total en `cost`. Tarda lo que la consulta más lenta: la Procuraduría expide el certificado en unos 7 s con el registro sano y hasta 140 s en un bache.\n\nCosto: 10 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `PEP`. Tipo de documento. Obligatorio si pides alguna de `disciplinario`, `fiscal` o `judicial` (lo son por defecto). Cada registro maneja los suyos —disciplinario: CC, CE, NIT, PPT, PEP; fiscal: CC, CE, TI, PA, PPT, PEP; judicial: CC, CE, PA, CD—; la consulta que no maneja el tipo enviado responde `code: \"no_aplica\"` y no cobra.\n- `docNumber` (string, opcional). Número de documento. Alias aceptado: `doc`.\n- `nombre` (string, opcional). Nombre completo para OFAC y ONU. OPCIONAL si mandas el documento: sin él se toma el del registro. Obligatorio si solo pides `ofac` u `onu`.\n- `consultas` (array, opcional). Qué consultar: cualquier combinación de `disciplinario`, `fiscal`, `judicial`, `ofac`, `onu` (arreglo en JSON o separadas por coma en GET). Por defecto, las cinco. Solo se reservan los créditos de las pedidas.\n- `primerNombre` (string, opcional). Primer nombre del titular. OPCIONAL: solo agiliza la consulta disciplinaria. No cambia el resultado."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/certificado-antecedentes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "certificado-antecedentes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Las cinco verificaciones de antecedentes de una persona en **una sola llamada**, cada una con su **PDF para ver o descargar**: disciplinarios (Procuraduría), fiscales (Contraloría), judiciales (Policía Nacional) y las listas de sanciones de **OFAC** y de la **ONU**. Procuraduría y Contraloría entregan el **certificado original** que expide la entidad (`pdf.tipo: \"oficial\"`), con su número o código de verificación. La Policía, OFAC y la ONU no expiden documento: para ellas el PDF es una **constancia de consulta** que emite PlacApi (`pdf.tipo: \"constancia\"`) y dice que no reemplaza un certificado de la entidad. Basta con el documento: el nombre para buscar en OFAC y ONU se toma del registro, y se busca también en variantes cortas (primer nombre y apellidos) para que no se escape alguien listado con menos nombres; si mandas `nombre`, se usa ese. `consultas` permite pedir solo algunas. **Cobro por consulta: 2 créditos con resultado y PDF, 1 con resultado sin PDF, 0 si falla o no aplica** — 10 créditos las cinco completas, y la respuesta declara el total en `cost`. Tarda lo que la consulta más lenta: la Procuraduría expide el certificado en unos 7 s con el registro sano y hasta 140 s en un bache.\n\nCosto: 10 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `docType` (string, opcional). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `PEP`. Tipo de documento. Obligatorio si pides alguna de `disciplinario`, `fiscal` o `judicial` (lo son por defecto). Cada registro maneja los suyos —disciplinario: CC, CE, NIT, PPT, PEP; fiscal: CC, CE, TI, PA, PPT, PEP; judicial: CC, CE, PA, CD—; la consulta que no maneja el tipo enviado responde `code: \"no_aplica\"` y no cobra.\n- `docNumber` (string, opcional). Número de documento. Alias aceptado: `doc`.\n- `nombre` (string, opcional). Nombre completo para OFAC y ONU. OPCIONAL si mandas el documento: sin él se toma el del registro. Obligatorio si solo pides `ofac` u `onu`.\n- `consultas` (array, opcional). Qué consultar: cualquier combinación de `disciplinario`, `fiscal`, `judicial`, `ofac`, `onu` (arreglo en JSON o separadas por coma en GET). Por defecto, las cinco. Solo se reservan los créditos de las pedidas.\n- `primerNombre` (string, opcional). Primer nombre del titular. OPCIONAL: solo agiliza la consulta disciplinaria. No cambia el resultado."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"certificado-antecedentes\",\n  \"status\": \"ok\",\n  \"documento\": {\n    \"docType\": \"CC\",\n    \"docNumber\": \"1020304050\"\n  },\n  \"nombreConsultado\": {\n    \"valor\": \"JUAN CARLOS PEREZ GOMEZ\",\n    \"origen\": \"registro\",\n    \"variantes\": [\n      \"JUAN CARLOS PEREZ GOMEZ\",\n      \"JUAN PEREZ GOMEZ\",\n      \"JUAN PEREZ\",\n      \"JUAN CARLOS PEREZ\"\n    ]\n  },\n  \"consultas\": {\n    \"disciplinario\": {\n      \"status\": \"ok\",\n      \"data\": {\n        \"documento\": \"1020304050\",\n        \"tipoDocumento\": \"Cédula de ciudadanía\",\n        \"nombre\": \"JUAN CARLOS PEREZ GOMEZ\",\n        \"tieneAntecedentes\": false,\n        \"descripcion\": \"No registra sanciones ni inhabilidades vigentes\",\n        \"anotaciones\": [],\n        \"totalAnotaciones\": 0,\n        \"inhabilitadoHasta\": \"\",\n        \"certificadoNumero\": \"304326366\",\n        \"fechaExpedicion\": \"06 de octubre del 2026\"\n      },\n      \"pdf\": {\n        \"tipo\": \"oficial\",\n        \"url\": \"https://placapi.com/api/certificados/Xk3v9QpL2mN7rT1wY5zA8cE4gH6jK0bD\",\n        \"expiraEn\": \"2026-10-09T15:04:05.000Z\",\n        \"nombreArchivo\": \"certificado-disciplinario-1020304050.pdf\",\n        \"bytes\": 52557,\n        \"sha256\": \"9f2c1e7a4b8d3f6e0a5c2b9d8e7f6a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f\"\n      },\n      \"cost\": 2\n    },\n    \"fiscal\": {\n      \"status\": \"ok\",\n      \"data\": {\n        \"documento\": \"1020304050\",\n        \"tipoDocumento\": \"Cédula de Ciudadanía\",\n        \"tieneAntecedentes\": false,\n        \"descripcion\": \"No se encuentra reportado como responsable fiscal\",\n        \"codigoVerificacion\": \"1020304050261006095647\",\n        \"fechaConsulta\": \"martes 06 de octubre de 2026 09:56:47\"\n      },\n      \"pdf\": {\n        \"tipo\": \"oficial\",\n        \"url\": \"https://placapi.com/api/certificados/Rt5yU8iO1pA4sD7fG0hJ3kL6zX9cV2bN\",\n        \"expiraEn\": \"2026-10-09T15:04:05.000Z\",\n        \"nombreArchivo\": \"certificado-fiscal-1020304050.pdf\",\n        \"bytes\": 48081,\n        \"sha256\": \"3b7e9a1c5d2f8e4a6b0c9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a\"\n      },\n      \"cost\": 2\n    },\n    \"judicial\": {\n      \"status\": \"ok\",\n      \"data\": {\n        \"documento\": \"1020304050\",\n        \"nombre\": \"PEREZ GOMEZ JUAN CARLOS\",\n        \"tipoDocumento\": \"Cédula de Ciudadanía\",\n        \"tieneAntecedentes\": false,\n        \"descripcion\": \"No tiene asuntos pendientes con las autoridades judiciales\",\n        \"anotaciones\": [],\n        \"fechaConsulta\": \"06/10/2026 10:04:05 AM\"\n      },\n      \"pdf\": {\n        \"tipo\": \"constancia\",\n        \"url\": \"https://placapi.com/api/certificados/Mn8bV5cX2zL9kJ6hG3fD0sA7pO4iU1yT\",\n        \"expiraEn\": \"2026-10-09T15:04:05.000Z\",\n        \"nombreArchivo\": \"constancia-judicial-1020304050.pdf\",\n        \"bytes\": 5371,\n        \"sha256\": \"c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5\"\n      },\n      \"cost\": 2\n    },\n    \"ofac\": {\n      \"status\": \"ok\",\n      \"data\": {\n        \"nombreConsultado\": \"JUAN CARLOS PEREZ GOMEZ\",\n        \"tieneAntecedentes\": false,\n        \"descripcion\": \"No aparece en las listas de sanciones consultadas\",\n        \"enListas\": false,\n        \"totalCoincidencias\": 0,\n        \"coincidencias\": [],\n        \"listaActualizada\": \"2026-07-24T15:04:05.000Z\"\n      },\n      \"pdf\": {\n        \"tipo\": \"constancia\",\n        \"url\": \"https://placapi.com/api/certificados/Qw2eR5tY8uI1oP4aS7dF0gH3jK6lZ9xC\",\n        \"expiraEn\": \"2026-10-09T15:04:05.000Z\",\n        \"nombreArchivo\": \"constancia-ofac-1020304050.pdf\",\n        \"bytes\": 5123,\n        \"sha256\": \"a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2\"\n      },\n      \"cost\": 2\n    },\n    \"onu\": {\n      \"status\": \"ok\",\n      \"data\": {\n        \"nombreConsultado\": \"JUAN CARLOS PEREZ GOMEZ\",\n        \"tieneAntecedentes\": false,\n        \"descripcion\": \"No aparece en la lista de sanciones del Consejo de Seguridad de la ONU\",\n        \"enLista\": false,\n        \"totalCoincidencias\": 0,\n        \"coincidencias\": [],\n        \"listaActualizada\": \"2026-07-24T15:04:05.000Z\"\n      },\n      \"pdf\": {\n        \"tipo\": \"constancia\",\n        \"url\": \"https://placapi.com/api/certificados/Zx1cV4bN7mQ0wE3rT6yU9iO2pA5sD8fG\",\n        \"expiraEn\": \"2026-10-09T15:04:05.000Z\",\n        \"nombreArchivo\": \"constancia-onu-1020304050.pdf\",\n        \"bytes\": 5011,\n        \"sha256\": \"e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6\"\n      },\n      \"cost\": 2\n    }\n  },\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"mode\": \"live\",\n  \"cost\": 10\n}"
         }
       ]
     },
