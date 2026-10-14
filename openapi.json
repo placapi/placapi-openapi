@@ -131,7 +131,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "primerApellido": {
                     "type": "string",
@@ -572,7 +572,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1013,7 +1013,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1130,7 +1130,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1248,7 +1248,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1416,7 +1416,8 @@
                         "codigo": "C14",
                         "estado": "pendiente",
                         "valor": 522700,
-                        "departamento": "BOGOTÁ D.C."
+                        "departamento": "BOGOTÁ D.C.",
+                        "tipo": "comparendo"
                       }
                     ]
                   },
@@ -1536,7 +1537,8 @@
                       "codigo": "C14",
                       "estado": "pendiente",
                       "valor": 522700,
-                      "departamento": "BOGOTÁ D.C."
+                      "departamento": "BOGOTÁ D.C.",
+                      "tipo": "comparendo"
                     }
                   },
                   "mode": "live",
@@ -1576,7 +1578,7 @@
         "tags": [
           "Multas y comparendos (SIMIT)"
         ],
-        "description": "Acuerdos de pago de comparendos de una persona por cédula (fuente SIMIT): resolución, fecha, estado, valor del acuerdo, saldo pendiente, secretaría y departamento de cada uno, más el total pendiente. `status`: ok sin acuerdos, warn con al menos uno. Costo: 1 crédito por consulta con datos.",
+        "description": "Acuerdos de pago de comparendos de una persona por cédula (fuente SIMIT): resolución, fecha, estado, valor del acuerdo, saldo pendiente, secretaría y departamento de cada uno, más el total pendiente. El SIMIT no publica el departamento del acuerdo, así que `departamento` viene `\"\"`. `status`: ok sin acuerdos, warn con al menos uno. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -1648,7 +1650,7 @@
                         "valorAcuerdo": 837716,
                         "pendiente": 500000,
                         "secretaria": "Jamundí",
-                        "departamento": "Valle del Cauca"
+                        "departamento": ""
                       }
                     ]
                   },
@@ -1762,7 +1764,8 @@
                         "codigo": "B01",
                         "estado": "acuerdo",
                         "valor": 837716,
-                        "departamento": "Valle del Cauca"
+                        "departamento": "Valle del Cauca",
+                        "tipo": "resolucion"
                       }
                     ]
                   },
@@ -1907,7 +1910,7 @@
                         "valorAcuerdo": 837716,
                         "pendiente": 500000,
                         "secretaria": "Bello",
-                        "departamento": "Antioquia"
+                        "departamento": ""
                       }
                     ]
                   },
@@ -2199,7 +2202,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -2330,7 +2333,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -2761,7 +2764,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: los campos planos de siempre (cilindraje, potencia, airbags, puertas, tracción) más `fichaTecnica`, con los 38 campos completos de la guía y sus valores normalizados, y `codigoFoto` con los identificadores de su imagen (vacío si no hay). No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado` y no cobra. Costo: 1 crédito por consulta con datos.",
+        "description": "Marcas, modelos, referencias y versiones de vehículos en Colombia, en cascada para poblar un selector: sin filtros trae las marcas y los años; con `marca`, sus referencias; con `marca` + `modelo` (o + `referencia`), las versiones. Cada versión trae su código —el mismo que acepta `/api/avaluo-por-codigo`—, el valor de mercado (`valorUsado`), el precio 0km (`valorNuevo`, solo en años que aún se venden nuevos) y la ficha técnica: los campos planos de siempre (cilindraje, potencia, airbags, puertas, tracción) más `fichaTecnica`, con los 38 campos completos de la guía y sus valores normalizados, y `codigoFoto` con los identificadores de su imagen (vacío si no hay). No pide placa ni documento del propietario. Cada lista viene `null` cuando su filtro ya está decidido; con `listas=todas` vuelven todas. Un filtro que no existe en el catálogo —o una combinación válida que no tiene ni una versión, como una marca que no vendió ese año— responde 404 `consulta_sin_resultado`; las primeras 10 de cada mes no cobran (ver /docs/errores). Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3567,7 +3570,7 @@
         "tags": [
           "Licencias de conducción"
         ],
-        "description": "Licencias de conducción por cédula (RUNT ciudadano): datos del conductor (nombre, estado de conductor y de ciudadano, número y fecha de inscripción), el arreglo `licenses` con una entrada por categoría —categoría, estado, número, organismo que expide, expedición, vencimiento, restricciones y, si aplica, resolución y fechas de suspensión— y los bloques de infracciones, solicitudes, certificados de aptitud y médicos, trámites SICOV, pagos ANSV, validaciones de identidad e impuestos de tránsito. Los bloques que el RUNT devuelve vacíos para la mayoría de documentos llegan como arreglos vacíos, no como null. Desde el 6-ago-2026 la fuente oficial exige el `primerApellido` del titular y devuelve el nombre ENMASCARADO (`J**N P***Z`). Acá el campo es OPCIONAL y define el precio: **1 crédito si envías el apellido, 2 si no lo mandas** —en ese caso lo averiguamos por ti—. Si no lo mandas y tampoco se logra averiguar, la respuesta es 400 `apellido_requerido` y no cobra; si el registro de donde lo averiguamos no responde, es 503 `identidad_no_disponible` con `Retry-After`, que tampoco cobra. Costo: 1 crédito por consulta con datos.",
+        "description": "Licencias de conducción por cédula (RUNT ciudadano): datos del conductor (nombre, estado de conductor y de ciudadano, número y fecha de inscripción), el arreglo `licenses` con una entrada por categoría —categoría, estado, número, organismo que expide, expedición, vencimiento, restricciones y, si aplica, resolución y fechas de suspensión— y los bloques de infracciones, solicitudes, certificados de aptitud y médicos, trámites SICOV, pagos ANSV, validaciones de identidad e impuestos de tránsito. Los bloques que el RUNT devuelve vacíos para la mayoría de documentos llegan como arreglos vacíos, no como null. Desde el 6-ago-2026 la fuente oficial exige el `primerApellido` del titular y devuelve el nombre ENMASCARADO (`J**N P***Z`). Acá el campo es OPCIONAL y define el precio: **1 crédito si envías el apellido, 2 si no lo mandas** —en ese caso lo averiguamos por ti—. Si no lo mandas y tampoco se logra averiguar, la respuesta es 400 `apellido_requerido` y no cobra; si el registro de donde lo averiguamos no responde, es 503 `identidad_no_disponible` con `Retry-After`, que tampoco cobra. Dos aclaraciones: el `status` de cada categoría es el estado de la LICENCIA en el RUNT —por eso una categoría con la vigencia vencida puede decir `ACTIVA`; la fecha con la que se lee la vigencia es `dueDate`—, y `infractions: null` significa que esa sección del RUNT no se pudo consultar, no que la persona no tenga multas. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -5435,7 +5438,7 @@
         "tags": [
           "Antecedentes de personas"
         ],
-        "description": "Medidas correctivas pendientes por cumplir de una persona, del Registro Nacional de Medidas Correctivas (**RNMC**) creado por la **Ley 1801 de 2016**, el Código Nacional de Seguridad y Convivencia Ciudadana. Son las sanciones por comportamientos contrarios a la convivencia —riñas, consumo en espacio público, porte de armas blancas, ruido— y quedan pendientes hasta que la persona paga la multa o cumple la medida pedagógica. **No es lo mismo que `/api/antecedentes-judiciales`**: aquél son asuntos pendientes con autoridades JUDICIALES y éste sanciones de POLICÍA; una persona limpia en uno puede no estarlo en el otro, así que una verificación seria consulta los dos. Devuelve el veredicto, el nombre completo del titular **sin enmascarar**, el número de registro con el que se verifica el certificado ante la Policía y el texto oficial literal, listo para mostrar o imprimir. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. Una respuesta \"no tiene medidas\" **COBRA** —es el dato que se vino a comprar—; una fecha que no coincide responde 404 y no cobra. ⚠️ **Advertencia de cobertura que conviene conocer**: el registro certifica \"sin medidas correctivas\" también para documentos que **no existen**, así que este veredicto no prueba que la persona exista; para eso está `/api/cedula`. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "description": "Medidas correctivas pendientes por cumplir de una persona, del Registro Nacional de Medidas Correctivas (**RNMC**) creado por la **Ley 1801 de 2016**, el Código Nacional de Seguridad y Convivencia Ciudadana. Son las sanciones por comportamientos contrarios a la convivencia —riñas, consumo en espacio público, porte de armas blancas, ruido— y quedan pendientes hasta que la persona paga la multa o cumple la medida pedagógica. **No es lo mismo que `/api/antecedentes-judiciales`**: aquél son asuntos pendientes con autoridades JUDICIALES y éste sanciones de POLICÍA; una persona limpia en uno puede no estarlo en el otro, así que una verificación seria consulta los dos. Devuelve el veredicto, el nombre completo del titular **sin enmascarar**, el número de registro con el que se verifica el certificado ante la Policía —ese número lo imprime la Policía solo en el certificado SIN medidas; cuando el certificado trae medidas, ese campo viene vacío— y el texto oficial literal, listo para mostrar o imprimir. Requiere la **fecha de expedición** del documento: la exige la fuente para autenticar, no nosotros. Una respuesta \"no tiene medidas\" **COBRA** —es el dato que se vino a comprar—; una fecha que no coincide responde 404 y no cobra. ⚠️ **Advertencia de cobertura que conviene conocer**: el registro certifica \"sin medidas correctivas\" también para documentos que **no existen**, así que este veredicto no prueba que la persona exista; para eso está `/api/cedula`. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
