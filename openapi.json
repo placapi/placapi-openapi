@@ -52,7 +52,7 @@
     },
     {
       "name": "Certificados en PDF",
-      "description": "Las cinco verificaciones de antecedentes de una persona en una llamada, con PDF: el certificado original de la entidad cuando lo expide (disciplinario, fiscal) y una constancia de PlacApi cuando no (judicial, OFAC, ONU)."
+      "description": "Documentos en PDF: las cinco verificaciones de antecedentes de una persona en una llamada —el certificado original de la entidad cuando lo expide (disciplinario, fiscal) y una constancia de PlacApi cuando no (judicial, OFAC, ONU)— y el certificado original de la tecnomecánica de un vehículo."
     },
     {
       "name": "Empresas y Estado",
@@ -5977,6 +5977,128 @@
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
                   "mode": "live",
                   "cost": 10
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/certificado-tecnomecanica": {
+      "post": {
+        "operationId": "certificado-tecnomecanica",
+        "summary": "Certificado de tecnomecánica en PDF",
+        "tags": [
+          "Certificados en PDF"
+        ],
+        "description": "El **certificado de la revisión técnico-mecánica y de emisiones contaminantes en PDF**, el **original** que expide el CDA y queda en el registro, con la placa y el documento del propietario. Es el documento de la **última revisión** del vehículo: llega con sus datos en `tecnoMecanica` (los mismos campos que en Consulta vehicular) y el archivo en `pdf`, de dos formas a la vez: `pdf.base64` dentro del JSON y `pdf.url`, un enlace de 72 horas. Los dos son los mismos bytes que entregó el registro, sin regenerar ni recomprimir; `pdf.sha256` permite comprobarlo. **2 créditos, y solo si llega el PDF.** Si el vehículo no tiene revisión registrada, o el registro no tiene el PDF de la última (pasa en una de cada quince, más o menos), la respuesta es 404 `certificado_no_disponible` y no cobra. Responde en unos 5 segundos. El SOAT, las pólizas de responsabilidad civil y la tarjeta de operación no tienen PDF en el registro: sus datos vienen en Consulta vehicular. Costo: 2 créditos por consulta con datos.",
+        "x-credits": 2,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "placa",
+                  "docType",
+                  "docNumber"
+                ],
+                "properties": {
+                  "placa": {
+                    "type": "string",
+                    "example": "ABC123",
+                    "description": "Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400."
+                  },
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "NIT",
+                      "PA",
+                      "TI",
+                      "CD",
+                      "PPT",
+                      "RC"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                  }
+                }
+              },
+              "example": {
+                "placa": "ABC123",
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "certificado-tecnomecanica",
+                  "status": "ok",
+                  "placa": "ABC123",
+                  "tecnoMecanica": {
+                    "cdaExpide": "CDA FONTIBON S.A.S",
+                    "estado": "APROBADA",
+                    "fechaExpedicion": "22/09/2025",
+                    "fechaVencimiento": "22/09/2026",
+                    "informacionConsistente": "SI",
+                    "nroCertificado": "189733821",
+                    "numeroPlaca": "ABC123",
+                    "tipoRevision": "REVISION PERIODICA",
+                    "vigente": "SI"
+                  },
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "mode": "live",
+                  "cost": 2,
+                  "pdf": {
+                    "tipo": "oficial",
+                    "url": "https://placapi.com/api/certificados/Pq7wE2rT5yU8iO1aS4dF7gH0jK3lZ6xC",
+                    "expiraEn": "2026-07-27T15:04:05.000Z",
+                    "nombreArchivo": "certificado-tecnomecanica-ABC123-189733821.pdf",
+                    "bytes": 481920,
+                    "sha256": "7d1e4a9c2b5f8e3a6d0c9b2e5f8a1d4c7b0e3f6a9d2c5b8e1f4a7d0c3b6e9f2a",
+                    "contentType": "application/pdf",
+                    "base64": "JVBERi0xLjUKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoK…"
+                  }
                 }
               }
             }

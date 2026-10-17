@@ -3264,6 +3264,81 @@
       ]
     },
     {
+      "name": "Certificado de tecnomecánica en PDF",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/certificado-tecnomecanica",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "certificado-tecnomecanica"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"ABC123\",\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "El **certificado de la revisión técnico-mecánica y de emisiones contaminantes en PDF**, el **original** que expide el CDA y queda en el registro, con la placa y el documento del propietario. Es el documento de la **última revisión** del vehículo: llega con sus datos en `tecnoMecanica` (los mismos campos que en Consulta vehicular) y el archivo en `pdf`, de dos formas a la vez: `pdf.base64` dentro del JSON y `pdf.url`, un enlace de 72 horas. Los dos son los mismos bytes que entregó el registro, sin regenerar ni recomprimir; `pdf.sha256` permite comprobarlo. **2 créditos, y solo si llega el PDF.** Si el vehículo no tiene revisión registrada, o el registro no tiene el PDF de la última (pasa en una de cada quince, más o menos), la respuesta es 404 `certificado_no_disponible` y no cobra. Responde en unos 5 segundos. El SOAT, las pólizas de responsabilidad civil y la tarjeta de operación no tienen PDF en el registro: sus datos vienen en Consulta vehicular.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/certificado-tecnomecanica",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "certificado-tecnomecanica"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"ABC123\",\n  \"docType\": \"CC\",\n  \"docNumber\": \"1020304050\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "El **certificado de la revisión técnico-mecánica y de emisiones contaminantes en PDF**, el **original** que expide el CDA y queda en el registro, con la placa y el documento del propietario. Es el documento de la **última revisión** del vehículo: llega con sus datos en `tecnoMecanica` (los mismos campos que en Consulta vehicular) y el archivo en `pdf`, de dos formas a la vez: `pdf.base64` dentro del JSON y `pdf.url`, un enlace de 72 horas. Los dos son los mismos bytes que entregó el registro, sin regenerar ni recomprimir; `pdf.sha256` permite comprobarlo. **2 créditos, y solo si llega el PDF.** Si el vehículo no tiene revisión registrada, o el registro no tiene el PDF de la última (pasa en una de cada quince, más o menos), la respuesta es 404 `certificado_no_disponible` y no cobra. Responde en unos 5 segundos. El SOAT, las pólizas de responsabilidad civil y la tarjeta de operación no tienen PDF en el registro: sus datos vienen en Consulta vehicular.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, obligatorio). Placa del vehículo. 5 a 7 caracteres alfanuméricos: cubre AAA000, AAA00A y los formatos menos comunes (AAA00, AAAA00). Los guiones y espacios se ignoran. Si la mandas dentro del alias interno de tu flota (`ABC12D_JPG`, `ABC12D-JUAN-PEREZ`, `ABC12D-MOVIL-11`) se extrae la placa, siempre que en el texto haya UNA sola: con dos o con ninguna la respuesta es 400.\n- `docType` (string, obligatorio). Valores: `CC`, `CE`, `NIT`, `PA`, `TI`, `CD`, `PPT`, `RC`. Tipo de documento del propietario (CC, CE, NIT, PA, TI, CD, PPT, RC). Se aceptan alias comunes: PAS y PASAPORTE se normalizan a PA, y P.P.T. y P.P. —como lo abrevia la tarjeta de propiedad— se normalizan a PPT.\n- `docNumber` (string, obligatorio). Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"certificado-tecnomecanica\",\n  \"status\": \"ok\",\n  \"placa\": \"ABC123\",\n  \"tecnoMecanica\": {\n    \"cdaExpide\": \"CDA FONTIBON S.A.S\",\n    \"estado\": \"APROBADA\",\n    \"fechaExpedicion\": \"22/09/2025\",\n    \"fechaVencimiento\": \"22/09/2026\",\n    \"informacionConsistente\": \"SI\",\n    \"nroCertificado\": \"189733821\",\n    \"numeroPlaca\": \"ABC123\",\n    \"tipoRevision\": \"REVISION PERIODICA\",\n    \"vigente\": \"SI\"\n  },\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"mode\": \"live\",\n  \"cost\": 2,\n  \"pdf\": {\n    \"tipo\": \"oficial\",\n    \"url\": \"https://placapi.com/api/certificados/Pq7wE2rT5yU8iO1aS4dF7gH0jK3lZ6xC\",\n    \"expiraEn\": \"2026-07-27T15:04:05.000Z\",\n    \"nombreArchivo\": \"certificado-tecnomecanica-ABC123-189733821.pdf\",\n    \"bytes\": 481920,\n    \"sha256\": \"7d1e4a9c2b5f8e3a6d0c9b2e5f8a1d4c7b0e3f6a9d2c5b8e1f4a7d0c3b6e9f2a\",\n    \"contentType\": \"application/pdf\",\n    \"base64\": \"JVBERi0xLjUKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoK…\"\n  }\n}"
+        }
+      ]
+    },
+    {
       "name": "Contratación estatal (SECOP II)",
       "request": {
         "method": "POST",
