@@ -48,7 +48,7 @@
     },
     {
       "name": "Antecedentes de personas",
-      "description": "Verificación de una PERSONA, no de un vehículo: identidad, clasificación social, seguridad social, puesto de votación, disciplinarios, fiscales, judiciales y medidas correctivas por documento; listas de sanciones y notificaciones internacionales por nombre."
+      "description": "Verificación de una PERSONA, no de un vehículo: identidad, clasificación social, seguridad social, situación militar, tarjetas profesionales, puesto de votación, disciplinarios, fiscales, judiciales y medidas correctivas por documento; listas de sanciones y notificaciones internacionales por nombre."
     },
     {
       "name": "Certificados en PDF",
@@ -56,7 +56,7 @@
     },
     {
       "name": "Empresas y Estado",
-      "description": "Debida diligencia sobre la contraparte: registro mercantil, contratación con el Estado, procesos judiciales y declaración de bienes y rentas."
+      "description": "Debida diligencia sobre la contraparte: registro mercantil, estados financieros, contratación con el Estado, procesos judiciales, declaración de bienes y rentas y registros sanitarios de sus productos."
     },
     {
       "name": "Vehículo Perú (SUNARP, MTC, SUTRAN)",
@@ -7836,6 +7836,686 @@
                       }
                     ],
                     "fechaConsulta": "2026-09-07→2:21:35 PM"
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/situacion-militar": {
+      "post": {
+        "operationId": "situacion-militar",
+        "summary": "Situación militar (libreta militar)",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "La situación militar de una persona por cédula o tarjeta de identidad: si el registro de reclutamiento la tiene inscrita, el estado de su tarjeta militar (`estado`, tal cual lo escribe el certificado: «INSCRIPCIÓN», «CITADO - 2DO EXAMEN», una situación definida…), `definida` (true cuando el registro reporta la situación como definida, es decir, tarjeta expedida; false si sigue en trámite; null si el estado no se reconoce o no es concluyente, p. ej. «EXENTO»), el nombre del titular y la fecha del certificado. Responde en ~1 s. Si la persona está registrada con el OTRO tipo (la mandaste por CC y figura con TI, o al revés), se responde ese registro: `tipoDocumento` trae el tipo real y `tipoDocumentoConsultado` el que mandaste. Un documento que el registro no tiene con ninguno de los dos tipos responde 200 con `inscrito: false` y COBRA: es el hallazgo que se viene a buscar, pero no prueba que la situación esté sin definir (las mujeres no están obligadas a inscribirse). ⚠️ Solo `CC` y `TI`: es el universo del registro. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. El registro solo maneja cédula y tarjeta de identidad; con otro valor responde 400 `bad_request` sin cobrar.",
+                    "enum": [
+                      "CC",
+                      "TI"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento, de 1 a 11 dígitos (se aceptan puntos y espacios). Alias aceptados: `doc`, `documento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "situacion-militar",
+                  "status": "info",
+                  "data": {
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "inscrito": true,
+                    "definida": false,
+                    "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                    "estado": "INSCRIPCIÓN - EN REGISTRO",
+                    "fechaCertificacion": "16 de OCTUBRE de 2026"
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/tarjeta-profesional-contador": {
+      "post": {
+        "operationId": "tarjeta-profesional-contador",
+        "summary": "Tarjeta profesional de contador público",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "Si una persona está inscrita como contador público, por documento: número de tarjeta profesional, nombre y estado de la inscripción (`estado`, p. ej. «ACTIVO»; `vigente` es el estado INFORMATIVO de la inscripción, true/false cuando el estado lo dice, null si no se reconoce, y no equivale al certificado de vigencia). Responde en ~1 s. El estado es el que publica el registro de forma informativa: la habilitación formal se acredita con el certificado de vigencia, que no se expide aquí. Un documento sin inscripción responde 200 con `inscrito: false` y COBRA. ⚠️ Solo `CC`, `CE` y `PPT`. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Es el universo del registro; con otro valor responde 400 `bad_request` sin cobrar.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "PPT"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento, de 1 a 12 dígitos (se aceptan puntos y espacios). Alias aceptados: `doc`, `documento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "tarjeta-profesional",
+                  "status": "ok",
+                  "data": {
+                    "profesion": "contador",
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "inscrito": true,
+                    "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                    "numeroTarjeta": "T-123456",
+                    "estado": "ACTIVO",
+                    "vigente": true,
+                    "fechaInscripcion": null,
+                    "profesionDetalle": "CONTADOR PÚBLICO",
+                    "certificado": null
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/tarjeta-profesional-abogado": {
+      "post": {
+        "operationId": "tarjeta-profesional-abogado",
+        "summary": "Tarjeta profesional de abogado",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "Si una persona está inscrita como abogado, por documento: número de tarjeta profesional, fecha de inscripción, estado (`estado`, p. ej. «VIGENTE»; `vigente` true/false cuando el estado lo dice, null si no se reconoce o si el certificado trae observaciones) y el número y código de verificación del certificado de vigencia que se expide en la consulta (también en el negativo, que deja constancia de cuándo se verificó). Responde en ~7 s y se guarda 7 días en caché, también el negativo. Un documento sin inscripción responde 200 con `inscrito: false` y COBRA. ⚠️ Solo `CC`, `CE` y `PPT`, hasta 10 dígitos. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Con otro valor responde 400 `bad_request` sin cobrar.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "PPT"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento, de 1 a 10 dígitos (es el tope del registro; se aceptan puntos y espacios). Alias aceptados: `doc`, `documento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "tarjeta-profesional",
+                  "status": "ok",
+                  "data": {
+                    "profesion": "abogado",
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "inscrito": true,
+                    "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                    "numeroTarjeta": "123456",
+                    "estado": "VIGENTE",
+                    "vigente": true,
+                    "fechaInscripcion": "2005-03-15",
+                    "profesionDetalle": "ABOGADO(A) INSCRITO(A)",
+                    "certificado": {
+                      "numero": "1000001",
+                      "codigoVerificacion": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+                    }
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/tarjeta-profesional-ingeniero": {
+      "post": {
+        "operationId": "tarjeta-profesional-ingeniero",
+        "summary": "Matrícula profesional de ingeniero",
+        "tags": [
+          "Antecedentes de personas"
+        ],
+        "description": "Si una persona tiene matrícula profesional en el registro general de ingeniería y sus profesiones auxiliares y afines, por documento: número de matrícula, profesión, fecha de la resolución y estado (`estado`, p. ej. «VIGENTE»; `vigente` true/false cuando el estado lo dice, null si no se reconoce). Con varias matrículas, `profesionDetalle` las lista todas y el número, estado y fecha son de la primera. Responde en ~1 s. Un documento sin matrículas responde 200 con `inscrito: false` y COBRA. ⚠️ Las ingenierías con consejo profesional propio (eléctrica, mecánica y afines, química, de petróleos…) no aparecen en este registro: un `inscrito: false` no prueba que la persona carezca de matrícula. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "docNumber"
+                ],
+                "properties": {
+                  "docType": {
+                    "type": "string",
+                    "example": "CC",
+                    "description": "Tipo de documento. Por defecto `CC`. Con otro valor (p. ej. NIT) responde 400 `bad_request` sin cobrar.",
+                    "enum": [
+                      "CC",
+                      "CE",
+                      "PEP",
+                      "PA",
+                      "TI",
+                      "PPT"
+                    ]
+                  },
+                  "docNumber": {
+                    "type": "string",
+                    "example": "1020304050",
+                    "description": "Número de documento: de 1 a 20 caracteres, letras o dígitos (pasaporte y permisos son alfanuméricos). Alias aceptados: `doc`, `documento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "docType": "CC",
+                "docNumber": "1020304050"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "tarjeta-profesional",
+                  "status": "ok",
+                  "data": {
+                    "profesion": "ingeniero",
+                    "documento": "1020304050",
+                    "tipoDocumento": "CC",
+                    "inscrito": true,
+                    "nombre": "JUAN CARLOS PEREZ GOMEZ",
+                    "numeroTarjeta": "05202-12345",
+                    "estado": "VIGENTE",
+                    "vigente": true,
+                    "fechaInscripcion": "2001-06-15",
+                    "profesionDetalle": "INGENIERIA CIVIL",
+                    "certificado": null
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/invima": {
+      "post": {
+        "operationId": "invima",
+        "summary": "Registros sanitarios (INVIMA)",
+        "tags": [
+          "Empresas y Estado"
+        ],
+        "description": "Registros sanitarios del INVIMA —medicamentos, alimentos y bebidas, cosméticos, productos de aseo y dispositivos médicos— por número de registro (incluidas notificaciones NSO y permisos), por expediente o por texto libre (producto o titular). Devuelve producto, titular, estado del registro («Vigente», «Vencido», «En tramite renov»…), fechas de expedición y vencimiento, categoría, grupo y, en dispositivos, marca y clase de riesgo. Páginas de 20 con `offset`. En una búsqueda por texto muy amplia la lista es una MUESTRA ordenada por número de registro (no por relevancia), `paginacion.truncado` llega en true y `total` es una cota inferior: para una lista exacta, buscar por `registro` o acotar con `categoria`; un `offset` más allá de lo que la muestra alcanza responde 400. Cero resultados responde 200 con `resultados: []` y COBRA: es el hallazgo («ese producto no tiene registro»). Responde en ~1 s. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "registro": {
+                    "type": "string",
+                    "example": "INVIMA 2099M-0000001-R1",
+                    "description": "Número de registro sanitario, notificación o permiso, con o sin el prefijo «INVIMA». Alias: `registroSanitario`. Manda sobre `expediente` y `texto`."
+                  },
+                  "expediente": {
+                    "type": "string",
+                    "example": "20000001",
+                    "description": "Número de expediente, solo dígitos. Manda sobre `texto`."
+                  },
+                  "texto": {
+                    "type": "string",
+                    "example": "acetaminofen",
+                    "description": "Texto libre, mínimo 3 caracteres: nombre del producto o del titular. Alias: `q`, `producto`, `titular`."
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "example": "medicamentos",
+                    "description": "Opcional: limita la búsqueda a un grupo de productos. Sin ella se busca en todos.",
+                    "enum": [
+                      "medicamentos",
+                      "alimentos-cosmeticos-aseo",
+                      "dispositivos"
+                    ]
+                  },
+                  "offset": {
+                    "type": "integer",
+                    "example": 0,
+                    "description": "Paginación de 20 en 20 (hasta 500)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "registro": "INVIMA 2099M-0000001-R1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "registro-sanitario",
+                  "status": "ok",
+                  "data": {
+                    "resultados": [
+                      {
+                        "registroSanitario": "INVIMA 2099M-0000001-R1",
+                        "producto": "PRODUCTO DE PRUEBA 160/5/12.5",
+                        "titular": "LABORATORIOS EJEMPLO S.A.",
+                        "estado": "Vigente",
+                        "fechaExpedicion": "2012-08-23",
+                        "fechaVencimiento": null,
+                        "categoria": "medicamentos",
+                        "grupo": null,
+                        "expediente": "20000001",
+                        "marca": null,
+                        "nivelRiesgo": null
+                      }
+                    ],
+                    "total": 1,
+                    "paginacion": {
+                      "offset": 0,
+                      "limit": 20,
+                      "hayMas": false,
+                      "truncado": false
+                    }
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/estados-financieros": {
+      "post": {
+        "operationId": "estados-financieros",
+        "summary": "Estados financieros por NIT",
+        "tags": [
+          "Empresas y Estado"
+        ],
+        "description": "Los estados financieros que una sociedad reportó a la Superintendencia de Sociedades, por NIT (con o sin dígito de verificación): en sus 5 cortes más recientes, un `resumen` con activos, pasivos, patrimonio, ingresos de actividades ordinarias y ganancia (pérdida) del periodo, y el detalle de cada concepto del estado de situación financiera y del estado de resultados. ⚠️ Las cifras están en MILES de pesos (`unidad: \"miles\"`). Puede haber cortes intermedios (30-jun) además de los anuales; con `anio` se filtran, y si la sociedad reporta pero no ese año responde `reporta: true`, `cortes: []` y `sinInformeEnElAnio: true`. Solo reportan las sociedades vigiladas por esa Superintendencia: una que no reporta (las vigiladas por la Superfinanciera, las ESAL, las personas naturales…) responde 200 con `reporta: false` y COBRA. No reportar no significa que la empresa no exista: para eso, `/api/rues`. Responde en ~1 s. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nit"
+                ],
+                "properties": {
+                  "nit": {
+                    "type": "string",
+                    "example": "900123456",
+                    "description": "NIT de la sociedad, con o sin puntos y con o sin el dígito de verificación tras guion (900.123.456-7). Alias: `documento`, `nitEmpresa`."
+                  },
+                  "anio": {
+                    "type": "integer",
+                    "example": 2025,
+                    "description": "Opcional: solo los cortes de ese año (anual e intermedios)."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "nit": "900123456"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "estados-financieros",
+                  "status": "ok",
+                  "data": {
+                    "nit": "900123456",
+                    "razonSocial": "EMPRESA DE PRUEBA S.A.S.",
+                    "reporta": true,
+                    "moneda": "COP",
+                    "unidad": "miles",
+                    "cortes": [
+                      {
+                        "fechaCorte": "2025-12-31",
+                        "periodo": "2025",
+                        "tipoInforme": "NIIF Plenas - Individual Grupo 1",
+                        "resumen": {
+                          "activos": 1000000,
+                          "pasivos": 400000,
+                          "patrimonio": 600000,
+                          "ingresos": 2500000,
+                          "utilidadNeta": 200000
+                        },
+                        "situacionFinanciera": [
+                          {
+                            "concepto": "Total de activos",
+                            "valor": 1000000
+                          },
+                          {
+                            "concepto": "Total pasivos",
+                            "valor": 400000
+                          },
+                          {
+                            "concepto": "Patrimonio total",
+                            "valor": 600000
+                          }
+                        ],
+                        "resultados": [
+                          {
+                            "concepto": "Ingresos de actividades ordinarias",
+                            "valor": 2500000
+                          },
+                          {
+                            "concepto": "Ganancia (pérdida)",
+                            "valor": 200000
+                          }
+                        ]
+                      }
+                    ]
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z",
