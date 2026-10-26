@@ -18,7 +18,7 @@
       "model": "prepaid-credits",
       "pricePerQuery": 349,
       "currency": "COP",
-      "note": "Se cobra el número de créditos de cada endpoint (x-credits) cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en varios de persona y 3 en consulta-full. Una consulta sin resultado (404) trae 10 gratis por mes y por cada código de sin-resultado, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full siempre cobra sus créditos. Repetir la MISMA consulta (misma cuenta, endpoint y placa) dentro de 10 segundos se responde igual pero no vuelve a cobrar: se reembolsa con el motivo duplicado_reciente."
+      "note": "Se cobra el número de créditos de cada endpoint (x-credits) cuando la consulta devuelve datos: 1 crédito la mayoría, 2 en varios de persona y 3 en consulta-full. Una consulta sin resultado (404) trae 10 gratis por mes y por cada código de sin-resultado, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir la misma consulta (misma placa y documento) dentro de la ventana de caché se responde con fromCache: true y NO vuelve a cobrar; la ventana va de 24h (datos del vehículo) a 30 días según la fuente. Excepción: consulta-full cobra también desde caché, salvo que la misma cuenta ya haya pagado esa placa con ese documento en las últimas 24 horas (esa repetición desde caché no vuelve a cobrar). Repetir la MISMA consulta (misma cuenta, endpoint y placa) dentro de 10 segundos se responde igual pero no vuelve a cobrar: se reembolsa con el motivo duplicado_reciente."
     }
   },
   "tags": [
@@ -2822,12 +2822,12 @@
                   "pagina": {
                     "type": "number",
                     "example": 1,
-                    "description": "Página de versiones (default 1)."
+                    "description": "Página de versiones (default 1). Pedir una página más allá de `paginacion.paginas` responde 404 `consulta_sin_resultado`, con un mensaje que dice cuántas versiones y páginas hay: el recorrido termina en `paginas`."
                   },
                   "porPagina": {
                     "type": "number",
                     "example": 50,
-                    "description": "Versiones por página (default 50, máximo 200)."
+                    "description": "Versiones por página (default 50, máximo 200). Con `soloConPrecio` el filtro se aplica ANTES de paginar: cada página viene llena, `paginacion.total` y `paginacion.paginas` cuentan solo las versiones con precio y `paginacion.descartadasSinPrecio` dice cuántas se quitaron del resultado completo. Una marca y año con precio rara vez pasa de 100 versiones, así que con 200 suele bastar una llamada."
                   },
                   "refresh": {
                     "type": "boolean",
