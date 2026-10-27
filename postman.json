@@ -189,6 +189,81 @@
       ]
     },
     {
+      "name": "Decodificar VIN",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/decodificar-vin",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "decodificar-vin"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vin\": \"5YFBURHE1GP000123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Lee lo que trae escrito un VIN de 17 caracteres de **cualquier país**: fabricante y marca (por el WMI), país y región de fabricación, año modelo (posición 10), dígito de control (posición 9), código de planta y número de serie. Cubre las marcas que circulan en América Latina y que las bases de Estados Unidos no conocen —MG, Great Wall, Changan, Chery, Foton, Suzuki India— y los VIN de Brasil, Argentina, México, Tailandia e India. El año se repite cada 30 años: donde el VIN no permite desempatar llega también `anioModeloAlternativo`. Cuando existe, `detalle` trae modelo, versión, carrocería, cilindrada, combustible, tracción, transmisión y puertas, **solo si cuadran con la marca y el año del propio VIN**; un detalle que no cuadra se descarta y `cobertura.detalle` lo dice (`ok`, `no_disponible`, `descartado`, `error`). El dígito de control es `obligatorio` en EE. UU., Canadá y China e `informativo` en el resto, donde muchos fabricantes no lo usan: ahí un `valido: false` no indica un VIN adulterado. `status` es `warn` solo cuando el dígito es obligatorio y no cuadra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `vin` (string, obligatorio). VIN de 17 caracteres, sin I, O ni Q. Se aceptan espacios, puntos y guiones. Alias: `chasis`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/decodificar-vin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "decodificar-vin"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vin\": \"5YFBURHE1GP000123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Lee lo que trae escrito un VIN de 17 caracteres de **cualquier país**: fabricante y marca (por el WMI), país y región de fabricación, año modelo (posición 10), dígito de control (posición 9), código de planta y número de serie. Cubre las marcas que circulan en América Latina y que las bases de Estados Unidos no conocen —MG, Great Wall, Changan, Chery, Foton, Suzuki India— y los VIN de Brasil, Argentina, México, Tailandia e India. El año se repite cada 30 años: donde el VIN no permite desempatar llega también `anioModeloAlternativo`. Cuando existe, `detalle` trae modelo, versión, carrocería, cilindrada, combustible, tracción, transmisión y puertas, **solo si cuadran con la marca y el año del propio VIN**; un detalle que no cuadra se descarta y `cobertura.detalle` lo dice (`ok`, `no_disponible`, `descartado`, `error`). El dígito de control es `obligatorio` en EE. UU., Canadá y China e `informativo` en el resto, donde muchos fabricantes no lo usan: ahí un `valido: false` no indica un VIN adulterado. `status` es `warn` solo cuando el dígito es obligatorio y no cuadra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `vin` (string, obligatorio). VIN de 17 caracteres, sin I, O ni Q. Se aceptan espacios, puntos y guiones. Alias: `chasis`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"vin\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"vin\": \"5YFBURHE1GP000123\",\n    \"wmi\": \"5YF\",\n    \"vds\": \"BURHE1\",\n    \"vis\": \"GP000123\",\n    \"fabricante\": {\n      \"marca\": \"Toyota\",\n      \"nombre\": \"TOYOTA MOTOR MANUFACTURING, MISSISSIPPI, INC.\",\n      \"marcas\": [\n        \"Toyota\"\n      ],\n      \"pais\": \"Estados Unidos\",\n      \"codigoPais\": \"US\",\n      \"region\": \"Norteamérica\"\n    },\n    \"tipoVehiculo\": \"automovil\",\n    \"anioModelo\": 2016,\n    \"anioModeloAlternativo\": null,\n    \"digitoControl\": {\n      \"valor\": \"1\",\n      \"calculado\": \"1\",\n      \"valido\": true,\n      \"aplica\": true\n    },\n    \"plantaCodigo\": \"P\",\n    \"numeroSerie\": \"000123\",\n    \"detalle\": {\n      \"marca\": \"TOYOTA\",\n      \"modelo\": \"Corolla\",\n      \"version\": \"L/LE\",\n      \"carroceria\": \"sedán\",\n      \"cilindradaL\": 1.8,\n      \"combustible\": \"gasolina\",\n      \"traccion\": \"4x2\",\n      \"transmision\": null,\n      \"puertas\": 4\n    },\n    \"cobertura\": {\n      \"detalle\": \"ok\",\n      \"digitoControl\": \"obligatorio\"\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
       "name": "Consulta vehicular por VIN",
       "request": {
         "method": "POST",
@@ -2064,7 +2139,7 @@
       ]
     },
     {
-      "name": "Licencia México (CDMX)",
+      "name": "Licencia México (CDMX, GRO, MIC, PUE, BCN)",
       "request": {
         "method": "POST",
         "header": [
@@ -2091,7 +2166,7 @@
             }
           }
         },
-        "description": "Vigencia de la licencia de conducir de la Ciudad de México por CURP, desde el portal de finanzas de la CDMX. Devuelve si el registro reporta vigencia para esa CURP y la vigencia tal como la publica el portal. ⚠️ No es el registro nacional de licencias — México no tiene uno público — y la respuesta negativa del portal agrupa dos cosas: sin datos en CDMX O licencia permanente (el programa 2024+, que no tiene vigencia). Por eso `encontrada: false` no afirma que la persona no tenga licencia: solo que la ciudad no reporta una vigencia, y el `mensaje` del portal viaja completo. Una CURP mal formada responde 400 sin cobrar. `status` es `ok` con vigencia reportada e `info` sin ella (respuesta válida que cobra). Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `curp` (string, obligatorio). CURP de 18 caracteres (4 letras, 6 dígitos, 1 letra y 7 alfanuméricos). Se aceptan espacios y guiones.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+        "description": "Licencia de conducir de México por estado. `CMX` (Ciudad de México, el valor por defecto) va por CURP sola contra el portal de finanzas de la CDMX y devuelve si el registro reporta vigencia y la vigencia tal como la publica. `GRO` (Guerrero), `MIC` (Michoacán) y `PUE` (Puebla) validan CURP + número de licencia —el folio, en Guerrero— y devuelven si el portal reconoce ese par, si está vencida, la vigencia, la expedición, el tipo y la oficina (Guerrero agrega clase, plazo y municipio). `BCN` (Baja California) NO usa CURP: pide número de licencia + fecha de expedición + fecha de nacimiento y devuelve si ese conjunto forma un registro válido, con vigencia, expedición y tipo. ⚠️ Baja California no distingue «no existe» de «los datos no coinciden»: `encontrada: false` solo dice que la licencia y esas dos fechas no forman un registro válido. ⚠️ México no tiene registro nacional de licencias: fuera de esos cinco estados no hay validación web pública sin captcha. La negativa de la CDMX agrupa dos cosas: sin datos en CDMX O licencia permanente (el programa 2024+, que no tiene vigencia); por eso `encontrada: false` no afirma que la persona no tenga licencia y el `mensaje` del portal viaja completo. La negativa de GRO/MIC/PUE/BCN también es una respuesta válida y COBRA, igual que la de CDMX; solo la fuente caída reembolsa. Una CURP mal formada o una licencia ausente con GRO/MIC/PUE, y una fecha ausente o imposible con BCN, responden 400 sin cobrar. Nunca se devuelve nombre, fotografía ni documento del titular. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `curp` (string, opcional). CURP de 18 caracteres (4 letras, 6 dígitos, 1 letra y 7 alfanuméricos). Se aceptan espacios y guiones. Obligatoria en `CMX`, `GRO`, `MIC` y `PUE`; `BCN` no la pide y la ignora si llega.\n- `estado` (string, opcional). Valores: `CMX`, `CDMX`, `GRO`, `MIC`, `PUE`, `BCN`. Estado que emitió la licencia, como código ISO 3166-2:MX sin el prefijo: `CMX` (Ciudad de México), `GRO` (Guerrero), `MIC` (Michoacán), `PUE` (Puebla) o `BCN` (Baja California). Se acepta en minúsculas y con espacios alrededor, y `CDMX` es alias de `CMX`. Ausente o vacío = `CMX`, que es la consulta de la CDMX de siempre. Cualquier otro valor responde 400 con los admitidos.\n- `licencia` (string, opcional). Número de la licencia (en Guerrero, el folio). Obligatoria con `estado` `GRO`, `MIC`, `PUE` o `BCN`; con `CMX` se ignora. Se aceptan los alias `numeroLicencia`, `noLicencia`, `no_licencia` y `folio`. Se normaliza con trim, mayúsculas y sin espacios internos (los guiones se conservan): de 3 a 20 caracteres de letras, números o guiones, y máximo 15 en Guerrero.\n- `fechaExpedicion` (string, opcional). Solo BCN: fecha de expedición de la licencia, en `dd/mm/yyyy` o `yyyy-mm-dd`; se normaliza a `dd/mm/yyyy`. Se aceptan los alias `fecha_expedicion` y `expedicion`. En los demás estados se ignora.\n- `fechaNacimiento` (string, opcional). Solo BCN: fecha de nacimiento del titular, en `dd/mm/yyyy` o `yyyy-mm-dd`; se normaliza a `dd/mm/yyyy`. Se aceptan los alias `fecha_nacimiento` y `nacimiento`. En los demás estados se ignora.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
       },
       "response": [
         {
@@ -2122,7 +2197,7 @@
                 }
               }
             },
-            "description": "Vigencia de la licencia de conducir de la Ciudad de México por CURP, desde el portal de finanzas de la CDMX. Devuelve si el registro reporta vigencia para esa CURP y la vigencia tal como la publica el portal. ⚠️ No es el registro nacional de licencias — México no tiene uno público — y la respuesta negativa del portal agrupa dos cosas: sin datos en CDMX O licencia permanente (el programa 2024+, que no tiene vigencia). Por eso `encontrada: false` no afirma que la persona no tenga licencia: solo que la ciudad no reporta una vigencia, y el `mensaje` del portal viaja completo. Una CURP mal formada responde 400 sin cobrar. `status` es `ok` con vigencia reportada e `info` sin ella (respuesta válida que cobra). Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `curp` (string, obligatorio). CURP de 18 caracteres (4 letras, 6 dígitos, 1 letra y 7 alfanuméricos). Se aceptan espacios y guiones.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+            "description": "Licencia de conducir de México por estado. `CMX` (Ciudad de México, el valor por defecto) va por CURP sola contra el portal de finanzas de la CDMX y devuelve si el registro reporta vigencia y la vigencia tal como la publica. `GRO` (Guerrero), `MIC` (Michoacán) y `PUE` (Puebla) validan CURP + número de licencia —el folio, en Guerrero— y devuelven si el portal reconoce ese par, si está vencida, la vigencia, la expedición, el tipo y la oficina (Guerrero agrega clase, plazo y municipio). `BCN` (Baja California) NO usa CURP: pide número de licencia + fecha de expedición + fecha de nacimiento y devuelve si ese conjunto forma un registro válido, con vigencia, expedición y tipo. ⚠️ Baja California no distingue «no existe» de «los datos no coinciden»: `encontrada: false` solo dice que la licencia y esas dos fechas no forman un registro válido. ⚠️ México no tiene registro nacional de licencias: fuera de esos cinco estados no hay validación web pública sin captcha. La negativa de la CDMX agrupa dos cosas: sin datos en CDMX O licencia permanente (el programa 2024+, que no tiene vigencia); por eso `encontrada: false` no afirma que la persona no tenga licencia y el `mensaje` del portal viaja completo. La negativa de GRO/MIC/PUE/BCN también es una respuesta válida y COBRA, igual que la de CDMX; solo la fuente caída reembolsa. Una CURP mal formada o una licencia ausente con GRO/MIC/PUE, y una fecha ausente o imposible con BCN, responden 400 sin cobrar. Nunca se devuelve nombre, fotografía ni documento del titular. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `curp` (string, opcional). CURP de 18 caracteres (4 letras, 6 dígitos, 1 letra y 7 alfanuméricos). Se aceptan espacios y guiones. Obligatoria en `CMX`, `GRO`, `MIC` y `PUE`; `BCN` no la pide y la ignora si llega.\n- `estado` (string, opcional). Valores: `CMX`, `CDMX`, `GRO`, `MIC`, `PUE`, `BCN`. Estado que emitió la licencia, como código ISO 3166-2:MX sin el prefijo: `CMX` (Ciudad de México), `GRO` (Guerrero), `MIC` (Michoacán), `PUE` (Puebla) o `BCN` (Baja California). Se acepta en minúsculas y con espacios alrededor, y `CDMX` es alias de `CMX`. Ausente o vacío = `CMX`, que es la consulta de la CDMX de siempre. Cualquier otro valor responde 400 con los admitidos.\n- `licencia` (string, opcional). Número de la licencia (en Guerrero, el folio). Obligatoria con `estado` `GRO`, `MIC`, `PUE` o `BCN`; con `CMX` se ignora. Se aceptan los alias `numeroLicencia`, `noLicencia`, `no_licencia` y `folio`. Se normaliza con trim, mayúsculas y sin espacios internos (los guiones se conservan): de 3 a 20 caracteres de letras, números o guiones, y máximo 15 en Guerrero.\n- `fechaExpedicion` (string, opcional). Solo BCN: fecha de expedición de la licencia, en `dd/mm/yyyy` o `yyyy-mm-dd`; se normaliza a `dd/mm/yyyy`. Se aceptan los alias `fecha_expedicion` y `expedicion`. En los demás estados se ignora.\n- `fechaNacimiento` (string, opcional). Solo BCN: fecha de nacimiento del titular, en `dd/mm/yyyy` o `yyyy-mm-dd`; se normaliza a `dd/mm/yyyy`. Se aceptan los alias `fecha_nacimiento` y `nacimiento`. En los demás estados se ignora.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
           },
           "status": "OK",
           "code": 200,
@@ -2510,6 +2585,231 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"multas\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"placa\": \"BBCB01\",\n    \"total\": 3,\n    \"pendientes\": 3,\n    \"montoPendiente\": 189263,\n    \"permisoCirculacion\": {\n      \"anio\": 2026,\n      \"multasAlCorte\": 3,\n      \"bloqueado\": true\n    },\n    \"multas\": [\n      {\n        \"origen\": \"detalle\",\n        \"juzgado\": \"1 JPL LAS CONDES\",\n        \"comuna\": \"LAS CONDES\",\n        \"rolCausa\": \"055185\",\n        \"fecha\": \"2025-07-03\",\n        \"monto\": 76701,\n        \"infraccion\": \"TRANSITAR SIN DISPOSITIVO ELECTRONICO POR AUTOPISTA CONCESIONADA\",\n        \"numeroDenuncia\": \"53540351\",\n        \"pagada\": false\n      },\n      {\n        \"origen\": \"detalle\",\n        \"juzgado\": \"1 JPL SANTIAGO\",\n        \"comuna\": \"SANTIAGO\",\n        \"rolCausa\": \"A6204\",\n        \"fecha\": \"2025-06-25\",\n        \"monto\": 112562,\n        \"infraccion\": \"ESTACIONAR EN SITIO PROHIBIDO Y SEÑALIZADO\",\n        \"numeroDenuncia\": \"54089414\",\n        \"pagada\": false\n      },\n      {\n        \"origen\": \"nacional\",\n        \"juzgado\": \"2 JPL SANTIAGO\",\n        \"comuna\": null,\n        \"rolCausa\": \"J313836 - 2023\",\n        \"fecha\": null,\n        \"monto\": null,\n        \"infraccion\": null,\n        \"numeroDenuncia\": null,\n        \"pagada\": false\n      }\n    ],\n    \"cobertura\": {\n      \"nacional\": \"ok\",\n      \"camaras\": \"sin_datos\",\n      \"detalle\": \"ok\"\n    }\n  },\n  \"portalUrl\": \"https://consultamultas.srcei.cl/ConsultaMultas/consultaMultasExterna.do\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Encargo por robo Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/encargo-robo-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "encargo-robo-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Si un vehículo chileno tiene **encargo por robo vigente**, consultado en el registro oficial de encargos que alimentan Carabineros, la PDI, el Registro Civil y el Ministerio Público a partir de denuncias y órdenes judiciales, no en avisos de la comunidad. Se pregunta por **una** de tres llaves: `placa`, `vin` o `motor`. `estado` replica la regla del registro pieza por pieza: `encargo_vigente` si el VIN sigue sin aparecer, `encargo_parcial` si el vehículo apareció pero sus patentes o su motor no (no es un auto robado, pero sus placas siguen buscadas) y `sin_encargo` si no hay encargo o todo apareció. Devuelve el número del encargo (EUN, el folio con el que lo identifican Carabineros y la PDI), la fecha en que se ingresó y cada pieza denunciada —patente delantera, trasera, VIN y motor— con su identificador y si sigue con encargo. Consultando por VIN o motor, `placa` trae la patente de la denuncia: si no coincide con la del vehículo que se tiene delante, es señal de una patente clonada. `recuperado: true` marca un vehículo robado que ya apareció completo. Un `sin_encargo` es una respuesta válida y cobra. No incluye datos del propietario ni del denunciante. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, opcional). Patente chilena (`BBCB01`, `AA1234`, `BBB010`). Alias: `patente`. Mandar **una sola** llave: `placa`, `vin` o `motor`.\n- `vin` (string, opcional). VIN o número de chasis, de 5 a 17 letras o dígitos (se aceptan chasis cortos de vehículos antiguos). Alias: `chasis`.\n- `motor` (string, opcional). Número de motor, de 4 a 25 letras o dígitos. Sirve para revisar un motor suelto antes de comprarlo.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/encargo-robo-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encargo-robo-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placa\": \"BBCB01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Si un vehículo chileno tiene **encargo por robo vigente**, consultado en el registro oficial de encargos que alimentan Carabineros, la PDI, el Registro Civil y el Ministerio Público a partir de denuncias y órdenes judiciales, no en avisos de la comunidad. Se pregunta por **una** de tres llaves: `placa`, `vin` o `motor`. `estado` replica la regla del registro pieza por pieza: `encargo_vigente` si el VIN sigue sin aparecer, `encargo_parcial` si el vehículo apareció pero sus patentes o su motor no (no es un auto robado, pero sus placas siguen buscadas) y `sin_encargo` si no hay encargo o todo apareció. Devuelve el número del encargo (EUN, el folio con el que lo identifican Carabineros y la PDI), la fecha en que se ingresó y cada pieza denunciada —patente delantera, trasera, VIN y motor— con su identificador y si sigue con encargo. Consultando por VIN o motor, `placa` trae la patente de la denuncia: si no coincide con la del vehículo que se tiene delante, es señal de una patente clonada. `recuperado: true` marca un vehículo robado que ya apareció completo. Un `sin_encargo` es una respuesta válida y cobra. No incluye datos del propietario ni del denunciante. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, opcional). Patente chilena (`BBCB01`, `AA1234`, `BBB010`). Alias: `patente`. Mandar **una sola** llave: `placa`, `vin` o `motor`.\n- `vin` (string, opcional). VIN o número de chasis, de 5 a 17 letras o dígitos (se aceptan chasis cortos de vehículos antiguos). Alias: `chasis`.\n- `motor` (string, opcional). Número de motor, de 4 a 25 letras o dígitos. Sirve para revisar un motor suelto antes de comprarlo.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"encargo\",\n  \"status\": \"danger\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"consulta\": {\n      \"tipo\": \"placa\",\n      \"valor\": \"BBCB01\"\n    },\n    \"placa\": \"BBCB01\",\n    \"vin\": \"9BWZZZ377VT004251\",\n    \"numeroMotor\": \"CFW123456\",\n    \"estado\": \"encargo_vigente\",\n    \"encargoVigente\": true,\n    \"numeroEncargo\": 700001,\n    \"fechaEncargo\": \"2026-10-19T08:15:15\",\n    \"piezas\": [\n      {\n        \"tipo\": \"patente_delantera\",\n        \"identificador\": \"BBCB01\",\n        \"conEncargo\": true,\n        \"fechaRecuperacion\": null\n      },\n      {\n        \"tipo\": \"patente_trasera\",\n        \"identificador\": \"BBCB01\",\n        \"conEncargo\": true,\n        \"fechaRecuperacion\": null\n      },\n      {\n        \"tipo\": \"vin\",\n        \"identificador\": \"9BWZZZ377VT004251\",\n        \"conEncargo\": true,\n        \"fechaRecuperacion\": null\n      },\n      {\n        \"tipo\": \"motor\",\n        \"identificador\": \"CFW123456\",\n        \"conEncargo\": true,\n        \"fechaRecuperacion\": null\n      }\n    ],\n    \"recuperado\": false\n  },\n  \"portalUrl\": \"https://www.autoseguro.gob.cl/\",\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Recalls Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/recall-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "recall-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vin\": \"8AFBR00CXRJ347621\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Campañas de seguridad (**recalls**) de un vehículo en Chile, por `vin` o por `placa` (de la ficha sale el VIN). `campanas` trae las campañas que **incluyen ese VIN en su lista de unidades afectadas**: es la coincidencia firme (`coincidencia: \"vin_exacto\"`). Una campaña que publicó lista y no trae el VIN **no aparece**, aunque coincidan la marca y el modelo. `posibles` trae, aparte, las campañas que no publicaron lista y coinciden en marca y años (`marca_anio`) o además en modelo cuando se conoce (`marca_modelo_anio`): son para revisar, no un veredicto. Cada campaña trae fecha, defecto, riesgo, medida, si hubo accidentes reportados en Chile, el contacto de la marca y las referencias de la misma campaña en otros países. `status` es `warn` con campañas exactas, `info` solo con posibles y `ok` sin ninguna. No se publica si la reparación ya se hizo (`cobertura.estadoReparacion`). Consultando por patente sin VIN válido en la ficha, `cobertura.vinDisponible` es `false` y solo hay posibles. «Sin recalls» es una respuesta válida y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `vin` (string, opcional). VIN de 17 caracteres. Alias: `chasis`. Mandar **una sola** llave: `vin` o `placa`.\n- `placa` (string, opcional). Patente chilena; el VIN sale de la ficha del vehículo. Alias: `patente`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/recall-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recall-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vin\": \"8AFBR00CXRJ347621\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Campañas de seguridad (**recalls**) de un vehículo en Chile, por `vin` o por `placa` (de la ficha sale el VIN). `campanas` trae las campañas que **incluyen ese VIN en su lista de unidades afectadas**: es la coincidencia firme (`coincidencia: \"vin_exacto\"`). Una campaña que publicó lista y no trae el VIN **no aparece**, aunque coincidan la marca y el modelo. `posibles` trae, aparte, las campañas que no publicaron lista y coinciden en marca y años (`marca_anio`) o además en modelo cuando se conoce (`marca_modelo_anio`): son para revisar, no un veredicto. Cada campaña trae fecha, defecto, riesgo, medida, si hubo accidentes reportados en Chile, el contacto de la marca y las referencias de la misma campaña en otros países. `status` es `warn` con campañas exactas, `info` solo con posibles y `ok` sin ninguna. No se publica si la reparación ya se hizo (`cobertura.estadoReparacion`). Consultando por patente sin VIN válido en la ficha, `cobertura.vinDisponible` es `false` y solo hay posibles. «Sin recalls» es una respuesta válida y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `vin` (string, opcional). VIN de 17 caracteres. Alias: `chasis`. Mandar **una sola** llave: `vin` o `placa`.\n- `placa` (string, opcional). Patente chilena; el VIN sale de la ficha del vehículo. Alias: `patente`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"recall\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"vin\": \"8AFBR00CXRJ347621\",\n    \"placa\": null,\n    \"marca\": \"Ford\",\n    \"modelo\": null,\n    \"anio\": 2024,\n    \"totalCampanas\": 1,\n    \"campanas\": [\n      {\n        \"id\": \"CL-1500\",\n        \"fecha\": \"2025-09-25\",\n        \"titulo\": \"Vehículos Ford, varios modelos, años 2021-2025\",\n        \"empresa\": \"Ford Motor Company Chile SPA.\",\n        \"marcas\": [\n          \"Ford\"\n        ],\n        \"modelos\": [\n          \"Bronco\",\n          \"Edge\",\n          \"Escape\",\n          \"Expedition\",\n          \"F-150\",\n          \"Mustang\",\n          \"Ranger\",\n          \"Ranger Raptor\",\n          \"Transit Custom\"\n        ],\n        \"anios\": {\n          \"desde\": 2021,\n          \"hasta\": 2025\n        },\n        \"periodoComercializacion\": \"durante los años 2021-2025\",\n        \"defecto\": \"La empresa informa que en los vehículos afectados al activarse la marcha en reversa, el cliente podría visualizar en la pantalla una imagen congelada, seguida de una imagen negra y un posterior reinicio del sistema de la cámara de visión trasera.\",\n        \"riesgo\": \"Aumento del riesgo de accidente.\",\n        \"medida\": \"La empresa procederá a actualizar el software APIM, ECG, IPC y/o TCU. La reparación tiene una duración estimada de aproximadamente 7 horas y no tiene costo adicional para el consumidor\",\n        \"accidentesReportadosChile\": false,\n        \"contacto\": {\n          \"telefono\": \"800 470 408\",\n          \"web\": null\n        },\n        \"referenciasInternacionales\": [],\n        \"coincidencia\": \"vin_exacto\"\n      }\n    ],\n    \"posibles\": [],\n    \"indiceActualizadoAl\": \"2026-10-20\",\n    \"cobertura\": {\n      \"estadoReparacion\": \"no_publicado\",\n      \"vinDisponible\": true\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Tasación y permiso de circulación Chile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/tasacion-cl",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "tasacion-cl"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigoSii\": \"CT1060006\",\n  \"anio\": \"2023\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Tasación fiscal del año y **valor del permiso de circulación** de un vehículo liviano chileno, con su ficha técnica: versión, tipo, puertas, cilindrada, potencia, combustible, transmisión y tracción. Tres formas de preguntar: `placa`; `codigoSii` + `anio`; o `marca` + `modelo` + `anio` (+ `version` opcional). La patente identifica el modelo pero no la versión exacta, así que cuando varias versiones calzan (`coincidencia: \"multiple\"`) la respuesta trae todos los `candidatos` y el `rango` de tasación y de permiso, y deja `tasacion` y `permisoCirculacion` en `null` en vez de elegir una versión al azar; con una sola (`unica` o `codigo`) vienen llenos. Consultando por patente, `anioAjustado: true` indica que se usó el año siguiente como año modelo (la ficha da el de fabricación). Los valores rigen de febrero a enero del año siguiente (`vigencia`), en pesos chilenos, con la exención de los eléctricos ya aplicada. Los modelos del año en curso aún no tienen tasación: su primer permiso se calcula sobre la factura y responden 404 sin cobro, igual que un vehículo sin coincidencia. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, opcional). Patente chilena (`BBCB01`, `AA1234`). Alias: `patente`.\n- `codigoSii` (string, opcional). Código SII del vehículo: dos letras y siete dígitos. Va con `anio`.\n- `marca` (string, opcional). Marca, con `modelo` y `anio`.\n- `modelo` (string, opcional). Modelo, con `marca` y `anio`.\n- `version` (string, opcional). Versión, opcional: acota los candidatos.\n- `anio` (integer, opcional). Año modelo.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasacion-cl",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tasacion-cl"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigoSii\": \"CT1060006\",\n  \"anio\": \"2023\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Tasación fiscal del año y **valor del permiso de circulación** de un vehículo liviano chileno, con su ficha técnica: versión, tipo, puertas, cilindrada, potencia, combustible, transmisión y tracción. Tres formas de preguntar: `placa`; `codigoSii` + `anio`; o `marca` + `modelo` + `anio` (+ `version` opcional). La patente identifica el modelo pero no la versión exacta, así que cuando varias versiones calzan (`coincidencia: \"multiple\"`) la respuesta trae todos los `candidatos` y el `rango` de tasación y de permiso, y deja `tasacion` y `permisoCirculacion` en `null` en vez de elegir una versión al azar; con una sola (`unica` o `codigo`) vienen llenos. Consultando por patente, `anioAjustado: true` indica que se usó el año siguiente como año modelo (la ficha da el de fabricación). Los valores rigen de febrero a enero del año siguiente (`vigencia`), en pesos chilenos, con la exención de los eléctricos ya aplicada. Los modelos del año en curso aún no tienen tasación: su primer permiso se calcula sobre la factura y responden 404 sin cobro, igual que un vehículo sin coincidencia. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `placa` (string, opcional). Patente chilena (`BBCB01`, `AA1234`). Alias: `patente`.\n- `codigoSii` (string, opcional). Código SII del vehículo: dos letras y siete dígitos. Va con `anio`.\n- `marca` (string, opcional). Marca, con `modelo` y `anio`.\n- `modelo` (string, opcional). Modelo, con `marca` y `anio`.\n- `version` (string, opcional). Versión, opcional: acota los candidatos.\n- `anio` (integer, opcional). Año modelo.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"tasacion\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"pais\": \"CL\",\n    \"anioTributario\": 2026,\n    \"vigencia\": {\n      \"desde\": \"2026-02-01\",\n      \"hasta\": \"2027-01-31\"\n    },\n    \"consulta\": {\n      \"placa\": null,\n      \"codigoSii\": \"CT1060006\",\n      \"marca\": null,\n      \"modelo\": null,\n      \"version\": null,\n      \"anio\": 2023\n    },\n    \"vehiculo\": null,\n    \"coincidencia\": \"codigo\",\n    \"anioAjustado\": false,\n    \"tasacion\": 25674803,\n    \"permisoCirculacion\": 727063,\n    \"rango\": {\n      \"tasacionMin\": 25674803,\n      \"tasacionMax\": 25674803,\n      \"permisoMin\": 727063,\n      \"permisoMax\": 727063\n    },\n    \"candidatos\": [\n      {\n        \"codigoSii\": \"CT1060006\",\n        \"anio\": 2023,\n        \"tipo\": \"Camioneta\",\n        \"marca\": \"HONDA\",\n        \"modelo\": \"RIDGELINE\",\n        \"version\": \"DCAB 3.5 AUT\",\n        \"puertas\": 4,\n        \"cilindradaCc\": 3500,\n        \"potenciaHp\": null,\n        \"combustible\": \"Bencina\",\n        \"transmision\": \"Automática\",\n        \"traccion\": \"4x4 (AWD)\",\n        \"tasacion\": 25674803,\n        \"permisoCirculacion\": 727063,\n        \"observacion\": null\n      }\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
         }
       ]
     },
