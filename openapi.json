@@ -23,6 +23,10 @@
   },
   "tags": [
     {
+      "name": "Consulta solo con la placa",
+      "description": "Ficha técnica, SOAT y tecnomecánica con la placa sola, sin el documento del propietario."
+    },
+    {
       "name": "Reporte completo",
       "description": "Todas las fuentes del vehículo y del propietario en una sola llamada."
     },
@@ -1330,7 +1334,9 @@
       "post": {
         "operationId": "vehiculo-placa",
         "summary": "Ficha técnica, SOAT y tecnomecánica por placa",
-        "tags": [],
+        "tags": [
+          "Consulta solo con la placa"
+        ],
         "description": "Consulta vehicular por placa SOLA, sin el documento del propietario. Casi siempre entrega la ficha técnica COMPLETA del registro —marca, línea, modelo, clase, carrocería, color, cilindraje, combustible, servicio, motor, chasis, VIN, licencia de tránsito vigente, estado, organismo, fecha de matrícula, ejes, pasajeros, peso bruto y puertas— más el SOAT (`vigente`, vencimiento, aseguradora, póliza e histórico de los 5 más recientes) y la revisión técnico-mecánica (`vigente`, vencimiento, CDA, certificado e histórico): por VIN cuando el vehículo lo tiene y, sin VIN (modelos anteriores a 2011), por sus revisiones técnico-mecánicas. Cuando no hay con qué pedir la ficha completa (sin VIN ni revisiones) o esa consulta no responde, sale el RESUMEN del registro: la misma ficha sin fecha de matrícula, ejes, pasajeros, peso ni puertas, y SOAT y tecnomecánica con los 3 registros más recientes (sin número de certificado), con `advertencia` que explica la causa. `cobertura.ficha` dice `completa` o `resumen`; `cobertura.soat`/`tecnomecanica` dicen `completa`, `sin_vin` (sin VIN ni revisiones con que completar; reintentar no sirve), `no_encontrado` o `no_disponible` (reintentar más tarde puede traer la ficha completa). Con la ficha completa, un vehículo nuevo sin certificado dentro del plazo de la primera revisión (art. 52 de la Ley 769/2002: 5 años desde la matrícula el particular distinto de moto, 2 el público y las motos) sale con `tecnomecanica.exento: true`, `vigente: true` y `fechaPrimeraRevision`; el particular matriculado antes del 19-may-2023 entre el año 5 y el 6 sale `enDisputa: true` con `vigente: null`. En el resumen, sin ninguna revisión registrada la tecnomecánica sale con `vigente: null` (no se afirma ni vigente ni vencida). `status`: ok con los dos vigentes (o la RTM exenta), danger si alguno venció, info si falta alguno o está en disputa. Una placa sin registro: 404 `vehiculo_no_registrado`; el registro sin responder: 502 `source_error`, sin cobro y reintentable. En `sandbox.placapi.com` responde a cualquier API key sin cobrar, solo con las placas de prueba (otra placa: 400 `placa_fuera_de_sandbox` con la lista). Cuesta 10 créditos por consulta con datos; una placa sin registro cuesta 1, y solo pasados los sin-resultado gratis del mes. Costo: 10 créditos por consulta con datos.",
         "x-credits": 10,
         "security": [
