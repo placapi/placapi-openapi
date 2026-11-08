@@ -67,6 +67,10 @@
       "description": "Nombres y apellidos de una persona peruana por DNI o carné de extranjería, contra el Portal Único del Conductor del MTC."
     },
     {
+      "name": "Empresas Perú (SUNAT, SUNARP)",
+      "description": "Debida diligencia sobre una empresa peruana: estado y condición del RUC en el padrón de SUNAT y su partida en el índice de personas jurídicas de SUNARP."
+    },
+    {
       "name": "Vehículo Perú (SUNARP, MTC, SUTRAN)",
       "description": "Ficha del vehículo peruano por placa: registro, revisión técnica, SOAT y papeletas."
     },
@@ -4426,6 +4430,105 @@
         }
       }
     },
+    "/empresa-pe": {
+      "post": {
+        "operationId": "empresa-pe",
+        "summary": "Empresa Perú (SUNARP)",
+        "tags": [
+          "Empresas Perú (SUNAT, SUNARP)"
+        ],
+        "description": "Busca personas jurídicas inscritas en el índice nacional de SUNARP por razón social o por siglas. Devuelve, por cada coincidencia, el número de partida, la razón social, las siglas y la oficina registral. La búsqueda exige al menos 3 caracteres en el campo que se use; un término imposible responde 400 sin cobrar. ⚠️ Es el índice/directorio, no la ficha registral: no entrega RUC, representantes, capital ni domicilio —eso exige consultar la partida en el SPRL—. Un criterio sin coincidencias es una respuesta válida (el directorio no la tiene) y cobra. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "razonSocial": {
+                    "type": "string",
+                    "example": "BANCO INTERNACIONAL DEL PERU",
+                    "description": "Razón o denominación social, mínimo 3 caracteres. Se compara en mayúsculas. Alias aceptados: `razon`, `nombre`, `empresa`."
+                  },
+                  "siglas": {
+                    "type": "string",
+                    "example": "INTERBANK",
+                    "description": "Siglas de la empresa, mínimo 3 caracteres (ej. `INTERBANK`). Alias aceptado: `sigla`. Se puede mandar sola o junto con la razón social."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "razonSocial": "BANCO INTERNACIONAL DEL PERU"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "empresaPe",
+                  "status": "ok",
+                  "data": {
+                    "consulta": {
+                      "razonSocial": null,
+                      "siglas": "INTERBANK"
+                    },
+                    "total": 1,
+                    "resultados": [
+                      {
+                        "numPartida": "11005055",
+                        "razonSocial": "BANCO INTERNACIONAL DEL PERU",
+                        "siglas": "INTERBANK",
+                        "oficina": "ICA"
+                      }
+                    ]
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
     "/contribuyente-cl": {
       "post": {
         "operationId": "contribuyente-cl",
@@ -4638,6 +4741,115 @@
                         "montos individuales no estructurados (texto de la fuente)",
                         "datos de contacto"
                       ]
+                    }
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
+    "/company-pe": {
+      "post": {
+        "operationId": "company-pe",
+        "summary": "Empresa Perú por RUC (SUNAT)",
+        "tags": [
+          "Empresas Perú (SUNAT, SUNARP)"
+        ],
+        "description": "Empresa peruana por RUC contra el padrón reducido oficial de SUNAT: razón social, estado del contribuyente (`ACTIVO`, `BAJA DE OFICIO`…), condición de domicilio (`HABIDO`, `NO HABIDO`…), ubigeo y los componentes de la dirección fiscal tal como los publica el padrón. Cubre las personas jurídicas —RUC de 11 dígitos que empieza por 20—; un RUC con otro prefijo o largo responde 400 sin cobrar. No depende de un portal en vivo, así que responde en menos de un segundo y sin captcha; el padrón se sincroniza cada semana. NO entrega representantes legales, capital ni fecha de constitución, y `cobertura` lo declara. Un RUC que no está en el padrón responde `no_encontrado` y reembolsa. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
+        "x-credits": 1,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ruc"
+                ],
+                "properties": {
+                  "ruc": {
+                    "type": "string",
+                    "example": "20605980008",
+                    "description": "RUC de empresa: 11 dígitos que empiezan por 20. Alias: `documentNumber`, `documento`, `numeroDocumento`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "ruc": "20605980008"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "sunatRucPe",
+                  "status": "ok",
+                  "data": {
+                    "ruc": "20605980008",
+                    "razonSocial": "MERCADOLIBRE PERU S.R.L.",
+                    "estado": "ACTIVO",
+                    "condicion": "HABIDO",
+                    "ubigeo": "150131",
+                    "direccion": "AV. VICTOR ANDRES BELAUNDE NRO. 332 INT. 702 URB. EL ROSARIO UBIGEO 150131",
+                    "tipoVia": "AV.",
+                    "nombreVia": "VICTOR ANDRES BELAUNDE",
+                    "numero": "332",
+                    "interior": "702",
+                    "lote": null,
+                    "manzana": null,
+                    "kilometro": null,
+                    "zonaCodigo": "URB.",
+                    "zonaTipo": "EL ROSARIO",
+                    "departamento": null,
+                    "cobertura": {
+                      "razonSocial": true,
+                      "estado": true,
+                      "condicion": true,
+                      "ubigeo": true,
+                      "direccion": true,
+                      "representantes": false,
+                      "capital": false,
+                      "fechaConstitucion": false
                     }
                   },
                   "mode": "live",

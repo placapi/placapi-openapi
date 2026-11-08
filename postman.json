@@ -2289,6 +2289,81 @@
       ]
     },
     {
+      "name": "Empresa Perú (SUNARP)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/empresa-pe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "empresa-pe"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"razonSocial\": \"BANCO INTERNACIONAL DEL PERU\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Busca personas jurídicas inscritas en el índice nacional de SUNARP por razón social o por siglas. Devuelve, por cada coincidencia, el número de partida, la razón social, las siglas y la oficina registral. La búsqueda exige al menos 3 caracteres en el campo que se use; un término imposible responde 400 sin cobrar. ⚠️ Es el índice/directorio, no la ficha registral: no entrega RUC, representantes, capital ni domicilio —eso exige consultar la partida en el SPRL—. Un criterio sin coincidencias es una respuesta válida (el directorio no la tiene) y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `razonSocial` (string, opcional). Razón o denominación social, mínimo 3 caracteres. Se compara en mayúsculas. Alias aceptados: `razon`, `nombre`, `empresa`.\n- `siglas` (string, opcional). Siglas de la empresa, mínimo 3 caracteres (ej. `INTERBANK`). Alias aceptado: `sigla`. Se puede mandar sola o junto con la razón social.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/empresa-pe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "empresa-pe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"razonSocial\": \"BANCO INTERNACIONAL DEL PERU\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Busca personas jurídicas inscritas en el índice nacional de SUNARP por razón social o por siglas. Devuelve, por cada coincidencia, el número de partida, la razón social, las siglas y la oficina registral. La búsqueda exige al menos 3 caracteres en el campo que se use; un término imposible responde 400 sin cobrar. ⚠️ Es el índice/directorio, no la ficha registral: no entrega RUC, representantes, capital ni domicilio —eso exige consultar la partida en el SPRL—. Un criterio sin coincidencias es una respuesta válida (el directorio no la tiene) y cobra. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `razonSocial` (string, opcional). Razón o denominación social, mínimo 3 caracteres. Se compara en mayúsculas. Alias aceptados: `razon`, `nombre`, `empresa`.\n- `siglas` (string, opcional). Siglas de la empresa, mínimo 3 caracteres (ej. `INTERBANK`). Alias aceptado: `sigla`. Se puede mandar sola o junto con la razón social.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"empresaPe\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"consulta\": {\n      \"razonSocial\": null,\n      \"siglas\": \"INTERBANK\"\n    },\n    \"total\": 1,\n    \"resultados\": [\n      {\n        \"numPartida\": \"11005055\",\n        \"razonSocial\": \"BANCO INTERNACIONAL DEL PERU\",\n        \"siglas\": \"INTERBANK\",\n        \"oficina\": \"ICA\"\n      }\n    ]\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
       "name": "Contribuyente Chile (RUT)",
       "request": {
         "method": "POST",
@@ -2435,6 +2510,81 @@
           ],
           "cookie": [],
           "body": "{\n  \"source\": \"identidad\",\n  \"status\": \"warn\",\n  \"data\": {\n    \"pais\": \"CO\",\n    \"tipoDocumento\": \"CC\",\n    \"documento\": \"0000000000\",\n    \"encontrado\": true,\n    \"cantidad\": 2,\n    \"deudas\": [\n      {\n        \"impuesto\": \"PREDIAL\",\n        \"objeto\": \"AAA0000TEST\",\n        \"vigencia\": \"2018\",\n        \"periodo\": \"0\",\n        \"fecha\": \"01-01-2026\"\n      },\n      {\n        \"impuesto\": \"PREDIAL\",\n        \"objeto\": \"AAA0000DEMO\",\n        \"vigencia\": \"2021\",\n        \"periodo\": \"0\",\n        \"fecha\": \"01-01-2026\"\n      }\n    ],\n    \"cobertura\": {\n      \"reporte\": true,\n      \"detalle\": true,\n      \"noPublicados\": [\n        \"montos individuales no estructurados (texto de la fuente)\",\n        \"datos de contacto\"\n      ]\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
+        }
+      ]
+    },
+    {
+      "name": "Empresa Perú por RUC (SUNAT)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/company-pe",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "company-pe"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ruc\": \"20605980008\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Empresa peruana por RUC contra el padrón reducido oficial de SUNAT: razón social, estado del contribuyente (`ACTIVO`, `BAJA DE OFICIO`…), condición de domicilio (`HABIDO`, `NO HABIDO`…), ubigeo y los componentes de la dirección fiscal tal como los publica el padrón. Cubre las personas jurídicas —RUC de 11 dígitos que empieza por 20—; un RUC con otro prefijo o largo responde 400 sin cobrar. No depende de un portal en vivo, así que responde en menos de un segundo y sin captcha; el padrón se sincroniza cada semana. NO entrega representantes legales, capital ni fecha de constitución, y `cobertura` lo declara. Un RUC que no está en el padrón responde `no_encontrado` y reembolsa. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `ruc` (string, obligatorio). RUC de empresa: 11 dígitos que empiezan por 20. Alias: `documentNumber`, `documento`, `numeroDocumento`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/company-pe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "company-pe"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ruc\": \"20605980008\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Empresa peruana por RUC contra el padrón reducido oficial de SUNAT: razón social, estado del contribuyente (`ACTIVO`, `BAJA DE OFICIO`…), condición de domicilio (`HABIDO`, `NO HABIDO`…), ubigeo y los componentes de la dirección fiscal tal como los publica el padrón. Cubre las personas jurídicas —RUC de 11 dígitos que empieza por 20—; un RUC con otro prefijo o largo responde 400 sin cobrar. No depende de un portal en vivo, así que responde en menos de un segundo y sin captcha; el padrón se sincroniza cada semana. NO entrega representantes legales, capital ni fecha de constitución, y `cobertura` lo declara. Un RUC que no está en el padrón responde `no_encontrado` y reembolsa. Cuesta 1 crédito.\n\nCosto: 1 crédito por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `ruc` (string, obligatorio). RUC de empresa: 11 dígitos que empiezan por 20. Alias: `documentNumber`, `documento`, `numeroDocumento`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"sunatRucPe\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"ruc\": \"20605980008\",\n    \"razonSocial\": \"MERCADOLIBRE PERU S.R.L.\",\n    \"estado\": \"ACTIVO\",\n    \"condicion\": \"HABIDO\",\n    \"ubigeo\": \"150131\",\n    \"direccion\": \"AV. VICTOR ANDRES BELAUNDE NRO. 332 INT. 702 URB. EL ROSARIO UBIGEO 150131\",\n    \"tipoVia\": \"AV.\",\n    \"nombreVia\": \"VICTOR ANDRES BELAUNDE\",\n    \"numero\": \"332\",\n    \"interior\": \"702\",\n    \"lote\": null,\n    \"manzana\": null,\n    \"kilometro\": null,\n    \"zonaCodigo\": \"URB.\",\n    \"zonaTipo\": \"EL ROSARIO\",\n    \"departamento\": null,\n    \"cobertura\": {\n      \"razonSocial\": true,\n      \"estado\": true,\n      \"condicion\": true,\n      \"ubigeo\": true,\n      \"direccion\": true,\n      \"representantes\": false,\n      \"capital\": false,\n      \"fechaConstitucion\": false\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 1\n}"
         }
       ]
     },
