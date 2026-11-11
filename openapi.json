@@ -3,7 +3,7 @@
   "info": {
     "title": "PlacApi API",
     "version": "1.0.0",
-    "description": "API REST sobre registros oficiales de Colombia, con dos familias de consultas. Vehicular POR PLACA: RUNT, SOAT, tecnomecánica, multas del SIMIT, antecedentes del vehículo, impuestos, avalúo FASECOLDA y pico y placa. De personas POR NÚMERO DE DOCUMENTO, sin placa: nombre por cédula, licencias de conducción, comparendos, puesto de votación del censo electoral de la Registraduría, Sisbén y Registro Universal de Ingresos, afiliaciones a seguridad social del RUAF, registro mercantil del RUES, contratación estatal del SECOP II, procesos judiciales, bienes y rentas, y antecedentes disciplinarios, fiscales y judiciales. PlacApi no es una entidad oficial del Gobierno colombiano.",
+    "description": "API REST sobre registros oficiales de Colombia, con dos familias de consultas. Vehicular POR PLACA: RUNT, SOAT, tecnomecánica, multas del SIMIT, antecedentes del vehículo, impuestos, avalúo FASECOLDA y pico y placa. De personas POR NÚMERO DE DOCUMENTO, sin placa: nombre por cédula, licencias de conducción, comparendos, puesto de votación del censo electoral de la Registraduría, Sisbén y Registro Universal de Ingresos, afiliaciones a seguridad social del RUAF, registro mercantil del RUES, contratación estatal del SECOP II, procesos judiciales, bienes y rentas, y antecedentes disciplinarios, fiscales y judiciales. Con la misma API key cubre además Perú, México, Chile y Brasil: Perú (8): Identidad Perú (DNI/CE), Empresa Perú (SUNARP), Empresa Perú por RUC (SUNAT), Vehículo Perú, Revisión técnica Perú, SOAT Perú, Papeletas Perú, Licencia Perú; México (6): Identidad México (CURP), Cédula profesional México (SEP), Validación INE México (Finanzas CDMX), Multas México (CDMX), Verificación México (CDMX), Licencia México (CDMX, GRO, MIC, PUE y BCN); Chile (9): Contribuyente Chile (RUT), Registro Nacional de Transporte (Chile), Consulta vehicular Chile, Revisión técnica Chile, SOAP Chile, Multas Chile, Encargo por robo Chile, Recalls Chile, Tasación y permiso de circulación Chile; Brasil (1): Identidad Brasil (CPF). PlacApi no es una entidad oficial del Gobierno colombiano.",
     "termsOfService": "https://placapi.com/terminos",
     "contact": {
       "name": "Soporte PlacApi",
@@ -85,6 +85,10 @@
     {
       "name": "México",
       "description": "Multas, verificación y licencia de un vehículo mexicano."
+    },
+    {
+      "name": "Identidad México (CURP, INE, cédula profesional)",
+      "description": "Identidad de una persona por CURP, validación de la credencial INE y cédula profesional de la SEP."
     }
   ],
   "servers": [
@@ -4113,11 +4117,114 @@
         }
       }
     },
+    "/identidad-mx": {
+      "post": {
+        "operationId": "identidad-mx",
+        "summary": "Identidad México (CURP)",
+        "tags": [
+          "Identidad México (CURP, INE, cédula profesional)"
+        ],
+        "description": "Ficha de identidad de una persona mexicana por CURP, contra el Registro Nacional de Población (RENAPO): nombres y apellidos, fecha de nacimiento, edad y sexo. La CURP se valida **sin red** antes de consultar —18 caracteres, estructura, entidad federativa, dígito verificador y siglo según la homoclave— y una CURP imposible responde 400 sin cobrar. Una CURP bien formada que no figura en el registro responde 404 `no_encontrado` y reembolsa; si el registro no responde, la consulta tampoco se cobra y se puede reintentar. `isAlive` no se publica (la CURP no certifica estado vital) y viaja en `cobertura.noPublicados`. Cuesta 2 créditos. Costo: 2 créditos por consulta con datos.",
+        "x-credits": 2,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "documento"
+                ],
+                "properties": {
+                  "documento": {
+                    "type": "string",
+                    "example": "GARC850101HDFRRL05",
+                    "description": "CURP de 18 caracteres. Se valida el formato y el dígito verificador; si no cuadra responde 400 sin cobrar. Alias aceptados: `curp`, `doc`."
+                  },
+                  "refresh": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+                  }
+                }
+              },
+              "example": {
+                "documento": "GARC850101HDFRRL05"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta ejecutada. Cada fuente reporta su propio status (ok, empty, error).",
+            "content": {
+              "application/json": {
+                "example": {
+                  "source": "identidad-mx",
+                  "status": "ok",
+                  "data": {
+                    "documento": "GARC850101HDFRRL05",
+                    "tipoDocumento": "CURP",
+                    "nombre": "JOSE GARCIA RUIZ",
+                    "nombres": "JOSE",
+                    "apellidos": "GARCIA RUIZ",
+                    "fechaNacimiento": "1985-01-01",
+                    "edad": 41,
+                    "sexo": "M",
+                    "isAlive": null,
+                    "cobertura": {
+                      "nombre": true,
+                      "fechaNacimiento": true,
+                      "sexo": true,
+                      "isAlive": false,
+                      "noPublicados": [
+                        "isAlive"
+                      ]
+                    }
+                  },
+                  "mode": "live",
+                  "fetchedAt": "2026-07-24T15:04:05.000Z",
+                  "cost": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cuerpo inválido: placa o documento con formato incorrecto (code: bad_request)."
+          },
+          "401": {
+            "description": "No autenticado o API key inválida (code: unauthorized)."
+          },
+          "402": {
+            "description": "Sin créditos suficientes (code: no_credits). No se cobró nada. El body trae costo (créditos que pide la consulta), saldo (los que tiene la cuenta), comprar (URL para recargar) y desde (el paquete mínimo con su precio)."
+          },
+          "404": {
+            "description": "La fuente oficial respondió y no hay datos para la consulta. No reintentar: el resultado sería el mismo. code: propietario_no_coincide (el documento no es de un propietario activo del vehículo), vehiculo_no_registrado (el vehículo no tiene información registrada) o consulta_sin_resultado. Cada uno de esos códigos trae 10 consultas sin resultado gratis por mes y cuenta, con cuotas independientes; a partir de la 11 de ese código cobra como una consulta normal. Repetir una que ya salió sin resultado no cobra durante 24 horas (se responde de caché con fromCache: true). El body trae charged (si esta consulta cobró) y freeNoResultsLeft (cuántas gratis quedan en el mes para ESE código)."
+          },
+          "429": {
+            "description": "Rate limit excedido: 1000 consultas/minuto por API key (code: rate_limited). Respeta Retry-After."
+          },
+          "500": {
+            "description": "Error interno (code: internal_error)."
+          },
+          "502": {
+            "description": "La fuente oficial no respondió a tiempo (code: source_error). Reintentar más tarde. No se cobra crédito."
+          }
+        }
+      }
+    },
     "/cedula-profesional-mx": {
       "post": {
         "operationId": "cedula-profesional-mx",
         "summary": "Cédula profesional México (SEP)",
-        "tags": [],
+        "tags": [
+          "Identidad México (CURP, INE, cédula profesional)"
+        ],
         "description": "Consulta una cédula profesional mexicana por su número en el Registro Nacional de Profesionistas de la SEP. Devuelve los registros exactos con `cedula`, `profesion`, `carrera`, `institucion` y `anioRegistro`. Por minimización de PII NO publica nombre, CURP, fechas personales, género, libro ni foja; `cobertura` declara esas exclusiones. El número se valida antes de reservar crédito: exactamente 7 u 8 dígitos, sin espacios ni guiones; una entrada imposible responde 400 sin cobrar y sin gastar captcha. Una cédula bien formada que no figura responde 404 `no_encontrado` y reembolsa. La consulta requiere salida mexicana y reCAPTCHA v3; un fallo de la SEP, del proxy o del solver también reembolsa, nunca se convierte en negativa. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
@@ -4221,7 +4328,9 @@
       "post": {
         "operationId": "ine-mx",
         "summary": "Validación INE México (Finanzas CDMX)",
-        "tags": [],
+        "tags": [
+          "Identidad México (CURP, INE, cédula profesional)"
+        ],
         "description": "Valida una Credencial para Votar mexicana con el validador público de Finanzas CDMX contra el INE. Acepta el CIC de 9 dígitos o la combinación OCR de 13 + clave de elector de 18 + emisión de exactamente 2 dígitos; una forma incompleta responde 400 sin cobrar ni gastar proxy/captcha. Publica el `estatus` literal de la fuente (`VIGENTE`, `NO_VIGENTE` u otro que aparezca), `encontrado` y `vigente`; si el estado es nuevo, `vigente` queda `null` en vez de deducirse. NO entrega nombre, datos biográficos ni metadatos de emisión. `DATOS_NO_ENCONTRADOS` responde 404 `no_encontrado` y reembolsa; un captcha rechazado dos veces o una falla de la fuente responde sin cobrar y nunca se convierte en negativa. Cuesta 1 crédito. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [

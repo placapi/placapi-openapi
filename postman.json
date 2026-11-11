@@ -2064,6 +2064,81 @@
       ]
     },
     {
+      "name": "Identidad México (CURP)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/identidad-mx",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "identidad-mx"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"documento\": \"GARC850101HDFRRL05\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Ficha de identidad de una persona mexicana por CURP, contra el Registro Nacional de Población (RENAPO): nombres y apellidos, fecha de nacimiento, edad y sexo. La CURP se valida **sin red** antes de consultar —18 caracteres, estructura, entidad federativa, dígito verificador y siglo según la homoclave— y una CURP imposible responde 400 sin cobrar. Una CURP bien formada que no figura en el registro responde 404 `no_encontrado` y reembolsa; si el registro no responde, la consulta tampoco se cobra y se puede reintentar. `isAlive` no se publica (la CURP no certifica estado vital) y viaja en `cobertura.noPublicados`. Cuesta 2 créditos.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `documento` (string, obligatorio). CURP de 18 caracteres. Se valida el formato y el dígito verificador; si no cuadra responde 400 sin cobrar. Alias aceptados: `curp`, `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+      },
+      "response": [
+        {
+          "name": "200 OK — ejemplo",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/identidad-mx",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "identidad-mx"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documento\": \"GARC850101HDFRRL05\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Ficha de identidad de una persona mexicana por CURP, contra el Registro Nacional de Población (RENAPO): nombres y apellidos, fecha de nacimiento, edad y sexo. La CURP se valida **sin red** antes de consultar —18 caracteres, estructura, entidad federativa, dígito verificador y siglo según la homoclave— y una CURP imposible responde 400 sin cobrar. Una CURP bien formada que no figura en el registro responde 404 `no_encontrado` y reembolsa; si el registro no responde, la consulta tampoco se cobra y se puede reintentar. `isAlive` no se publica (la CURP no certifica estado vital) y viaja en `cobertura.noPublicados`. Cuesta 2 créditos.\n\nCosto: 2 créditos por consulta con datos. Las consultas sin resultado (404) tienen 10 gratis al mes por cada `code` de error —las cuotas son independientes— y después cobran igual; repetir una que ya salió sin resultado no cobra durante 24 horas.\n\n### Parámetros\n\n- `documento` (string, obligatorio). CURP de 18 caracteres. Se valida el formato y el dígito verificador; si no cuadra responde 400 sin cobrar. Alias aceptados: `curp`, `doc`.\n- `refresh` (boolean, opcional). Ignora la caché y vuelve a consultar la fuente oficial. Ojo: una consulta refrescada con datos siempre cobra (el hit de caché no)."
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"source\": \"identidad-mx\",\n  \"status\": \"ok\",\n  \"data\": {\n    \"documento\": \"GARC850101HDFRRL05\",\n    \"tipoDocumento\": \"CURP\",\n    \"nombre\": \"JOSE GARCIA RUIZ\",\n    \"nombres\": \"JOSE\",\n    \"apellidos\": \"GARCIA RUIZ\",\n    \"fechaNacimiento\": \"1985-01-01\",\n    \"edad\": 41,\n    \"sexo\": \"M\",\n    \"isAlive\": null,\n    \"cobertura\": {\n      \"nombre\": true,\n      \"fechaNacimiento\": true,\n      \"sexo\": true,\n      \"isAlive\": false,\n      \"noPublicados\": [\n        \"isAlive\"\n      ]\n    }\n  },\n  \"mode\": \"live\",\n  \"fetchedAt\": \"2026-07-24T15:04:05.000Z\",\n  \"cost\": 2\n}"
+        }
+      ]
+    },
+    {
       "name": "Cédula profesional México (SEP)",
       "request": {
         "method": "POST",
