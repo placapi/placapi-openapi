@@ -599,6 +599,11 @@
                     "type": "string",
                     "example": "complete",
                     "description": "`complete` (default) incluye `data.plate`; `vehicle-by-plate` lo omite para dejar el shape RUNT puro."
+                  },
+                  "indeterminadoPorPlaca": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Para vehículos traspasados a persona indeterminada. Si el registro rechaza el documento y el propietario ACTIVO del vehículo es persona indeterminada, la ficha se resuelve con la placa sola —el mismo `data`, con `docNumber` como lo mandaste— y la respuesta trae `resueltoPorPlaca: true`. Esa consulta cuesta lo mismo que `/api/consulta-placa` (10 créditos) en vez de 1; sin saldo para eso, 402 sin cobro. Si el propietario activo es una persona, un documento equivocado sigue siendo 404 `propietario_no_coincide`, con el campo o sin él. Sin el campo, o en `false`, la consulta no cambia. Úsalo con `docNumber` 1111111111 en los traspasos viejos que con ese documento no salen."
                   }
                 }
               },
@@ -1338,9 +1343,9 @@
         }
       }
     },
-    "/vehiculo-placa": {
+    "/consulta-placa": {
       "post": {
-        "operationId": "vehiculo-placa",
+        "operationId": "consulta-placa",
         "summary": "Ficha técnica, SOAT y tecnomecánica por placa",
         "tags": [
           "Consulta solo con la placa"
