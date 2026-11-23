@@ -434,7 +434,8 @@
                         "segmentoTamano": "C",
                         "segmentoCilindraje": "Y"
                       },
-                      "origen": "vin"
+                      "origen": "vin",
+                      "aproximado": false
                     }
                   },
                   "picoYPlaca": {
@@ -2656,7 +2657,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase y la **ficha técnica completa** en `fichaTecnica` (38 campos: motor, dimensiones, capacidades, seguridad, equipamiento y clasificación — los mismos de `/api/avaluo-por-codigo`). El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` (exacto) o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos); con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` cubre todas. Por `vin` la versión es única, así que `rangoMercado` colapsa en el propio valor; la curva año por año de esa versión viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. `codigoFoto` trae los identificadores de la imagen que la guía archiva para esa versión —lista vacía si no tiene ninguna—: el nombre del archivo no siempre corresponde al código, así que no se puede deducir. Costo: 1 crédito por consulta con datos.",
+        "description": "Valor comercial FASECOLDA por placa: código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase y la **ficha técnica completa** en `fichaTecnica` (38 campos: motor, dimensiones, capacidades, seguridad, equipamiento y clasificación — los mismos de `/api/avaluo-por-codigo`). El VIN y el modelo se resuelven primero desde el RUNT, así que la placa basta. `origen` dice cómo se identificó el vehículo: `vin` o `catalogo` (marca + año + línea + cilindraje, cuando FASECOLDA no decodifica el chasis — le pasa a los modelos nuevos). El VIN identifica el modelo, no siempre el acabado: en 3 de cada 4 avalúos por VIN corresponde a varias versiones. Por cualquiera de los dos caminos, `aproximado` avisa si quedó más de una versión posible, `versionesConsideradas` dice cuántas y `rangoMercado` las cubre; `valorComercial` es, por VIN, la primera que lista la guía, y los códigos posibles van en `codigosAlternos` (con la versión exacta, `/api/avaluo-por-codigo` da su valor). Con una sola versión el rango colapsa en el valor; la curva año por año de la versión valorada viaja aparte en `valoresPorAnio`. Valor de referencia del gremio asegurador, no un avalúo pericial: si una aseguradora cotiza otra cifra, lo primero a descartar es que haya tomado otra versión del mismo modelo. `codigoFoto` trae los identificadores de la imagen que la guía archiva para esa versión —lista vacía si no tiene ninguna—: el nombre del archivo no siempre corresponde al código, así que no se puede deducir. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -2781,7 +2782,8 @@
                       "segmentoTamano": "C",
                       "segmentoCilindraje": "Y"
                     },
-                    "origen": "vin"
+                    "origen": "vin",
+                    "aproximado": false
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
@@ -2964,7 +2966,7 @@
         "tags": [
           "Avalúo comercial (FASECOLDA)"
         ],
-        "description": "Valor comercial FASECOLDA y **ficha técnica completa** por VIN (número de chasis), sin placa ni documento del propietario. Misma respuesta que `/api/avaluo` —código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase, `fichaTecnica` con sus 38 campos, `valoresPorAnio` y `codigoFoto`— pero entrando directo: FASECOLDA siempre se consultó por VIN, y en la versión por placa el documento del propietario existe solo para que el registro nacional devuelva ese número. Quien ya lo tiene a la vista se ahorra ese paso, su espera y su modo de falla más común (el documento que no corresponde al propietario activo).\n\n⚠️ FASECOLDA **no decodifica los VIN de los modelos nuevos** (medido: ninguno de los 2025, uno de cada nueve de 2026). Para esos casos existe el respaldo por catálogo, que identifica el grupo compatible con marca + año + línea + cilindraje: por eso este endpoint acepta esos cuatro datos como campos opcionales. Mandarlos es la diferencia entre recibir un avalúo aproximado y no recibir ninguno en un vehículo 0 km; con un VIN que la fuente sí decodifica, el cilindraje comprueba que la versión asignada tenga ese motor y, si no lo tiene, el valor sale de la versión que corresponde a tus datos. `origen` dice cuál de los dos caminos respondió (`vin` o `catalogo`) y, con `catalogo`, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` las cubre todas.\n\nValor de referencia del gremio asegurador, no un avalúo pericial. Un VIN que no resuelve por ningún camino responde `data: null` y no cobra. Cuesta 1 crédito por consulta con datos. Costo: 1 crédito por consulta con datos.",
+        "description": "Valor comercial FASECOLDA y **ficha técnica completa** por VIN (número de chasis), sin placa ni documento del propietario. Misma respuesta que `/api/avaluo` —código FASECOLDA, marca, línea, modelo (año), valor comercial en pesos, clase, `fichaTecnica` con sus 38 campos, `valoresPorAnio` y `codigoFoto`— pero entrando directo: FASECOLDA siempre se consultó por VIN, y en la versión por placa el documento del propietario existe solo para que el registro nacional devuelva ese número. Quien ya lo tiene a la vista se ahorra ese paso, su espera y su modo de falla más común (el documento que no corresponde al propietario activo).\n\n⚠️ FASECOLDA **no decodifica los VIN de los modelos nuevos** (medido: ninguno de los 2025, uno de cada nueve de 2026). Para esos casos existe el respaldo por catálogo, que identifica el grupo compatible con marca + año + línea + cilindraje: por eso este endpoint acepta esos cuatro datos como campos opcionales. Mandarlos es la diferencia entre recibir un avalúo aproximado y no recibir ninguno en un vehículo 0 km; con un VIN que la fuente sí decodifica, el cilindraje comprueba que la versión asignada tenga ese motor y, si no lo tiene, el valor sale de la versión que corresponde a tus datos. `origen` dice cuál de los dos caminos respondió (`vin` o `catalogo`). Por los dos, `aproximado` avisa si quedó más de una versión posible y `rangoMercado` las cubre todas: el VIN identifica el modelo, no siempre el acabado, y en 3 de cada 4 corresponde a varias versiones (sus códigos van en `codigosAlternos`; con el cilindraje se descartan las de otro motor).\n\nValor de referencia del gremio asegurador, no un avalúo pericial. Un VIN que no resuelve por ningún camino responde `data: null` y no cobra. Cuesta 1 crédito por consulta con datos. Costo: 1 crédito por consulta con datos.",
         "x-credits": 1,
         "security": [
           {
@@ -3090,7 +3092,8 @@
                       "segmentoTamano": "C",
                       "segmentoCilindraje": "Y"
                     },
-                    "origen": "vin"
+                    "origen": "vin",
+                    "aproximado": false
                   },
                   "mode": "live",
                   "fetchedAt": "2026-07-24T15:04:05.000Z"
