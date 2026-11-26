@@ -147,7 +147,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "primerApellido": {
                     "type": "string",
@@ -589,7 +589,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1158,7 +1158,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1275,7 +1275,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -1599,7 +1599,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -2553,7 +2553,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "oldDocNumber": {
                     "type": "string",
@@ -2699,7 +2699,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   },
                   "refresh": {
                     "type": "boolean",
@@ -8097,7 +8097,7 @@
                   "docNumber": {
                     "type": "string",
                     "example": "1020304050",
-                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
+                    "description": "Número de documento del propietario. Alias aceptado: `doc`. Un NIT va con sus 9 dígitos, sin el dígito de verificación (`900123456`, no `9001234567`). Si el vehículo tiene traspaso a persona indeterminada, manda `docNumber` 1111111111."
                   }
                 }
               },
